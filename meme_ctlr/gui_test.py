@@ -61,6 +61,8 @@ max_y_vel = 0.0
 max_z_vel = 0.0
 max_e_vel = 0.0
 
+level_table = [["Front", 0,0,0,0], ["Mid F", 0,0,0,0], ["Mid R", 0,0,0,0], ["Rear", 0,0,0,0]]
+
 ###############################################################################
 # Set Serial port and control variables for threaded access
 ###############################################################################
@@ -84,7 +86,8 @@ sg.theme('DarkAmber')
 layout = [  [sg.Text("Nozzle Temp: ", size=(13,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp: ", size=(10,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset: ", size=(10,1)), sg.InputText(key="z_off", size=(8,1)), sg.Text("Steps per mm: ", size=(14,1)), sg.InputText(key="steps", size=(8,1)), sg.Button("Pull Stats", key="cord_button")],
             [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box') , sg.Multiline('', key="console", size=(80,20), disabled=1)],
             [sg.Text(" " * 65),sg.InputText(key="cmd_box", size=(80,1))],
-            [sg.Button("Home", key="home_button"), sg.Text("X", size=(1,1)), sg.InputText("0",key="x_in", size=(8,1)), sg.Text("Y", size=(1,1)), sg.InputText("0",key="y_in", size=(8,1)), sg.Text("Z", size=(1,1)), sg.InputText("0",key="z_in", size=(8,1)), sg.Button("Go", key="pos_move"), sg.Text("E", size=(1,1)), sg.InputText("0.0", size=(8,1), key="e_move"), sg.Button("Extrude", key="extrude_button"), sg.Button("Retract", key="retract_button")]
+            [sg.Button("Home", key="home_button"), sg.Text("X", size=(1,1)), sg.InputText("0",key="x_in", size=(8,1)), sg.Text("Y", size=(1,1)), sg.InputText("0",key="y_in", size=(8,1)), sg.Text("Z", size=(1,1)), sg.InputText("0",key="z_in", size=(8,1)), sg.Button("Go", key="pos_move"), sg.Text("E", size=(1,1)), sg.InputText("0.0", size=(8,1), key="e_move"), sg.Button("Extrude", key="extrude_button"), sg.Button("Retract", key="retract_button")],
+            [sg.Button("Level", key="level_button"), sg.Table(level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="level_table_ui")]
         ]
 
 # Create the Window and define elements
@@ -110,6 +113,8 @@ go_button = window["pos_move"]
 e_go_box = window["e_move"]
 extrude_botton = window["extrude_button"]
 retract_botton = window["retract_button"]
+level_button = window["level_button"]
+level_table_ui = window["level_table_ui"]
 
 # Helper to append multiline (console). Input multiline sg obj and add line at
 # end of lines. Scroll to last line upon update.
@@ -156,8 +161,11 @@ def _recver_thread():
     global max_z_vel
     global max_e_vel
 
+    global level_table
+
     global info_label_box
     global console
+    global level_table_ui
 
     #  == T:xxx.xx/xxx.xx == B:xxx.xx/xxx.xx
     # Takes in a line and tests if it is a temp (M155) pull response. If it is,
@@ -195,8 +203,26 @@ def _recver_thread():
     def parse_feed_rate(line):
         if line.find("M203") > -1:
             numbers = re.findall(r"[-+]?(?:\d*\.\d+|\d+)", line)
-            print(numbers)
             return numbers
+        return []
+
+    # look for level table
+    def parse_level_table(line):
+        if line.find("Bilinear") == 0:
+            # found the first line of the grid, read the next couple lines till
+            # we fill the table. May read input from other commands i.e. temp,
+            # but we will just throw those lines out
+            lines_read = 0
+            new_table = []
+            while lines_read < 4:
+                next_line = recv(port)
+                if next_line.find(str(lines_read)) == 1:
+                    numbers = re.findall(r"[-+]?(?:\d*\.\d+|\d+)", next_line)
+                    new_table.append(numbers[1:])
+                    lines_read += 1
+                else:
+                    continue
+            return new_table
         return []
 
     while True:
@@ -214,6 +240,8 @@ def _recver_thread():
         steps = parse_steps_per_mm(serial_input)
         pos = parse_pos(serial_input)
         feeds =  parse_feed_rate(serial_input)
+        levels = parse_level_table(serial_input)
+
         if len(temps) >= 4:
             current_nozzle_temp = temps[0]
             target_nozzle_temp  = temps[1]
@@ -237,6 +265,11 @@ def _recver_thread():
             max_z_vel = feeds[3]
             max_e_vel = feeds[4]
             update_info_label_box(info_label_box)
+        elif len(levels) > 0:
+            for i in range(0, 4):
+                for j in range(0, 4):
+                    level_table[i][j+1] = levels[i][j]
+            level_table_ui.update(level_table)
         else:
             update_console(console, serial_input)
 
@@ -324,6 +357,14 @@ if __name__ == "__main__":
             amount = e_go_box.get()
             send(port, "G92 E" + amount)
             send(port, "G1 E0")
+
+        # Level
+        elif event == "level_button":
+            send(port, "G28")
+            send(port, "G29 V4")
+            send(port, "M500")
+            send(port, "M501")
+            send(port, "M420 S1 V1")
 
     # Kill the recver thread
     killed = 1
