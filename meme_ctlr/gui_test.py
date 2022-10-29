@@ -87,7 +87,9 @@ layout = [  [sg.Text("Nozzle Temp: ", size=(13,1)), sg.InputText(key="nozzle_tar
             [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box') , sg.Multiline('', key="console", size=(80,20), disabled=1)],
             [sg.Text(" " * 65),sg.InputText(key="cmd_box", size=(80,1))],
             [sg.Button("Home", key="home_button"), sg.Text("X", size=(1,1)), sg.InputText("0",key="x_in", size=(8,1)), sg.Text("Y", size=(1,1)), sg.InputText("0",key="y_in", size=(8,1)), sg.Text("Z", size=(1,1)), sg.InputText("0",key="z_in", size=(8,1)), sg.Button("Go", key="pos_move"), sg.Text("E", size=(1,1)), sg.InputText("0.0", size=(8,1), key="e_move"), sg.Button("Extrude", key="extrude_button"), sg.Button("Retract", key="retract_button")],
-            [sg.Button("Level", key="level_button"), sg.Table(level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="level_table_ui")]
+            [sg.Button("Level", key="level_button"), sg.Table(level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="level_table_ui")],
+            [sg.InputText(size=(20,1), key="input_file"), sg.Button("Send Local File to SD", key="send_file_button"), sg.Button("Populate SD Table", key="pop_SD")], 
+            [sg.Multiline('', key="sd_explorer", size=(60,20))]
         ]
 
 # Create the Window and define elements
@@ -115,6 +117,10 @@ extrude_botton = window["extrude_button"]
 retract_botton = window["retract_button"]
 level_button = window["level_button"]
 level_table_ui = window["level_table_ui"]
+sd_explorer = window["sd_explorer"]
+sd_table_populate = window["pop_SD"]
+input_file_box = window["input_file"]
+input_file_button = window["send_file_button"]
 
 # Helper to append multiline (console). Input multiline sg obj and add line at
 # end of lines. Scroll to last line upon update.
@@ -166,6 +172,7 @@ def _recver_thread():
     global info_label_box
     global console
     global level_table_ui
+    global sd_explorer
 
     #  == T:xxx.xx/xxx.xx == B:xxx.xx/xxx.xx
     # Takes in a line and tests if it is a temp (M155) pull response. If it is,
@@ -225,6 +232,19 @@ def _recver_thread():
             return new_table
         return []
 
+    # look for SD card list
+    def parse_sd_list(line):
+        if line.find("Begin file list") == 0:
+            ret = []
+            while True:
+                new_line = recv(port)
+                if new_line.find("End file list") == 0:
+                    return ret
+
+                if new_line.find(".GCO"):
+                    ret.append(new_line)
+        return []
+
     while True:
         serial_input = recv(port)
 
@@ -241,6 +261,7 @@ def _recver_thread():
         pos = parse_pos(serial_input)
         feeds =  parse_feed_rate(serial_input)
         levels = parse_level_table(serial_input)
+        sd_list = parse_sd_list(serial_input)
 
         if len(temps) >= 4:
             current_nozzle_temp = temps[0]
@@ -270,6 +291,12 @@ def _recver_thread():
                 for j in range(0, 4):
                     level_table[i][j+1] = levels[i][j]
             level_table_ui.update(level_table)
+        elif len(sd_list) > 0:
+            updated_list = ""
+            for s in sd_list:
+                updated_list = updated_list + s
+            sd_explorer.update(updated_list)
+            sd_explorer.set_vscroll_position(1.0)
         else:
             update_console(console, serial_input)
 
@@ -365,6 +392,15 @@ if __name__ == "__main__":
             send(port, "M500")
             send(port, "M501")
             send(port, "M420 S1 V1")
+
+        # populate SD table
+        elif event == "pop_SD":
+            send(port, "M20")
+
+        # send local file to SD
+        elif event == "send_file_button":
+            file_name = input_file_box.get()
+            
 
     # Kill the recver thread
     killed = 1
