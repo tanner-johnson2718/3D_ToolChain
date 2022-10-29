@@ -16,28 +16,36 @@ serial_timeout = 1
 port = 0                  # forward declaration of serial port obj
 killed = 0
 
-info_text_lines = 10
+info_text_lines = 16
 info_label_box_text = "\
 Nozzle Temp Current\n\
 Nozzle Temp Target\n\
 Bed Temp Current\n\
-Bed Temp Target\n\
+Bed Temp Target\n\n\
 X Current\n\
 Y Current\n\
 Z Current\n\n\
 Z Offset\n\
-Steps per mm\n"
+Steps per mm\n\
+Max X vel\n\
+Max Y vel\n\
+Max Z vel\n\
+Max E vel\n"
 
 info_value_box_text="\
 0.0 C\n\
 0.0 C\n\
 0.0 C\n\
-0.0 C\n\
+0.0 C\n\n\
 0.0 mm\n\
 0.0 mm\n\
 0.0 mm\n\n\
 0.0 mm\n\
-0.0 mm\n"
+0.0 steps\n\
+0.0 m/s\n\
+0.0 m/s\n\
+0.0 m/s\n\
+0.0 m/s"
 
 current_nozzle_temp = 0.0
 target_nozzle_temp = 0.0
@@ -48,6 +56,10 @@ y_curr = 0.0
 z_curr = 0.0
 z_off = 0.0
 steps_per_mm = 0.0
+max_x_vel = 0.0
+max_y_vel = 0.0
+max_z_vel = 0.0
+max_e_vel = 0.0
 
 ###############################################################################
 # Set Serial port and control variables for threaded access
@@ -69,9 +81,10 @@ port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
 
 # Define Window layout and Theme
 sg.theme('DarkAmber')
-layout = [  [sg.Text("Nozzle Temp: ", size=(13,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp: ", size=(10,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset: ", size=(10,1)), sg.InputText(key="z_off", size=(8,1)), sg.Text("Steps per mm: ", size=(14,1)), sg.InputText(key="steps", size=(8,1))],
-            [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(10,info_text_lines), key='info_value_box') , sg.Multiline('', key="console", size=(80,20), disabled=1)],
-            [sg.Text(" " * 56),sg.InputText(key="cmd_box", size=(80,1))],
+layout = [  [sg.Text("Nozzle Temp: ", size=(13,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp: ", size=(10,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset: ", size=(10,1)), sg.InputText(key="z_off", size=(8,1)), sg.Text("Steps per mm: ", size=(14,1)), sg.InputText(key="steps", size=(8,1)), sg.Button("Pull Stats", key="cord_button")],
+            [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box') , sg.Multiline('', key="console", size=(80,20), disabled=1)],
+            [sg.Text(" " * 65),sg.InputText(key="cmd_box", size=(80,1))],
+            [sg.Button("Home", key="home_button"), sg.Text("X", size=(1,1)), sg.InputText("0",key="x_in", size=(8,1)), sg.Text("Y", size=(1,1)), sg.InputText("0",key="y_in", size=(8,1)), sg.Text("Z", size=(1,1)), sg.InputText("0",key="z_in", size=(8,1)), sg.Button("Go", key="pos_move"), sg.Text("E", size=(1,1)), sg.InputText("0.0", size=(8,1), key="e_move"), sg.Button("Extrude", key="extrude_button"), sg.Button("Retract", key="retract_button")]
         ]
 
 # Create the Window and define elements
@@ -88,6 +101,15 @@ nozzle_target_temp_input_box = window["nozzle_target"]
 bed_target_temp_input_box = window["bed_target"]
 z_off_input_box = window["z_off"]
 steps_input_box = window["steps"]
+pull_coordinates_button = window["cord_button"]
+home_button = window["home_button"]
+x_go_box = window["x_in"]
+y_go_box = window["y_in"]
+z_go_box = window["z_in"]
+go_button = window["pos_move"]
+e_go_box = window["e_move"]
+extrude_botton = window["extrude_button"]
+retract_botton = window["retract_button"]
 
 # Helper to append multiline (console). Input multiline sg obj and add line at
 # end of lines. Scroll to last line upon update.
@@ -100,12 +122,16 @@ def update_info_label_box(text_obj):
     new_text = str(current_nozzle_temp) + " C\n" +\
               str(target_nozzle_temp)  + " C\n" +\
               str(current_bed_temp)    + " C\n" +\
-              str(target_bed_temp)     + " C\n" +\
+              str(target_bed_temp)     + " C\n\n" +\
               str(x_curr)              + " mm\n" +\
               str(y_curr)              + " mm\n" +\
               str(z_curr)              + " mm\n\n" +\
               str(z_off)               + " mm\n" +\
-              str(steps_per_mm)        + " mm\n"
+              str(steps_per_mm)        + " mm\n" +\
+              str(max_x_vel)           + " mm/s\n" +\
+              str(max_y_vel)           + " mm/s\n" +\
+              str(max_z_vel)           + " mm/s\n" +\
+              str(max_e_vel)           + " mm/s" 
 
     text_obj.update(new_text)
 
@@ -125,6 +151,10 @@ def _recver_thread():
     global z_curr
     global z_off
     global steps_per_mm
+    global max_x_vel
+    global max_y_vel
+    global max_z_vel
+    global max_e_vel
 
     global info_label_box
     global console
@@ -158,6 +188,13 @@ def _recver_thread():
     def parse_pos(line):
         if line.find("X:") == 0 and line.find("Count") > 0:
             numbers = re.findall(r"[-+]?(?:\d*\.\d+|\d+)", line)
+            return numbers
+        return []
+
+    # look for Feed rates
+    def parse_feed_rate(line):
+        if line.find("M203") > -1:
+            numbers = re.findall(r"[-+]?(?:\d*\.\d+|\d+)", line)
             print(numbers)
             return numbers
         return []
@@ -176,6 +213,7 @@ def _recver_thread():
         z_offs = parse_z_off(serial_input)
         steps = parse_steps_per_mm(serial_input)
         pos = parse_pos(serial_input)
+        feeds =  parse_feed_rate(serial_input)
         if len(temps) >= 4:
             current_nozzle_temp = temps[0]
             target_nozzle_temp  = temps[1]
@@ -191,7 +229,13 @@ def _recver_thread():
         elif len(pos) > 6:
             x_curr = pos[0]
             y_curr = pos[1]
-            z_curr = pos[1]
+            z_curr = pos[2]
+            update_info_label_box(info_label_box)
+        elif len(feeds) > 4:
+            max_x_vel = feeds[1]
+            max_y_vel = feeds[2]
+            max_z_vel = feeds[3]
+            max_e_vel = feeds[4]
             update_info_label_box(info_label_box)
         else:
             update_console(console, serial_input)
@@ -251,6 +295,35 @@ if __name__ == "__main__":
             send(port, "M500")
             send(port, "M501")
             send(port, "M503")
+
+        # Pull Coordinates button pressed
+        elif event == "cord_button":
+            send(port, "M114")
+            send(port, "M503")
+
+        # Home printer
+        elif event == "home_button":
+            send(port, "G28")
+
+        # Goto Coordinates
+        elif event == "pos_move":
+            x = x_go_box.get()
+            y = y_go_box.get()
+            z = z_go_box.get()
+            send(port, "G1 X" + x + " Y" + y + " Z" + z)
+
+        # Extrude
+        elif event == "extrude_button":
+            amount = e_go_box.get()
+            send(port, "G92 E0")
+            send(port, "G1 E" + amount)
+            send(port, "G92 E0")
+
+        # Retract
+        elif event == "retract_button":
+            amount = e_go_box.get()
+            send(port, "G92 E" + amount)
+            send(port, "G1 E0")
 
     # Kill the recver thread
     killed = 1

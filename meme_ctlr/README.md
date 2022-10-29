@@ -27,3 +27,6 @@ My G-code sener and printer controller, reversed engineered using pronsole as a 
 * Macros, mesh viz, etc all can be added using this basic framework
     * either by giving its own dedicated UI feature or through cmd interface
 * **KEY MISSING FEATURE** how to send and monitor print jobs
+
+# Final Architecture
+* **NOTE** pysimplegui must run on main thread
