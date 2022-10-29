@@ -1,5 +1,7 @@
 # TODO doc
 
+from fileinput import filename
+from multiprocessing import Semaphore
 import PySimpleGUI as sg
 import serial
 import re
@@ -62,6 +64,85 @@ max_z_vel = 0.0
 max_e_vel = 0.0
 
 level_table = [["Front", 0,0,0,0], ["Mid F", 0,0,0,0], ["Mid R", 0,0,0,0], ["Rear", 0,0,0,0]]
+sd_entries = ""
+console_text = ""
+
+globals_changed = 0
+
+###############################################################################
+# Global accessor functions. Global Values should only be updated here
+###############################################################################
+
+global_lock = Semaphore(1)
+
+def update_global_console_text(text):
+    global console_text
+
+    global_lock.acquire()
+    console_text = console_text + text
+    global_lock.release()
+
+def update_global_temps(nozzle_curr, nozzle_target, bed_curr, bed_target):
+    global current_nozzle_temp
+    global target_nozzle_temp
+    global current_bed_temp
+    global target_bed_temp
+
+    global_lock.acquire()
+    current_nozzle_temp = nozzle_curr
+    target_nozzle_temp = nozzle_target
+    current_bed_temp = bed_curr
+    target_bed_temp = bed_target
+    global_lock.release()
+
+def update_global_level_table(levels):
+    global level_table
+
+    global_lock.acquire()
+    for i in range(0, 4):
+                for j in range(0, 4):
+                    level_table[i][j+1] = levels[i][j]
+    global_lock.release()
+
+def update_global_z_offset(new_z):
+    global z_off
+    global_lock.acquire()
+    z_off = new_z
+    global_lock.release()
+
+def update_global_steps_per_mm(new):
+    global steps_per_mm
+    global_lock.acquire()
+    steps_per_mm = new
+    global_lock.release()
+
+def update_globals_curr_pos(x,y,z):
+    global x_curr
+    global y_curr
+    global z_curr
+    global_lock.acquire()
+    x_curr = x
+    y_curr = y
+    z_curr = z
+    global_lock.release()
+
+def update_globals_max_vel(x,y,z,e):
+    global max_x_vel
+    global max_y_vel
+    global max_z_vel
+    global max_e_vel
+    global_lock.acquire()
+    max_x_vel = x
+    max_y_vel = y
+    max_z_vel = z
+    max_e_vel = e
+    global_lock.release()
+
+def update_globals_sd_list(new):
+    global sd_entries
+    global_lock.acquire()
+    sd_entries = new
+    global_lock.release()
 
 ###############################################################################
 # Set Serial port and control variables for threaded access
@@ -84,7 +165,7 @@ port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
 # Define Window layout and Theme
 sg.theme('DarkAmber')
 layout = [  [sg.Text("Nozzle Temp: ", size=(13,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp: ", size=(10,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset: ", size=(10,1)), sg.InputText(key="z_off", size=(8,1)), sg.Text("Steps per mm: ", size=(14,1)), sg.InputText(key="steps", size=(8,1)), sg.Button("Pull Stats", key="cord_button")],
-            [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box') , sg.Multiline('', key="console", size=(80,20), disabled=1)],
+            [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box') , sg.Multiline('Test', key="console", size=(80,20))],
             [sg.Text(" " * 65),sg.InputText(key="cmd_box", size=(80,1))],
             [sg.Button("Home", key="home_button"), sg.Text("X", size=(1,1)), sg.InputText("0",key="x_in", size=(8,1)), sg.Text("Y", size=(1,1)), sg.InputText("0",key="y_in", size=(8,1)), sg.Text("Z", size=(1,1)), sg.InputText("0",key="z_in", size=(8,1)), sg.Button("Go", key="pos_move"), sg.Text("E", size=(1,1)), sg.InputText("0.0", size=(8,1), key="e_move"), sg.Button("Extrude", key="extrude_button"), sg.Button("Retract", key="retract_button")],
             [sg.Button("Level", key="level_button"), sg.Table(level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="level_table_ui")],
@@ -99,7 +180,6 @@ window["nozzle_target"].bind("<Return>", "enter_hit")
 window["bed_target"].bind("<Return>", "enter_hit")
 window["z_off"].bind("<Return>", "enter_hit")
 window["steps"].bind("<Return>", "enter_hit")
-console = window["console"]
 cmd_box = window["cmd_box"]
 info_label_box = window["info_value_box"]
 nozzle_target_temp_input_box = window["nozzle_target"]
@@ -122,14 +202,29 @@ sd_table_populate = window["pop_SD"]
 input_file_box = window["input_file"]
 input_file_button = window["send_file_button"]
 
+###############################################################################
+# GUI Accessor functions. Only the main thread should try to update GUI
+# elements. Following functions will enforce this. ALL UPDATES TO GUI ELEMENTS
+# SHOULD GO THROUGH HERE.
+###############################################################################
+
 # Helper to append multiline (console). Input multiline sg obj and add line at
 # end of lines. Scroll to last line upon update.
-def update_console(multi_line_obj, text):
-    multi_line_obj.update(multi_line_obj.get() + "\n" + text)
-    multi_line_obj.set_vscroll_position(1.0)
+def update_console():
+    if __name__ != "__main__":
+        print("ERROR, GUI elements accessed by non main thread")
+        return
+        
+    window["console"].update('\n'.join(console_text.splitlines()[-20:]))
+    window["console"].set_vscroll_position(1.0)
+    
 
-# Input info labels sg object, the line indexes to update, and values to update too 
-def update_info_label_box(text_obj):
+# Input info labels sg object and update with current global values
+def update_info_label_box():
+    if __name__ != "__main__":
+        print("ERROR, GUI elements accessed by non main thread")
+        return
+
     new_text = str(current_nozzle_temp) + " C\n" +\
               str(target_nozzle_temp)  + " C\n" +\
               str(current_bed_temp)    + " C\n" +\
@@ -144,7 +239,24 @@ def update_info_label_box(text_obj):
               str(max_z_vel)           + " mm/s\n" +\
               str(max_e_vel)           + " mm/s" 
 
-    text_obj.update(new_text)
+    info_label_box.update(new_text)
+
+# Update the SD explorer
+def update_sd_explorer():
+    if __name__ != "__main__":
+        print("ERROR, GUI elements accessed by non main thread")
+        return
+
+    sd_explorer.update(sd_entries)
+    sd_explorer.set_vscroll_position(1.0)
+
+# Update level table
+def update_level_table():
+    if __name__ != "__main__":
+        print("ERROR, GUI elements accessed by non main thread")
+        return
+
+    level_table_ui.update(level_table)
 
 ###############################################################################
 # Thread functions
@@ -152,27 +264,6 @@ def update_info_label_box(text_obj):
 
 # Thread to block on input from printer
 def _recver_thread():
-
-    global current_nozzle_temp
-    global target_nozzle_temp
-    global current_bed_temp
-    global target_bed_temp
-    global x_curr
-    global y_curr
-    global z_curr
-    global z_off
-    global steps_per_mm
-    global max_x_vel
-    global max_y_vel
-    global max_z_vel
-    global max_e_vel
-
-    global level_table
-
-    global info_label_box
-    global console
-    global level_table_ui
-    global sd_explorer
 
     #  == T:xxx.xx/xxx.xx == B:xxx.xx/xxx.xx
     # Takes in a line and tests if it is a temp (M155) pull response. If it is,
@@ -221,7 +312,8 @@ def _recver_thread():
             # but we will just throw those lines out
             lines_read = 0
             new_table = []
-            while lines_read < 4:
+            while lines_read < 4 and not killed:
+                print("Waiting for mesh level entries...")
                 next_line = recv(port)
                 if next_line.find(str(lines_read)) == 1:
                     numbers = re.findall(r"[-+]?(?:\d*\.\d+|\d+)", next_line)
@@ -229,6 +321,7 @@ def _recver_thread():
                     lines_read += 1
                 else:
                     continue
+            print("Done with mesh level reading")
             return new_table
         return []
 
@@ -236,16 +329,18 @@ def _recver_thread():
     def parse_sd_list(line):
         if line.find("Begin file list") == 0:
             ret = []
-            while True:
+            while True and not killed:
+                print("Waiting for more SD entries...")
                 new_line = recv(port)
                 if new_line.find("End file list") == 0:
+                    print("Done with SD\n")
                     return ret
 
                 if new_line.find(".GCO"):
                     ret.append(new_line)
         return []
 
-    while True:
+    while True and not killed:
         serial_input = recv(port)
 
         if killed == 1:
@@ -264,41 +359,24 @@ def _recver_thread():
         sd_list = parse_sd_list(serial_input)
 
         if len(temps) >= 4:
-            current_nozzle_temp = temps[0]
-            target_nozzle_temp  = temps[1]
-            current_bed_temp    = temps[2]
-            target_bed_temp     = temps[3]
-            update_info_label_box(info_label_box)  # Update info values
+            update_global_temps(temps[0], temps[1], temps[2], temps[3])
         elif len(z_offs) == 2:
-            z_off = z_offs[1]
-            update_info_label_box(info_label_box)
+            update_global_z_offset(z_offs[1])
         elif len(steps) == 5:
-            steps_per_mm = steps[4]
-            update_info_label_box(info_label_box)
+            update_global_steps_per_mm(steps[4])
         elif len(pos) > 6:
-            x_curr = pos[0]
-            y_curr = pos[1]
-            z_curr = pos[2]
-            update_info_label_box(info_label_box)
+            update_globals_curr_pos(pos[0], pos[1], pos[2])
         elif len(feeds) > 4:
-            max_x_vel = feeds[1]
-            max_y_vel = feeds[2]
-            max_z_vel = feeds[3]
-            max_e_vel = feeds[4]
-            update_info_label_box(info_label_box)
+            update_globals_max_vel(feeds[1],feeds[2],feeds[3],feeds[4])
         elif len(levels) > 0:
-            for i in range(0, 4):
-                for j in range(0, 4):
-                    level_table[i][j+1] = levels[i][j]
-            level_table_ui.update(level_table)
+            update_global_level_table(levels)
         elif len(sd_list) > 0:
-            updated_list = ""
+            new_sd = ""
             for s in sd_list:
-                updated_list = updated_list + s
-            sd_explorer.update(updated_list)
-            sd_explorer.set_vscroll_position(1.0)
+                new_sd = new_sd + s
+            update_globals_sd_list(new_sd)
         else:
-            update_console(console, serial_input)
+            update_global_console_text(serial_input)
 
 ###############################################################################
 # Main
@@ -313,7 +391,7 @@ if __name__ == "__main__":
     send(port, "M155 S1")
 
     # Start threads
-    recver_thread = threading.Thread(target=_recver_thread)
+    recver_thread = threading.Thread(target=_recver_thread, name="Recv_Thread")
     recver_thread.start()
 
     while True:
@@ -326,8 +404,7 @@ if __name__ == "__main__":
         # Enter hit while in command box
         elif event == "cmd_box" + "enter_hit":
             command = cmd_box.get()
-            update_console(console, "Sending) " + command)
-            cmd_box.update("")
+            update_global_console_text("Sending) " + command + "\n")
             send(port, command)
 
         # nozzle temp updated
@@ -400,8 +477,45 @@ if __name__ == "__main__":
         # send local file to SD
         elif event == "send_file_button":
             file_name = input_file_box.get()
-            
 
+            # open file
+            try:
+                send(port, "M28 " + file_name)
+                # Read line by line and send line by line, stripping comments
+                print("Reading " + file_name + "...")
+                counter = 0
+                with open(file_name) as my_file_handle:
+                    for line in my_file_handle:
+
+                        # strip new line
+                        if len(line) > 0:
+                            line = line[0:(len(line)-1)]  
+
+                        # strip comments
+                        if len(line) > 0:
+                            index = line.find(";")
+                            line = line[0:index]
+
+                        # Send Gcode
+                        if len(line) > 0:
+                            send(port, line)
+
+                        # report
+                        if counter % 100 == 0:
+                            print("Reading " + file_name + "...")
+                        counter += 1
+                print("done")
+                send(port, "M29")
+
+            except:
+                print("ERROR reading " + file_name)
+
+        # Update values in gui elements
+        update_console()
+        update_info_label_box()
+        update_sd_explorer()
+        update_level_table()
+    
     # Kill the recver thread
     killed = 1
     recver_thread.join()
