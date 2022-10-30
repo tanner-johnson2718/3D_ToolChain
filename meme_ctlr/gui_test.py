@@ -7,6 +7,7 @@ import serial
 import re
 import threading
 import time
+import os
 
 ###############################################################################
 # Global Consts
@@ -17,6 +18,8 @@ baud = 115200
 serial_timeout = 1
 port = 0                  # forward declaration of serial port obj
 killed = 0
+pause_recv_thread = 0
+recv_thread_paused = 0
 
 info_text_lines = 16
 info_label_box_text = "\
@@ -265,6 +268,9 @@ def update_level_table():
 # Thread to block on input from printer
 def _recver_thread():
 
+    global pause_recv_thread
+    global recv_thread_paused
+
     #  == T:xxx.xx/xxx.xx == B:xxx.xx/xxx.xx
     # Takes in a line and tests if it is a temp (M155) pull response. If it is,
     # returns list of floats: current nozzle, target nozzle, current bed, target
@@ -345,6 +351,14 @@ def _recver_thread():
 
         if killed == 1:
             break
+
+        if pause_recv_thread == 1:
+            recv_thread_paused = 1
+            print("Recv Thread Paused")
+            while pause_recv_thread and not killed:
+                time.sleep(1)
+            print("Recv Thread Resumed")
+            recv_thread_paused = 0
 
         # Serial input ready to be displayed
         if serial_input == "" :
@@ -484,22 +498,48 @@ if __name__ == "__main__":
 
             # open file
             try:
-                send(port, "M28 " + file_name)
-                # Read line by line and send line by line, stripping comments
-                print("Reading " + file_name + "...")
-                counter = 0
-                with open(file_name, encoding="utf-8") as my_file_handle:
-                    for line in my_file_handle:
+                # Turn off temp polling and pause recv_thread, wait till its paused
+                pause_recv_thread = 1
+                while not recv_thread_paused:
+                    time.sleep(1)
+                send(port, "M155 S0")
 
-                        # Send Gcode
-                        print(line)
-                        port.write((line).encode('ascii'))
+                send(port, "M28 " + file_name)
+                print("Reading " + file_name + "...")
+
+                with open(file_name, encoding="utf-8") as my_file_handle:
+                    
+                    tot_sent = 0
+
+                    for chunk in my_file_handle:
+
+                        if not (chunk.find("G") == 0 or chunk.find("M") == 0):
+                            continue
+                        
+                        chunk_size = len(chunk)
+                        bytes_sent = 0
+
+                        while bytes_sent < chunk_size:
+                            bytes_sent += port.write((chunk[bytes_sent:]).encode('ascii'))
+                            if(bytes_sent < chunk_size):
+                                print("Didnt send full line, sending rest")
+
+                        print(chunk)
+
+                        # wait for the ok to proceed
+                        while True:
+                            response = recv(port)
+                            if response.find("ok") > -1:
+                                break
 
                 print("done")
                 send(port, "M29")
+                pause_recv_thread = 0
+                send(port, "M155 S1")                  # Turn on temp polling
 
-            except:
+            except Exception as e:
                 print("ERROR reading " + file_name)
+                print(str(e))
 
         # Update values in gui elements
         update_console()
