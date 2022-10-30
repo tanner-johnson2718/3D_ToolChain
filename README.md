@@ -23,3 +23,4 @@ Currently only targeting ender 5 Plus with following components
 | X Gantry | - | Stock |
 | Y Guides | - | Stock |
 | Z Rails | Sept 2022 | Stock w/ Z axis POM Lead nut and spring |
+| Electronics Enclosure | Oct 2022 | Removed PSU and main board, printing custom enclosure to move electronics out from underneath printer |
