@@ -1,4 +1,4 @@
-# TODO doc
+# See readme for details
 
 from fileinput import filename
 from multiprocessing import Semaphore
@@ -167,7 +167,7 @@ sg.theme('DarkAmber')
 layout = [  [sg.Text("Nozzle Temp: ", size=(13,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp: ", size=(10,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset: ", size=(10,1)), sg.InputText(key="z_off", size=(8,1)), sg.Text("Steps per mm: ", size=(14,1)), sg.InputText(key="steps", size=(8,1)), sg.Button("Pull Stats", key="cord_button")],
             [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box') , sg.Multiline('Test', key="console", size=(80,20))],
             [sg.Text(" " * 65),sg.InputText(key="cmd_box", size=(80,1))],
-            [sg.Button("Home", key="home_button"), sg.Text("X", size=(1,1)), sg.InputText("0",key="x_in", size=(8,1)), sg.Text("Y", size=(1,1)), sg.InputText("0",key="y_in", size=(8,1)), sg.Text("Z", size=(1,1)), sg.InputText("0",key="z_in", size=(8,1)), sg.Button("Go", key="pos_move"), sg.Text("E", size=(1,1)), sg.InputText("0.0", size=(8,1), key="e_move"), sg.Button("Extrude", key="extrude_button"), sg.Button("Retract", key="retract_button")],
+            [sg.Button("Home", key="home_button"), sg.Text("X", size=(1,1)), sg.InputText("0",key="x_in", size=(8,1)), sg.Text("Y", size=(1,1)), sg.InputText("0",key="y_in", size=(8,1)), sg.Text("Z", size=(1,1)), sg.InputText("0",key="z_in", size=(8,1)), sg.Button("Go", key="pos_move"), sg.Text("E", size=(1,1)), sg.InputText("0.0", size=(8,1), key="e_move"), sg.Button("Extrude", key="extrude_button"), sg.Button("Retract", key="retract_button"), sg.Button("STOP!", key="STOP")],
             [sg.Button("Level", key="level_button"), sg.Table(level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="level_table_ui")],
             [sg.InputText(size=(20,1), key="input_file"), sg.Button("Send Local File to SD", key="send_file_button"), sg.Button("Populate SD Table", key="pop_SD")], 
             [sg.Multiline('', key="sd_explorer", size=(60,20))]
@@ -214,7 +214,7 @@ def update_console():
     if __name__ != "__main__":
         print("ERROR, GUI elements accessed by non main thread")
         return
-        
+
     window["console"].update('\n'.join(console_text.splitlines()[-20:]))
     window["console"].set_vscroll_position(1.0)
     
@@ -401,6 +401,10 @@ if __name__ == "__main__":
         if event == sg.WIN_CLOSED:       # Close button hit
             break
 
+        # emergency stop
+        elif event == "STOP":
+            send(port, "M112")
+
         # Enter hit while in command box
         elif event == "cmd_box" + "enter_hit":
             command = cmd_box.get()
@@ -484,26 +488,13 @@ if __name__ == "__main__":
                 # Read line by line and send line by line, stripping comments
                 print("Reading " + file_name + "...")
                 counter = 0
-                with open(file_name) as my_file_handle:
+                with open(file_name, encoding="utf-8") as my_file_handle:
                     for line in my_file_handle:
 
-                        # strip new line
-                        if len(line) > 0:
-                            line = line[0:(len(line)-1)]  
-
-                        # strip comments
-                        if len(line) > 0:
-                            index = line.find(";")
-                            line = line[0:index]
-
                         # Send Gcode
-                        if len(line) > 0:
-                            send(port, line)
+                        print(line)
+                        port.write((line).encode('ascii'))
 
-                        # report
-                        if counter % 100 == 0:
-                            print("Reading " + file_name + "...")
-                        counter += 1
                 print("done")
                 send(port, "M29")
 
