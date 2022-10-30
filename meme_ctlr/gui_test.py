@@ -7,7 +7,6 @@ import serial
 import re
 import threading
 import time
-import os
 
 ###############################################################################
 # Global Consts
@@ -21,7 +20,7 @@ killed = 0
 pause_recv_thread = 0
 recv_thread_paused = 0
 
-info_text_lines = 16
+info_text_lines = 17
 info_label_box_text = "\
 Nozzle Temp Current\n\
 Nozzle Temp Target\n\
@@ -29,7 +28,8 @@ Bed Temp Current\n\
 Bed Temp Target\n\n\
 X Current\n\
 Y Current\n\
-Z Current\n\n\
+Z Current\n\
+E Current\n\n\
 Z Offset\n\
 Steps per mm\n\
 Max X vel\n\
@@ -42,6 +42,7 @@ info_value_box_text="\
 0.0 C\n\
 0.0 C\n\
 0.0 C\n\n\
+0.0 mm\n\
 0.0 mm\n\
 0.0 mm\n\
 0.0 mm\n\n\
@@ -59,6 +60,7 @@ target_bed_temp = 0.0
 x_curr = 0.0
 y_curr = 0.0
 z_curr = 0.0
+e_curr = 0.0
 z_off = 0.0
 steps_per_mm = 0.0
 max_x_vel = 0.0
@@ -119,14 +121,16 @@ def update_global_steps_per_mm(new):
     steps_per_mm = new
     global_lock.release()
 
-def update_globals_curr_pos(x,y,z):
+def update_globals_curr_pos(x,y,z,e):
     global x_curr
     global y_curr
     global z_curr
+    global e_curr
     global_lock.acquire()
     x_curr = x
     y_curr = y
     z_curr = z
+    e_curr = e
     global_lock.release()
 
 def update_globals_max_vel(x,y,z,e):
@@ -172,7 +176,7 @@ layout = [  [sg.Text("Nozzle Temp: ", size=(13,1)), sg.InputText(key="nozzle_tar
             [sg.Text(" " * 65),sg.InputText(key="cmd_box", size=(80,1))],
             [sg.Button("Home", key="home_button"), sg.Text("X", size=(1,1)), sg.InputText("0",key="x_in", size=(8,1)), sg.Text("Y", size=(1,1)), sg.InputText("0",key="y_in", size=(8,1)), sg.Text("Z", size=(1,1)), sg.InputText("0",key="z_in", size=(8,1)), sg.Button("Go", key="pos_move"), sg.Text("E", size=(1,1)), sg.InputText("0.0", size=(8,1), key="e_move"), sg.Button("Extrude", key="extrude_button"), sg.Button("Retract", key="retract_button"), sg.Button("STOP!", key="STOP")],
             [sg.Button("Level", key="level_button"), sg.Table(level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="level_table_ui")],
-            [sg.InputText(size=(20,1), key="input_file"), sg.Button("Send Local File to SD", key="send_file_button"), sg.Button("Populate SD Table", key="pop_SD")], 
+            [sg.InputText(size=(20,1), key="input_file"), sg.Button("Send Local File to SD", key="send_file_button"), sg.Button("Populate SD Table", key="pop_SD"), sg.InputText(size=(20,1), key="print_file"), sg.Button("Print", key="print_button")], 
             [sg.Multiline('', key="sd_explorer", size=(60,20))]
         ]
 
@@ -204,6 +208,7 @@ sd_explorer = window["sd_explorer"]
 sd_table_populate = window["pop_SD"]
 input_file_box = window["input_file"]
 input_file_button = window["send_file_button"]
+print_file_box = window["print_file"]
 
 ###############################################################################
 # GUI Accessor functions. Only the main thread should try to update GUI
@@ -234,7 +239,8 @@ def update_info_label_box():
               str(target_bed_temp)     + " C\n\n" +\
               str(x_curr)              + " mm\n" +\
               str(y_curr)              + " mm\n" +\
-              str(z_curr)              + " mm\n\n" +\
+              str(z_curr)              + " mm\n" +\
+              str(e_curr)              + " mm\n\n" +\
               str(z_off)               + " mm\n" +\
               str(steps_per_mm)        + " mm\n" +\
               str(max_x_vel)           + " mm/s\n" +\
@@ -379,7 +385,8 @@ def _recver_thread():
         elif len(steps) == 5:
             update_global_steps_per_mm(steps[4])
         elif len(pos) > 6:
-            update_globals_curr_pos(pos[0], pos[1], pos[2])
+            update_globals_curr_pos(pos[0], pos[1], pos[2], pos[3])
+            update_global_console_text(serial_input)
         elif len(feeds) > 4:
             update_globals_max_vel(feeds[1],feeds[2],feeds[3],feeds[4])
         elif len(levels) > 0:
@@ -492,6 +499,12 @@ if __name__ == "__main__":
         elif event == "pop_SD":
             send(port, "M20")
 
+        # Send a print
+        elif event == "print_button":
+            send(port, "M23 " + print_file_box.get())
+            send(port, "M27 S5")   # 5s print status report
+            send(port, "M24")
+
         # send local file to SD
         elif event == "send_file_button":
             file_name = input_file_box.get()
@@ -540,6 +553,9 @@ if __name__ == "__main__":
             except Exception as e:
                 print("ERROR reading " + file_name)
                 print(str(e))
+                send(port, "M29")
+                pause_recv_thread = 0
+                send(port, "M155 S1")                  # Turn on temp polling
 
         # Update values in gui elements
         update_console()
