@@ -28,7 +28,7 @@ My G-code sener and printer controller, reversed engineered using pronsole as a 
     * either by giving its own dedicated UI feature or through cmd interface
 * **KEY MISSING FEATURE** how to send and monitor print jobs
 
-# Final Architecture
+# Current Architecture
 * **NOTE** pysimplegui must run on main thread
 * There are two concurrent threads: Main and Recver
 * Main thread handles all events from gui, updates gui elements, and sends commands to printer based on gui events
