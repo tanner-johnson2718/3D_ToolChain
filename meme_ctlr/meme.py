@@ -417,7 +417,7 @@ if __name__ == "__main__":
 
     while True:
         event = ""
-        event, values = window.read(1)    # block on GUI event
+        event, values = window.read()    # block on GUI event
 
         if event == sg.WIN_CLOSED:       # Close button hit
             break
