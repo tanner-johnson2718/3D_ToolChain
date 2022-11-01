@@ -46,12 +46,16 @@ My G-code sener and printer controller, reversed engineered using pronsole as a 
 * Main Thread Execution:
     * Set up program, gui, threads, etc.
     * Block on GUI events
+        * 1 Sec timeout
+        * On timeout no event is reported from gui, but recv thread may have updates to globals
     * Based on the event, other GUI elements may be read to check state.
         * based on this a command is usually sent to the printer
     * Finally update GUI elements to reflect current global status
     * Example) Update temp event is triggered. Read temp from text box. Send M104 SXX.XX, where XX.XX is updated temp
 * Recver Thread Execution:
     * Wait for input from serial
+        * 1 Second timeout
+        * Only use case for time out is to check if the app has been killed
     * Attempt to parse out data we want to display
         * This requires attempting to parse out all info we expect to get on serial port
     * If a recvieved line has data we want to display, update the corresponding global value
