@@ -32,6 +32,7 @@ My G-code sener and printer controller, reversed engineered using pronsole as a 
 * **NOTE** pysimplegui must run on main thread
 * There are two concurrent threads: Main and Recver
 * Main thread handles all events from gui, updates gui elements, and sends commands to printer based on gui events
+    * GUI accessors enforce the constraint that only main can access GUI elements
 * The recver thread blocks on reads from the printer and updates globals to reflect changes in printer state
 * Access to globals is regulated by single semaphore
 * Recver thread updates these globals, when the main thread runs it checks for updates and updates gui accordingly
