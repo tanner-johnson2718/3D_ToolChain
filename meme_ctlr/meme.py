@@ -19,6 +19,7 @@ port = 0                  # forward declaration of serial port obj
 killed = 0
 pause_recv_thread = 0
 recv_thread_paused = 0
+hide_temp_poll = 1
 
 info_text_lines = 17
 info_label_box_text = "\
@@ -70,7 +71,6 @@ max_e_vel = 0.0
 
 level_table = [["Front", 0,0,0,0], ["Mid F", 0,0,0,0], ["Mid R", 0,0,0,0], ["Rear", 0,0,0,0]]
 sd_entries = ""
-console_text = ""
 
 globals_changed = 0
 
@@ -79,13 +79,6 @@ globals_changed = 0
 ###############################################################################
 
 global_lock = Semaphore(1)
-
-def update_global_console_text(text):
-    global console_text
-
-    global_lock.acquire()
-    console_text = console_text + text
-    global_lock.release()
 
 def update_global_temps(nozzle_curr, nozzle_target, bed_curr, bed_target):
     global current_nozzle_temp
@@ -171,10 +164,10 @@ port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
 
 # Define Window layout and Theme
 sg.theme('DarkAmber')
-layout = [  [sg.Text("Nozzle Temp: ", size=(13,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp: ", size=(10,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset: ", size=(10,1)), sg.InputText(key="z_off", size=(8,1)), sg.Text("Steps per mm: ", size=(14,1)), sg.InputText(key="steps", size=(8,1)), sg.Button("Pull Stats", key="cord_button")],
-            [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box') , sg.Multiline('Test', key="console", size=(80,20))],
-            [sg.Text(" " * 65),sg.InputText(key="cmd_box", size=(80,1))],
+layout = [  [sg.Text("Send GCODE) "), sg.InputText(key="cmd_box", size=(80,1))],
             [sg.Button("Home", key="home_button"), sg.Text("X", size=(1,1)), sg.InputText("0",key="x_in", size=(8,1)), sg.Text("Y", size=(1,1)), sg.InputText("0",key="y_in", size=(8,1)), sg.Text("Z", size=(1,1)), sg.InputText("0",key="z_in", size=(8,1)), sg.Button("Go", key="pos_move"), sg.Text("E", size=(1,1)), sg.InputText("0.0", size=(8,1), key="e_move"), sg.Button("Extrude", key="extrude_button"), sg.Button("Retract", key="retract_button"), sg.Button("STOP!", key="STOP")],
+            [sg.Text("Nozzle Temp: ", size=(13,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp: ", size=(10,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset: ", size=(10,1)), sg.InputText(key="z_off", size=(8,1)), sg.Text("Steps per mm: ", size=(14,1)), sg.InputText(key="steps", size=(8,1)), sg.Button("Pull Stats", key="cord_button")],
+            [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box')],
             [sg.Button("Level", key="level_button"), sg.Table(level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="level_table_ui")],
             [sg.InputText(size=(20,1), key="input_file"), sg.Button("Send Local File to SD", key="send_file_button"), sg.Button("Populate SD Table", key="pop_SD"), sg.InputText(size=(20,1), key="print_file"), sg.Button("Print", key="print_button")], 
             [sg.Multiline('', key="sd_explorer", size=(60,20))]
@@ -216,15 +209,6 @@ print_file_box = window["print_file"]
 # SHOULD GO THROUGH HERE.
 ###############################################################################
 
-# Helper to append multiline (console). Input multiline sg obj and add line at
-# end of lines. Scroll to last line upon update.
-def update_console():
-    if __name__ != "__main__":
-        print("ERROR, GUI elements accessed by non main thread")
-        return
-
-    window["console"].update('\n'.join(console_text.splitlines()[-20:]))
-    window["console"].set_vscroll_position(1.0)
     
 
 # Input info labels sg object and update with current global values
@@ -380,13 +364,14 @@ def _recver_thread():
 
         if len(temps) >= 4:
             update_global_temps(temps[0], temps[1], temps[2], temps[3])
+            if hide_temp_poll:
+                continue
         elif len(z_offs) == 2:
             update_global_z_offset(z_offs[1])
         elif len(steps) == 5:
             update_global_steps_per_mm(steps[4])
         elif len(pos) > 6:
             update_globals_curr_pos(pos[0], pos[1], pos[2], pos[3])
-            update_global_console_text(serial_input)
         elif len(feeds) > 4:
             update_globals_max_vel(feeds[1],feeds[2],feeds[3],feeds[4])
         elif len(levels) > 0:
@@ -396,8 +381,8 @@ def _recver_thread():
             for s in sd_list:
                 new_sd = new_sd + s
             update_globals_sd_list(new_sd)
-        else:
-            update_global_console_text(serial_input)
+        
+        print(serial_input, end="")
 
 ###############################################################################
 # Main
@@ -429,7 +414,7 @@ if __name__ == "__main__":
         # Enter hit while in command box
         elif event == "cmd_box" + "enter_hit":
             command = cmd_box.get()
-            update_global_console_text("Sending) " + command + "\n")
+            print("Sending) " + command + "\n")
             send(port, command)
 
         # nozzle temp updated
@@ -458,7 +443,7 @@ if __name__ == "__main__":
             send(port, "M501")
             send(port, "M503")
 
-        # Pull Coordinates button pressed
+        # Pull Stats button pressed
         elif event == "cord_button":
             send(port, "M114")
             send(port, "M503")
@@ -558,7 +543,6 @@ if __name__ == "__main__":
                 send(port, "M155 S1")                  # Turn on temp polling
 
         # Update values in gui elements
-        update_console()
         update_info_label_box()
         update_sd_explorer()
         update_level_table()
