@@ -165,8 +165,9 @@ port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
 # Define Window layout and Theme
 sg.theme('DarkAmber')
 layout = [  [sg.Text("Send GCODE) "), sg.InputText(key="cmd_box", size=(80,1))],
-            [sg.Button("Home", key="home_button"), sg.Text("X", size=(1,1)), sg.InputText("0",key="x_in", size=(8,1)), sg.Text("Y", size=(1,1)), sg.InputText("0",key="y_in", size=(8,1)), sg.Text("Z", size=(1,1)), sg.InputText("0",key="z_in", size=(8,1)), sg.Button("Go", key="pos_move"), sg.Text("E", size=(1,1)), sg.InputText("0.0", size=(8,1), key="e_move"), sg.Button("Extrude", key="extrude_button"), sg.Button("Retract", key="retract_button"), sg.Button("STOP!", key="STOP")],
-            [sg.Text("Nozzle Temp: ", size=(13,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp: ", size=(10,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset: ", size=(10,1)), sg.InputText(key="z_off", size=(8,1)), sg.Text("Steps per mm: ", size=(14,1)), sg.InputText(key="steps", size=(8,1)), sg.Button("Pull Stats", key="cord_button")],
+            [sg.Button("Home", key="home_button"), sg.Button("STOP!", key="STOP"), sg.Button("Pull Stats", key="cord_button")],
+            [sg.Text("Nozzle Temp:    ", size=(14,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp:       ", size=(14,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset:       ", size=(14,1)), sg.InputText(key="z_off", size=(8,1))],
+            [sg.Text("X Steps per mm: ", size=(14,1)), sg.InputText(key="x_steps", size=(8,1)),       sg.Text("Y Steps per mm: ", size=(14,1)), sg.InputText(key="y_steps",    size=(8,1)), sg.Text("Z Steps per mm: ", size=(14,1)), sg.InputText(key="z_steps", size=(8,1)), sg.Text("E Steps per mm: ", size=(14,1)), sg.InputText(key="e_steps", size=(8,1))],
             [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box')],
             [sg.Button("Level", key="level_button"), sg.Table(level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="level_table_ui")],
             [sg.InputText(size=(20,1), key="input_file"), sg.Button("Send Local File to SD", key="send_file_button"), sg.Button("Populate SD Table", key="pop_SD"), sg.InputText(size=(20,1), key="print_file"), sg.Button("Print", key="print_button")], 
@@ -174,27 +175,26 @@ layout = [  [sg.Text("Send GCODE) "), sg.InputText(key="cmd_box", size=(80,1))],
         ]
 
 # Create the Window and define elements
-window = sg.Window('Window Title', layout, finalize=1)
+window = sg.Window('MEME', layout, finalize=1)
 window["cmd_box"].bind("<Return>", "enter_hit")
 window["nozzle_target"].bind("<Return>", "enter_hit")
 window["bed_target"].bind("<Return>", "enter_hit")
 window["z_off"].bind("<Return>", "enter_hit")
-window["steps"].bind("<Return>", "enter_hit")
+window["e_steps"].bind("<Return>", "enter_hit")
+window["x_steps"].bind("<Return>", "enter_hit")
+window["y_steps"].bind("<Return>", "enter_hit")
+window["z_steps"].bind("<Return>", "enter_hit")
 cmd_box = window["cmd_box"]
 info_label_box = window["info_value_box"]
 nozzle_target_temp_input_box = window["nozzle_target"]
 bed_target_temp_input_box = window["bed_target"]
 z_off_input_box = window["z_off"]
-steps_input_box = window["steps"]
+e_steps_input_box = window["e_steps"]
+x_steps_input_box = window["x_steps"]
+y_steps_input_box = window["y_steps"]
+z_steps_input_box = window["z_steps"]
 pull_coordinates_button = window["cord_button"]
 home_button = window["home_button"]
-x_go_box = window["x_in"]
-y_go_box = window["y_in"]
-z_go_box = window["z_in"]
-go_button = window["pos_move"]
-e_go_box = window["e_move"]
-extrude_botton = window["extrude_button"]
-retract_botton = window["retract_button"]
 level_button = window["level_button"]
 level_table_ui = window["level_table_ui"]
 sd_explorer = window["sd_explorer"]
@@ -435,10 +435,34 @@ if __name__ == "__main__":
             send(port, "M501")
             send(port, "M503")
 
-        # steps per mm updated
-        elif event == "steps" + "enter_hit":
-            val = steps_input_box.get()
+        # E steps per mm updated
+        elif event == "e_steps" + "enter_hit":
+            val = e_steps_input_box.get()
             send(port, "M92 E" + val)
+            send(port, "M500")
+            send(port, "M501")
+            send(port, "M503")
+
+        # X steps per mm updated
+        elif event == "x_steps" + "enter_hit":
+            val = x_steps_input_box.get()
+            send(port, "M92 X" + val)
+            send(port, "M500")
+            send(port, "M501")
+            send(port, "M503")
+
+        # Y steps per mm updated
+        elif event == "y_steps" + "enter_hit":
+            val = y_steps_input_box.get()
+            send(port, "M92 Y" + val)
+            send(port, "M500")
+            send(port, "M501")
+            send(port, "M503")
+
+        # Z steps per mm updated
+        elif event == "z_steps" + "enter_hit":
+            val = z_steps_input_box.get()
+            send(port, "M92 Z" + val)
             send(port, "M500")
             send(port, "M501")
             send(port, "M503")
@@ -451,26 +475,6 @@ if __name__ == "__main__":
         # Home printer
         elif event == "home_button":
             send(port, "G28")
-
-        # Goto Coordinates
-        elif event == "pos_move":
-            x = x_go_box.get()
-            y = y_go_box.get()
-            z = z_go_box.get()
-            send(port, "G1 X" + x + " Y" + y + " Z" + z)
-
-        # Extrude
-        elif event == "extrude_button":
-            amount = e_go_box.get()
-            send(port, "G92 E0")
-            send(port, "G1 E" + amount)
-            send(port, "G92 E0")
-
-        # Retract
-        elif event == "retract_button":
-            amount = e_go_box.get()
-            send(port, "G92 E" + amount)
-            send(port, "G1 E0")
 
         # Level
         elif event == "level_button":
