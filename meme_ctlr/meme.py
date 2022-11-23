@@ -70,7 +70,6 @@ max_z_vel = 0.0
 max_e_vel = 0.0
 
 level_table = [["Front", 0,0,0,0], ["Mid F", 0,0,0,0], ["Mid R", 0,0,0,0], ["Rear", 0,0,0,0]]
-prev_level_table = [["Front", 0,0,0,0], ["Mid F", 0,0,0,0], ["Mid R", 0,0,0,0], ["Rear", 0,0,0,0]]
 sd_entries = ""
 
 globals_changed = 0
@@ -96,13 +95,8 @@ def update_global_temps(nozzle_curr, nozzle_target, bed_curr, bed_target):
 
 def update_global_level_table(levels):
     global level_table
-    global prev_level_table
 
     global_lock.acquire()
-    for i in range(0,4):
-        for j in range(0,4):
-            prev_level_table[i][j+1] = level_table[i][j+1]
-
     for i in range(0, 4):
         for j in range(0, 4):
             level_table[i][j+1] = levels[i][j]
@@ -175,7 +169,7 @@ layout = [  [sg.Text("Send GCODE) "), sg.InputText(key="cmd_box", size=(80,1))],
             [sg.Text("Nozzle Temp:    ", size=(14,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp:       ", size=(14,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset:       ", size=(14,1)), sg.InputText(key="z_off", size=(8,1))],
             [sg.Text("X Steps per mm: ", size=(14,1)), sg.InputText(key="x_steps", size=(8,1)),       sg.Text("Y Steps per mm: ", size=(14,1)), sg.InputText(key="y_steps",    size=(8,1)), sg.Text("Z Steps per mm: ", size=(14,1)), sg.InputText(key="z_steps", size=(8,1)), sg.Text("E Steps per mm: ", size=(14,1)), sg.InputText(key="e_steps", size=(8,1))],
             [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box')],
-            [sg.Table(level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="level_table_ui"), sg.Table(prev_level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="prev_level_table_ui")],
+            [sg.Table(level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="level_table_ui")],
             [sg.InputText(size=(20,1), key="input_file"), sg.Button("Send Local File to SD", key="send_file_button"), sg.InputText(size=(20,1), key="print_file"), sg.Button("Print", key="print_button")], 
             [sg.Multiline('', key="sd_explorer", size=(60,20))]
         ]
@@ -203,7 +197,6 @@ pull_coordinates_button = window["cord_button"]
 home_button = window["home_button"]
 level_button = window["level_button"]
 level_table_ui = window["level_table_ui"]
-prev_level_table_ui = window["prev_level_table_ui"]
 sd_explorer = window["sd_explorer"]
 sd_table_populate = window["pop_SD"]
 input_file_box = window["input_file"]
@@ -257,7 +250,6 @@ def update_level_table():
         return
 
     level_table_ui.update(level_table)
-    prev_level_table_ui.update(prev_level_table)
 
 ###############################################################################
 # Thread functions
