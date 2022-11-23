@@ -39,6 +39,8 @@ Print 10mmx10mmx10mm cube. Use Calipers to measure accuracy. Adjust Steps per mm
 | --- | --- | --- | --- | --- |
 | Z offset | Affects distance of nozzle to bed | [-4.0mm, 0.0mm] | -3.00mm | Changing nozzle resets this. Nozzle size, line width and flow rate will affect the optimal value |
 | Line Width | How wide each line of plastic is | +/- 50% of nozzle size | - | Can be used to get the affect of smaller / larger nozzle sizes without actually changing nozzles. When line width > nozzle diameter, increasing temp and flow rate can help |
+| Nozzle Diameter | Not a parameter but size of nozzle is good to track | .2mm - 1.0mm | .4mm | - |
+| Temp | Depends on materail. Current values for PLA | 180 - 220 | 190 | - |
 | Flow Rate | - | - | - | - |
 | Wall Width | - | - | - | - |
 | Top / Bottom Width | - | - | - | - |
