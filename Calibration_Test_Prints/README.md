@@ -12,7 +12,19 @@ Print a 50mmX50mmX1mm square at slow speed in center of build plate. This print 
 Print 25mmX25mmx1mm squares at center and at four corners near edges of build plate. Verify good bed adhesion and proper z offset at four corners. This test just verifies the ABL is functioning properly.
 
 ## Temp_Tower)
-Slice temp tower STL using current printer configs. Use the temp_adjust.py script to insert temp adjustments at the layers where temp is supposed to change. Printed object should show what temp is optimal.
+Slice temp tower STL using current printer configs. Use the temp_adj.py script to insert temp adjustments at the layers where temp is supposed to change. Printed object should show what temp is optimal. The included file, 180-200_PLA_Temp_calibration.stl has the following tempature transistions
+
+| Temp | Layers |
+| --- | --- |
+| 220 | 0 - 40 |
+| 215 | 40 - 75 |
+| 210 | 75 - 105 |
+| 205 | 105 - 140 |
+| 200 | 140 - 175 |
+| 195 | 175 - 205 |
+| 190 | 205 - 240 | 
+| 185 | 240 - 275 |
+| 180 | 275 - 310 |
 
 ##  Retraction_Spikes)
 ##  Geometric_Accuracy) 
