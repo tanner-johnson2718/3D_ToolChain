@@ -17,9 +17,9 @@
 * Flow_Rate_Test) 
 
 # Key Calibration Parameters (GCode and Slicer configurable only)
-| Parameter | Description | Value Ranges | Known Good Values (Of Current Set Up) | Comments |
+| Parameter | Description | Value Ranges | Current Values | Comments |
 | --- | --- | --- | --- | --- |
-| Z offset | Affects distance of nozzle to bed | [-4.0mm, 0.0mm] | [-3.75mm, -3.95mm] | Changing nozzle resets this. Nozzle size, line width and flow rate will affect the optimal value |
+| Z offset | Affects distance of nozzle to bed | [-4.0mm, 0.0mm] | -3.00 | Changing nozzle resets this. Nozzle size, line width and flow rate will affect the optimal value |
 | Nozzle Diameter | - | - | -| - |
 | Line Width | - | - | - | - |
 | Flow Rate | - | - | - | - |
