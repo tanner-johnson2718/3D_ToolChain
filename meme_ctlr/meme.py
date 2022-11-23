@@ -165,7 +165,7 @@ port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
 # Define Window layout and Theme
 sg.theme('DarkAmber')
 layout = [  [sg.Text("Send GCODE) "), sg.InputText(key="cmd_box", size=(80,1))],
-            [sg.Button("Home", key="home_button"), sg.Button("STOP!", key="STOP"), sg.Button("Pull Stats", key="cord_button"), sg.Button("Level", key="level_button"), sg.Button("Populate SD Table", key="pop_SD")],
+            [sg.Button("Home", key="home_button"), sg.Button("STOP!", key="STOP"), sg.Button("Pull Stats", key="cord_button"), sg.Button("Level", key="level_button"), sg.Button("Populate SD Table", key="pop_SD"), sg.Button("Cycle Serial", key="cycle_serial")],
             [sg.Text("Nozzle Temp:    ", size=(14,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp:       ", size=(14,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset:       ", size=(14,1)), sg.InputText(key="z_off", size=(8,1))],
             [sg.Text("X Steps per mm: ", size=(14,1)), sg.InputText(key="x_steps", size=(8,1)),       sg.Text("Y Steps per mm: ", size=(14,1)), sg.InputText(key="y_steps",    size=(8,1)), sg.Text("Z Steps per mm: ", size=(14,1)), sg.InputText(key="z_steps", size=(8,1)), sg.Text("E Steps per mm: ", size=(14,1)), sg.InputText(key="e_steps", size=(8,1))],
             [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box')],
@@ -202,14 +202,13 @@ sd_table_populate = window["pop_SD"]
 input_file_box = window["input_file"]
 input_file_button = window["send_file_button"]
 print_file_box = window["print_file"]
+cycle_serial = window["cycle_serial"]
 
 ###############################################################################
 # GUI Accessor functions. Only the main thread should try to update GUI
 # elements. Following functions will enforce this. ALL UPDATES TO GUI ELEMENTS
 # SHOULD GO THROUGH HERE.
-###############################################################################
-
-    
+############################################################################### 
 
 # Input info labels sg object and update with current global values
 def update_info_label_box():
@@ -493,6 +492,10 @@ if __name__ == "__main__":
             send(port, "M23 " + print_file_box.get())
             send(port, "M27 S5")   # 5s print status report
             send(port, "M24")
+
+        # Close and reopen serial port
+        elif event == "cycle_serial":
+            print("IMPLEMENT ME PLZZZ :)")
 
         # send local file to SD
         elif event == "send_file_button":
