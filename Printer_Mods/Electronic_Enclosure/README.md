@@ -20,4 +20,8 @@
 | Additional NTC Thermistors | 5 | https://www.amazon.com/dp/B0714MR5BC?psc=1&ref=ppx_yo2ov_dt_b_product_details |
 | PTC heater (filament dehydrator) | 1 at 150W | https://www.amazon.com/dp/B07JKNKK7J?psc=1&ref=ppx_yo2ov_dt_b_product_details |
 | PTC heater (chamber heater) | 1-2 at 150-250W | - |
-| 
+| Mosfets | 3 | https://www.amazon.com/dp/B07C4PGXFK?psc=1&ref=ppx_yo2ov_dt_b_product_details |
+| Meanwell RSP-500-24 PSU | 2 | [Stock Meanwell RSP-500-24](MeanWell_500_Datasheet.pdf) |
+| Creality Melzi v2.2 | 1 | Stock |
+| Switches | 2 | Standard 30A 120V AC switches |
+| Ampmeters?? | 2 | - |

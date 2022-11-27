@@ -13,7 +13,7 @@ Currently only targeting ender 5 Plus with following components
 | --- | --- | --- |
 | Steppers | - | Stock |
 | Stepper Drivers | - | Stock |
-| PSU | - | Stock Meanwell RSP-500-24 |
+| PSU | - | [Stock Meanwell RSP-500-24](Printer_Mods/Electronic_Enclosure/MeanWell_500_Datasheet.pdf) |
 | Mother board | - | Stock Melzi v2.2 [Pinout](Printer_Mods/Electronic_Enclosure/melzi_pinout.jpg)|
 | Extruder | Sept 2022 | Creality All metal Extruder https://www.amazon.com/dp/B07ZMFP2L8?psc=1&ref=ppx_yo2ov_dt_b_product_details |
 | Bowden Tube | Sept 2022 | Capicorn XS https://www.captubes.com |
