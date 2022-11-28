@@ -40,12 +40,12 @@ Print 10mmx10mmx10mm cube. Use Calipers to measure accuracy. Adjust Steps per mm
 ## Line_Width_Test)
 ## Flow_Rate_Test) 
 
-# Key Calibration Parameters (GCode and Slicer configurable only)
+# Current Calibration Parameters (GCode and Slicer configurable only)
 | Parameter | Description | Value Ranges | Current Values | Comments |
 | --- | --- | --- | --- | --- |
-| Z offset | Affects distance of nozzle to bed | [-4.0mm, 0.0mm] | -3.00mm | Changing nozzle resets this. Nozzle size, line width and flow rate will affect the optimal value |
-| Line Width | How wide each line of plastic is | +/- 50% of nozzle size | .4mm - .6mm | Can be used to get the affect of smaller / larger nozzle sizes without actually changing nozzles. When line width > nozzle diameter, increasing temp and flow rate can help |
-| Nozzle Diameter | Not a parameter but size of nozzle is good to track | .2mm - 1.0mm | .4mm | - |
+| Nozzle Diameter | Not a parameter but size of nozzle is good to track | .2mm - 1.0mm | .6mm | Hardened Steel |
+| Z offset | Affects distance of nozzle to bed | [-4.0mm, 0.0mm] | -3.5mm | Changing nozzle resets this. Nozzle size, line width and flow rate will affect the optimal value |
+| Line Width | How wide each line of plastic is | +/- 50% of nozzle size | .6mm - .8mm | Can be used to get the affect of smaller / larger nozzle sizes without actually changing nozzles. When line width > nozzle diameter, increasing temp and flow rate can help |
 | Temp | Depends on materail. Current values for PLA | 180 - 220 | 180 | 180 for percise prints |
 | Retract Distance | How many mm's of filament is sucked back up the nozzle on a retraction | 2mm - 10mm | 5mm | At 180C, print speed of 80mm/s, travel speed of 200mm/s, these retraction settings worked very well. Uping print speed and temp may make these settings insuffcient (might need faster and longer retractions) |
 | Retract Rate | How fast the filament is retracted | 10mm/s - 45mm/s | 45mm/s | At 180C, print speed of 80mm/s, travel speed of 200mm/s, these retraction settings worked very well |
