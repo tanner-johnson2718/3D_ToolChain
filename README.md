@@ -4,7 +4,7 @@ Current tool chain is as follows:
 
 1) FreeCAD for 3D modeling
 2) Cura for slicing
-3) MEME CTLR (custom g code sender and printer serial monitor)
+3) [MEME CTLR](meme_ctlr) (custom g code sender and printer serial monitor)
 4) Marlin Firmware running on printer
 
 Currently only targeting ender 5 Plus with following components
