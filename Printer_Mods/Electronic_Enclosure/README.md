@@ -2,11 +2,13 @@
 
 # Requirements
 * Support chamber heater and Filament dryer
+    * Adding Mosfets and additional wiring and board pinout support to enable this
 * Relocate electronics from underneath the printer to outside the chamber
 * Measure power draw
 * Electric components, especially main board and its pinouts should be "easily" accesible
-* Should like cool (NEO pixels? :))
-* Support as many thermistors as possible
+    * Will encorpaerate a method "sliding" base plates that secucre components
+* All wiring should be evaluated for current draw and proper gauge wire shall be used
+* Enclosure should have quick connects to quickly disconnect all wires going to the printer.
 
 # Wiring Diagram
 
@@ -15,7 +17,7 @@
 | Material | Quantity | Link |
 | --- | --- | --- |
 | 2020 Aluminum T slot | 10 400mm | https://www.amazon.com/dp/B0B2P434PD?psc=1&ref=ppx_yo2ov_dt_b_product_details |
-| 8mm M3 Bolts and 2020 M3 wing nuts | 88  | To secure outer walls of case to frame  |
+| 8mm M3 Bolts and 2020 M3 wing nuts | 88  | To secure outer walls of case to frame. Each outer and upper wall gets 8. 2 fan plates, 4 Electronic wall plates, 2 upper plates, 2 psu wall plates, and 1 psu wall plate for 11 total.  |
 | 12mm M3 Bolts | 16 | To secure fans to fan plate | 
 | 40x40x10 fans | 4 | https://www.amazon.com/dp/B088665SKK?psc=1&ref=ppx_yo2ov_dt_b_product_details | 
 | Additional NTC Thermistors | 5 | https://www.amazon.com/dp/B0714MR5BC?psc=1&ref=ppx_yo2ov_dt_b_product_details |
