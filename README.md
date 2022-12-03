@@ -4,14 +4,14 @@ Current tool chain is as follows:
 
 1) FreeCAD for 3D modeling
 2) Cura for slicing
-3) [MEME CTLR](meme_ctlr), custom g code sender and printer serial monitor. This is the UI for the printer as modifcations required custom interface.
+3) [MEME CTLR](meme_ctlr), custom g code sender and printer serial monitor. This is the UI for the printer as modifcations required a custom interface.
 4) Marlin Firmware running on printer
 
 Currently only targeting ender 5 Plus with following components
 
 | Component | Date Installed | Comment |
 | --- | --- | --- |
-| Electronics Enclosure | Oct-Dec 2022 | Removed PSU and main board, printing custom enclosure to move electronics out from underneath printer see [Printer_Mods/Electronic_Enclosure](Printer_Mods/Electronic_Enclosure). Wiring diagrams, electrical specs, and pinout diagrams can all be found there as well. Added the physical infastructure to start using unused pin on Melzi (ATmega 2560) and to support current draw monitoring, a chamber heater, and a filament drier. |
+| Electronics Enclosure | Oct-Dec 2022 | Removed PSU and main board, printing custom enclosure to move electronics out from underneath printer, see [Printer_Mods/Electronic_Enclosure](Printer_Mods/Electronic_Enclosure). Wiring diagrams, electrical specs, and pinout diagrams can all be found there as well. Added the physical infastructure to start using unused pins on the Melzi board (ATmega 2560) and to support current draw monitoring, a chamber heater, and a filament drier. |
 | Cable Track management system | Nov 2022 | https://www.reddit.com/r/ender5plus/comments/so2ulf/ender_5_plus_cable_chain_solution/ [Printer_Mods/Cable_Track](Printer_Mods/Cable_Track)|
 | Steppers | - | Stock |
 | Stepper Drivers | - | Stock |
