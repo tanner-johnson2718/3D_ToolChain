@@ -13,7 +13,7 @@
 
 # PSU Wiring Diagrams
 
-Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC plug. 
+Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC plug. **NOTE** Forgot to include ground connection from PSUs to frame of enclosure. The Ground ideal connector will have a 3rd output going to the chasis of the enclosure. Printer frame will also be grounded to enclosure chasis.
 
 ![Alt text](Datasheets/Power_Supply_Wiring.png)
 
@@ -30,6 +30,16 @@ Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC p
 | Neutral Ideal Connector | Chamber PSU Neutral Terminal | Bare (push in) | Spade connector (8 to 10 stud size) | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
 | Ground Ideal Connector | Printer PSU Ground Terminal | Bare (push in) | Spade connector (8 to 10 stud size) | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
 | Ground Ideal Connector | Ground PSU Neutral Terminal | Bare (push in) | Spade connector (8 to 10 stud size) | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
+| Printer V1+ | Melzi +Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | **ASSUME** <240W | 16 gauge (rated to 10A DC or 240W) |
+| Printer V1- | Melzi -Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | **ASSUME** <240W | 16 gauge (rated to 10A DC or 240W) |
+| Printer V2+ | Bed MOSFET +Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | **ASSUME** <500W | 12 gauge (rated to 20A DC or 480W) |
+| Printer V2- | Bed MOSFET -Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | **ASSUME** <500W | 12 gauge (rated to 20A DC or 480W) |
+| Printer V3+ | Fans +Input | Spade connector (8 to 10 stud size) | ?? | 24V DC | ?? | ?? |
+| Printer V3- | Fans -Input | Spade connector (8 to 10 stud size) | ?? | 24V DC | ?? | ?? |
+| Chamber V1+ | Drier MOSFET +Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | **ASSUME** <500W | 12 gauge (rated to 20A DC or 480W) |
+| Chamber V2- | Drier MOSFET -Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | **ASSUME** <500W | 12 gauge (rated to 20A DC or 480W) |
+| Chamber V2+ | Chamber MOSFET +Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | **ASSUME** <500W | 12 gauge (rated to 20A DC or 480W) |
+| Chamber V2- | Chamber MOSFET -Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | **ASSUME** <500W | 12 gauge (rated to 20A DC or 480W) |
 
 
 # MOSFET and Enclosure Fan Wiring
@@ -58,7 +68,8 @@ Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC p
 | Switches | 2 | Standard 30A 120V AC switches |
 | 10A 250V GMA Fuse | 1 | Integrated in AC plug |
 | Ideal 4 way Push in connectors | 3 | 16AWG to 12AWG, rated to 20A|
-| Various disconnect connectors | >20 | Various sizes, 10AWG to 22AWG, amp rating appropiate to wire gauge. Use appropiate sized connectore given wire gauge | 
+| Various disconnect connectors | >20 | Various sizes, 10AWG to 22AWG, amp rating appropiate to wire gauge. Use appropiate sized connectore given wire gauge |
+| Spade Connectors | >20 | 16AWG to 12AWG, 8 to 10 Stud size | 
 | AC Plug | 1 | iec320 C14 |
 | Ampmeters?? | 2 | - |
 | Wire | ??? | Fill this out |
