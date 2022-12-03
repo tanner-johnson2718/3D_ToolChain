@@ -13,7 +13,7 @@
 
 # PSU Wiring Diagrams
 
-Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC plug. **NOTE** Forgot to include ground connection from PSUs to frame of enclosure. The Ground ideal connector will have a 3rd output going to the chasis of the enclosure. Printer frame will also be grounded to enclosure chasis.
+Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC plug. **NOTE** Forgot to include ground connection from PSUs to frame of enclosure. The Ground ideal connector will have a 3rd output going to the chasis of the enclosure. Printer frame will also be grounded to enclosure chasis. Ground connectors to chasis will be ring connectors.
 
 ![Alt text](Datasheets/Power_Supply_Wiring.png)
 
