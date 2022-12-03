@@ -7,6 +7,7 @@
 * Measure power draw
 * Electric components, especially main board and its pinouts should be "easily" accesible
     * Will encorpaerate a method "sliding" base plates that secucre components
+    * Main ports on Melzy should be mapped to JST connectors embedded into the frame of the enclosure for quick connect and disconnect (even unused )
 * All wiring should be evaluated for current draw and proper gauge wire shall be used
 * Enclosure should have quick connects to quickly disconnect all wires going to the printer.
 
@@ -18,11 +19,22 @@ Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC p
 
 | Connection Source | Connection Sink | Connector Source | Connector Sink | V | W | Wire Gauge |
 | --- | --- | --- | --- | --- | --- | --- |
-| Live iec320 | Ideal Connector | Female Disconnect | Bare (push in) | 120 AC | 1000W + | 12 gauge (rated to 20A AC or 2400W) |
-| Neutral iec320 | Ideal Connector | Female Disconnect | Bare (push in) | 120 AC | 1000W + | 12 gauge (rated to 20A AC or 2400W) |
-| Ground iec320 | Ideal Connector | Female Disconnect | Bare (push in) | 120 AC | 1000W + | 12 gauge (rated to 20A AC or 2400W) |
+| Live iec320 | Live Ideal Connector | Female Disconnect | Bare (push in) | 120V AC | 1000W + | 12 gauge (rated to 20A AC or 2400W) |
+| Neutral iec320 | Neutral Ideal Connector | Female Disconnect | Bare (push in) | 120V AC | 1000W + | 12 gauge (rated to 20A AC or 2400W) |
+| Ground iec320 | Ground Ideal Connector | Female Disconnect | Bare (push in) | 120V AC | 1000W + | 12 gauge (rated to 20A AC or 2400W) |
+| Live Ideal Connector | Printer Switch | Bare (push in) | Female Disconnect | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
+| Live Ideal Connector | Chamber Switch | Bare (push in) | Female Disconnect | 120V AC | 1000W + | 16 gauge (rated to 10A AC or 1200W) |
+| Printer Switch | Printer PSU Live terminal | Female Disconnect | Spade connector (8 to 10 stud size) | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
+| Chamber Switch | Chamber PSU Live terminal | Female Disconnect | Spade connector (8 to 10 stud size) | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
+| Neutral Ideal Connector | Printer PSU Neutral Terminal | Bare (push in) | Spade connector (8 to 10 stud size) | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
+| Neutral Ideal Connector | Chamber PSU Neutral Terminal | Bare (push in) | Spade connector (8 to 10 stud size) | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
+| Ground Ideal Connector | Printer PSU Ground Terminal | Bare (push in) | Spade connector (8 to 10 stud size) | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
+| Ground Ideal Connector | Ground PSU Neutral Terminal | Bare (push in) | Spade connector (8 to 10 stud size) | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
 
-# Melzi Connector and Pinout Table
+
+# MOSFET and Enclosure Fan Wiring
+
+# Melzi Wiring, Connectors, and Pinouts
  | Connector | ATmega2560 Pins | Connector Type (board side) | Connector Type (target side) |
  | --- | --- | --- | --- |
  | | | |
