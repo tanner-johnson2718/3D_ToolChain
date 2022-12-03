@@ -12,6 +12,11 @@
 
 # Wiring Diagram
 
+# Melzi Connector and Pinout Table
+ | Connector | ATmega2560 Pins | Connector Type (board side) | Connector Type (target side) |
+ | --- | --- | --- | --- |
+ | | | |
+
 # Bill of Materials
 
 | Material | Quantity | Link |
@@ -21,7 +26,6 @@
 | 12mm M3 Bolts | 16 | To secure fans to fan plate |
 | 8mm M4 bolts | 8 | To secure PSUs to bottom plate |
 | 16mm M3 Bolts + spaces + nuts | 17 | To secure melzi and MOSFET boards to bottom plates |
-| Wire | ??? | Fill this out |
 | 40x40x10 fans | 4 | https://www.amazon.com/dp/B088665SKK?psc=1&ref=ppx_yo2ov_dt_b_product_details | 
 | Additional NTC Thermistors | 5 | https://www.amazon.com/dp/B0714MR5BC?psc=1&ref=ppx_yo2ov_dt_b_product_details |
 | PTC heater (filament dehydrator) | 1 at 150W | https://www.amazon.com/dp/B07JKNKK7J?psc=1&ref=ppx_yo2ov_dt_b_product_details |
@@ -31,3 +35,5 @@
 | Creality Melzi v2.2 | 1 | Stock |
 | Switches | 2 | Standard 30A 120V AC switches |
 | Ampmeters?? | 2 | - |
+| Wire | ??? | Fill this out |
+| JST Connectors | ?? | Fill this out | 
