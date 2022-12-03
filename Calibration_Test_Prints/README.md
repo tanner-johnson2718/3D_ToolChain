@@ -30,7 +30,7 @@ Slice temp tower STL using current printer configs. Use the temp_adj.py script t
 | 180 | 275 - 310 |
 
 ##  Retraction_Spikes)
-Slice Retraction_Spikes.stl with current retraction settings. Print and observe stingy-ness, pooling, under/over extrusion, etc. Also look closely at layer lines as this where retractions occur. Adjust accordingly. 
+Slice Retraction_Spikes.stl with current retraction settings. Print and observe stingy-ness, pooling, under/over extrusion, etc. Also look closely at layer end lines as this where retractions occur. Adjust accordingly. 
 
 ##  Geometric_Accuracy) 
 Print 10mmx10mmx10mm cube. Use Calipers to measure accuracy. Adjust Steps per mm accordingly. Similarly to calibrate the E steps per mm, mark a point on filament roll just below extruder. Extrude a set amount of filament i.e. 10mm. Measure how much marked point moved. Adjust steps per mm accordingly.
