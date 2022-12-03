@@ -12,13 +12,15 @@
 
 # PSU Wiring Diagrams
 
-Power supply wiring diagram)
+Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC plug. 
 
 ![Alt text](Datasheets/Power_Supply_Wiring.png)
 
 | Connection Source | Connection Sink | Connector Source | Connector Sink | V | W | Wire Gauge |
 | --- | --- | --- | --- | --- | --- | --- |
 | Live iec320 | Ideal Connector | Female Disconnect | Bare (push in) | 120 AC | 1000W + | 12 gauge (rated to 20A AC or 2400W) |
+| Neutral iec320 | Ideal Connector | Female Disconnect | Bare (push in) | 120 AC | 1000W + | 12 gauge (rated to 20A AC or 2400W) |
+| Ground iec320 | Ideal Connector | Female Disconnect | Bare (push in) | 120 AC | 1000W + | 12 gauge (rated to 20A AC or 2400W) |
 
 # Melzi Connector and Pinout Table
  | Connector | ATmega2560 Pins | Connector Type (board side) | Connector Type (target side) |
@@ -43,9 +45,9 @@ Power supply wiring diagram)
 | Creality Melzi v2.2 | 1 | Stock |
 | Switches | 2 | Standard 30A 120V AC switches |
 | 10A 250V GMA Fuse | 1 | Integrated in AC plug |
-| Ideal 4 way Push in connectors | 3 | - |
+| Ideal 4 way Push in connectors | 3 | 16AWG to 12AWG, rated to 20A|
+| Various disconnect connectors | >20 | Various sizes, 10AWG to 22AWG, amp rating appropiate to wire gauge. Use appropiate sized connectore given wire gauge | 
 | AC Plug | 1 | iec320 C14 |
 | Ampmeters?? | 2 | - |
 | Wire | ??? | Fill this out |
 | JST Connectors | ?? | Fill this out |
-| Other connectors Used?? | ?? | Fill this out | 
