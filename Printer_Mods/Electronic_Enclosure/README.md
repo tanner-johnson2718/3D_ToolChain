@@ -10,11 +10,17 @@
 * All wiring should be evaluated for current draw and proper gauge wire shall be used
 * Enclosure should have quick connects to quickly disconnect all wires going to the printer.
 
-# Wiring Diagrams
+# PSU Wiring Diagrams
+
+Power supply wiring diagram)
 
 ![Alt text](Datasheets/Power_Supply_Wiring.png)
 
-# Connector and Pinout Table
+| Connection Source | Connection Sink | Connector Source | Connector Sink | V | W | Wire Gauge |
+| --- | --- | --- | --- | --- | --- | --- |
+| Live iec320 | Ideal Connector | Female Disconnect | Bare (push in) | 120 AC | 1000W + | 12 gauge (rated to 20A AC or 2400W) |
+
+# Melzi Connector and Pinout Table
  | Connector | ATmega2560 Pins | Connector Type (board side) | Connector Type (target side) |
  | --- | --- | --- | --- |
  | | | |
@@ -37,7 +43,9 @@
 | Creality Melzi v2.2 | 1 | Stock |
 | Switches | 2 | Standard 30A 120V AC switches |
 | 10A 250V GMA Fuse | 1 | Integrated in AC plug |
+| Ideal 4 way Push in connectors | 3 | - |
 | AC Plug | 1 | iec320 C14 |
 | Ampmeters?? | 2 | - |
 | Wire | ??? | Fill this out |
-| JST Connectors | ?? | Fill this out | 
+| JST Connectors | ?? | Fill this out |
+| Other connectors Used?? | ?? | Fill this out | 
