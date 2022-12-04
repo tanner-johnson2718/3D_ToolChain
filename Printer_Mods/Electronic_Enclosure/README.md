@@ -5,15 +5,12 @@
     * Adding Mosfets and additional wiring and board pinout support to enable this
 * Relocate electronics from underneath the printer to outside the chamber
 * Measure power draw
-* Electric components, especially main board and its pinouts should be "easily" accesible
-    * Will encorpaerate a method "sliding" base plates that secucre components
-    * Main ports on Melzi should be mapped to JST connectors embedded into the frame of the enclosure for quick connect and disconnect (even unused )
 * All wiring should be evaluated for current draw and proper gauge wire shall be used
 * Enclosure should have quick connects to quickly disconnect all wires going to the printer.
 
-# PSU and MOSFET Wiring Diagrams
+# Wiring Diagrams and Connector Table
 
-Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC plug. 
+Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC plug.
 
 ![Alt text](Datasheets/Power_Supply_Wiring.png)
 
@@ -35,17 +32,10 @@ Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC p
 | Printer V3+/- | Bed MOSFET +/- Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | 500W + | 12 gauge (rated to 20A DC or 480W) |
 | Chamber V1+/- | Drier MOSFET +/- Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | 150W | 16 gauge (rated to 10A DC or 240W) |
 | Chamber V3+/- | Chamber MOSFET +/- Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | ??? | ??? |
-| Bed MOSFET Output +/- | Terminal Connector | Bare (screw down) | Male Disconnect  | 24V DC | 500W + | 12 gauge (rated to 20A DC or 480W) |
-| Drier MOSFET Output +/- | Terminal Connector | Bare (screw down) | Male Disconnect  | 24V DC | 150W | 16 gauge (rated to 10A DC or 240W) |
-| Chamber MOSFET Output +/- | Terminal Connector | Bare (screw down) | Male Disconnect | 24V DC | ??? | ??? |
+| Bed MOSFET Output +/- | Terminal Device | Bare (screw down) | -  | 24V DC | 500W + | 12 gauge (rated to 20A DC or 480W) |
+| Drier MOSFET Output +/- | Terminal Device | Bare (screw down) | -  | 24V DC | 150W | 16 gauge (rated to 10A DC or 240W) |
+| Chamber MOSFET Output +/- | Terminal Device | Bare (screw down) | - | 24V DC | ??? | ??? |
 
-# Melzi Wiring, Connectors, and Pinouts
-
-![Alt text](Datasheets/melzi_pinout.jpg)
-
- | Connector | ATmega2560 Pins | Connector Type (board side) | Connector Type (target side) |
- | --- | --- | --- | --- |
- | | | |
 
 # Bill of Materials
 
@@ -71,4 +61,3 @@ Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC p
 | AC Plug | 1 | iec320 C14 |
 | Wire 16AWG, 12AWG | A few meters of each | - |
 | Ampmeters?? | 2 | - |
-| JST Connectors | ?? | Fill this out |
