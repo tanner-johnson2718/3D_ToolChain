@@ -23,7 +23,7 @@ Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC p
 | Neutral iec320 | Neutral Ideal Connector | Female Disconnect | Bare (push in) | 120V AC | 1000W + | 12 gauge (rated to 20A AC or 2400W) |
 | Ground iec320 | Ground Ideal Connector | Female Disconnect | Bare (push in) | 120V AC | 1000W + | 12 gauge (rated to 20A AC or 2400W) |
 | Live Ideal Connector | Printer Switch | Bare (push in) | Female Disconnect | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
-| Live Ideal Connector | Chamber Switch | Bare (push in) | Female Disconnect | 120V AC | 5000W + | 16 gauge (rated to 10A AC or 1200W) |
+| Live Ideal Connector | Chamber Switch | Bare (push in) | Female Disconnect | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
 | Printer Switch | Printer PSU Live terminal | Female Disconnect | Spade connector (8 to 10 stud size) | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
 | Chamber Switch | Chamber PSU Live terminal | Female Disconnect | Spade connector (8 to 10 stud size) | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
 | Neutral Ideal Connector | Printer PSU Neutral Terminal | Bare (push in) | Spade connector (8 to 10 stud size) | 120V AC | 500W + | 16 gauge (rated to 10A AC or 1200W) |
@@ -35,9 +35,9 @@ Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC p
 | Printer V3+/- | Bed MOSFET +/- Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | 500W + | 12 gauge (rated to 20A DC or 480W) |
 | Chamber V1+/- | Drier MOSFET +/- Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | 150W | 16 gauge (rated to 10A DC or 240W) |
 | Chamber V3+/- | Chamber MOSFET +/- Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | ??? | ??? |
-| Bed MOSFET Output +/- | Terminal Connector | Bare (screw down) | 24V DC | 500W + | 12 gauge (rated to 20A DC or 480W) |
-| Drier MOSFET Output +/- | Terminal Connector | Bare (screw down) | 24V DC | 150W | 16 gauge (rated to 10A DC or 240W) |
-| Chamber MOSFET Output +/- | Terminal Connector | Bare (screw down) | 24V DC | ??? | ??? |
+| Bed MOSFET Output +/- | Terminal Connector | Bare (screw down) | Male Disconnect  | 24V DC | 500W + | 12 gauge (rated to 20A DC or 480W) |
+| Drier MOSFET Output +/- | Terminal Connector | Bare (screw down) | Male Disconnect  | 24V DC | 150W | 16 gauge (rated to 10A DC or 240W) |
+| Chamber MOSFET Output +/- | Terminal Connector | Bare (screw down) | Male Disconnect | 24V DC | ??? | ??? |
 
 # Melzi Wiring, Connectors, and Pinouts
  | Connector | ATmega2560 Pins | Connector Type (board side) | Connector Type (target side) |
