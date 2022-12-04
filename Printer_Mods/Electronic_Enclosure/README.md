@@ -40,6 +40,9 @@ Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC p
 | Chamber MOSFET Output +/- | Terminal Connector | Bare (screw down) | Male Disconnect | 24V DC | ??? | ??? |
 
 # Melzi Wiring, Connectors, and Pinouts
+
+![Alt text](Datasheets/melzi_pinout.jpg)
+
  | Connector | ATmega2560 Pins | Connector Type (board side) | Connector Type (target side) |
  | --- | --- | --- | --- |
  | | | |
@@ -66,6 +69,6 @@ Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC p
 | Various disconnect connectors | >20 | Various sizes, 10AWG to 22AWG, amp rating appropiate to wire gauge. Use appropiate sized connectore given wire gauge |
 | Spade Connectors | >20 | 16AWG to 12AWG, 8 to 10 Stud size | 
 | AC Plug | 1 | iec320 C14 |
+| Wire 16AWG, 12AWG | A few meters of each | - |
 | Ampmeters?? | 2 | - |
-| Wire | ??? | Fill this out |
 | JST Connectors | ?? | Fill this out |
