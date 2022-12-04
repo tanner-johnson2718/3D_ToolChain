@@ -15,19 +15,19 @@ On the printed square, the print lines should overlap and form a uniform square 
 Print 25mmX25mmx1mm squares at center and at four corners near edges of build plate. Verify good bed adhesion and proper z offset at four corners. This test just verifies the ABL is functioning properly.
 
 ## Temp_Tower)
-Slice temp tower STL using current printer configs. Use the temp_adj.py script to insert temp adjustments at the layers where temp is supposed to change. Printed object should show what temp is optimal (minimal stringing, cleanest extrusions, crisp letters, etc). The included file, 180-200_PLA_Temp_calibration.stl has the following tempature transistions
+Slice temp tower STL using current printer configs. Use the temp_adj.py script to insert temp adjustments at the layers where temp is supposed to change. Printed object should show what temp is optimal (minimal stringing, cleanest extrusions, crisp letters, etc). Temp tower STLs included in this directory.
 
-| Temp | Layers |
-| --- | --- |
-| 220 | 0 - 40 |
-| 215 | 40 - 75 |
-| 210 | 75 - 105 |
-| 205 | 105 - 140 |
-| 200 | 140 - 175 |
-| 195 | 175 - 205 |
-| 190 | 205 - 240 | 
-| 185 | 240 - 275 |
-| 180 | 275 - 310 |
+| Temp (PLA) | Temp (PETg) | Layers |
+| --- | --- | ---
+| 220 | 260 | 0 - 40 |
+| 215 | 255 | 40 - 75 |
+| 210 | 250 | 75 - 105 |
+| 205 | 245 | 105 - 140 |
+| 200 | 240| 140 - 175 |
+| 195 | 235 | 175 - 205 |
+| 190 | 230 | 205 - 240 | 
+| 185 | 225 | 240 - 275 |
+| 180 | 220| 275 - 310 |
 
 ##  Retraction_Spikes)
 Slice Retraction_Spikes.stl with current retraction settings. Print and observe stingy-ness, pooling, under/over extrusion, etc. Also look closely at layer end lines as this where retractions occur. Adjust accordingly. 
@@ -46,15 +46,16 @@ Print 10mmx10mmx10mm cube. Use Calipers to measure accuracy. Adjust Steps per mm
 | Nozzle Diameter | Not a parameter but size of nozzle is good to track | .2mm - 1.0mm | .6mm | Hardened Steel |
 | Z offset | Affects distance of nozzle to bed | [-4.0mm, 0.0mm] | -3.5mm | Changing nozzle resets this. Nozzle size, line width and flow rate will affect the optimal value |
 | Line Width | How wide each line of plastic is | +/- 50% of nozzle size | .6mm - .8mm | Can be used to get the affect of smaller / larger nozzle sizes without actually changing nozzles. When line width > nozzle diameter, increasing temp and flow rate can help |
-| Temp | Depends on materail. Current values for PLA | 180 - 220 | 180 | 180 for percise prints |
-| Retract Distance | How many mm's of filament is sucked back up the nozzle on a retraction | 2mm - 10mm | 5mm | At 180C, print speed of 80mm/s, travel speed of 200mm/s, these retraction settings worked very well. Uping print speed and temp may make these settings insuffcient (might need faster and longer retractions) |
-| Retract Rate | How fast the filament is retracted | 10mm/s - 45mm/s | 45mm/s | At 180C, print speed of 80mm/s, travel speed of 200mm/s, these retraction settings worked very well |
+| Nozzle Temp | Depends on material. Current values for PETg | 220 - 260 | 250 | - |
+| Bed Temp | Temp of heated bed | 50 - 80 | 75 | - | 
+| Retract Distance | How many mm's of filament is sucked back up the nozzle on a retraction | 2mm - 10mm | 5mm | - |
+| Retract Rate | How fast the filament is retracted | 10mm/s - 45mm/s | 45mm/s | - |
+| Fan Speed | % Load on part cooling fan | 0 - 100 | 30? | Usually PETg does not need a fan but helps with briding and details |
 | Flow Rate | - | - | - | - |
 | Wall Width | - | - | - | - |
 | Top / Bottom Width | - | - | - | - |
 | Print Speed | - | - | - | - |
 | Travel Speed | - | - | - | - |
-| Fan Speed | - | - | - | - |
 | Steps per mm | - | - | - | - |
 | Linear Advance Settings?? | - | - | - | - | 
 | Acceleration Settings?? | - | - | - | - |

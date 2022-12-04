@@ -1,5 +1,5 @@
-file_name = "TOWER.GCO"
-temps  = [215, 210, 205, 200, 195, 190, 185, 180]
+file_name = "PETG.GCO"
+temps  = [255, 250, 245, 240, 235, 230, 225, 220]
 layers = [40,  75,  105, 140, 175, 205, 240, 275]
 layer_string_base = ";LAYER:"
 layer_string_curr = ""
