@@ -6,7 +6,6 @@
 * Relocate electronics from underneath the printer to outside the chamber
 * Measure power draw
 * All wiring should be evaluated for current draw and proper gauge wire shall be used
-* Enclosure should have quick connects to quickly disconnect all wires going to the printer.
 
 # Wiring Diagrams and Connector Table
 
