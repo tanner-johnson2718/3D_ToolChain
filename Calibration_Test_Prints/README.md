@@ -48,14 +48,14 @@ Print 10mmx10mmx10mm cube. Use Calipers to measure accuracy. Adjust Steps per mm
 | Line Width | How wide each line of plastic is | +/- 50% of nozzle size | .6mm - .8mm | Can be used to get the affect of smaller / larger nozzle sizes without actually changing nozzles. When line width > nozzle diameter, increasing temp and flow rate can help |
 | Nozzle Temp | Depends on material. Current values for PETg | 220 - 260 | 240 | Lower end gives better retraction but worse inital layer bed adhesion and under extrusion |
 | Bed Temp | Temp of heated bed | 50 - 80 | 75 | - | 
-| Retract Distance | How many mm's of filament is sucked back up the nozzle on a retraction | 2mm - 10mm | 5mm | - |
-| Retract Rate | How fast the filament is retracted | 10mm/s - 45mm/s | 45mm/s | - |
-| Fan Speed | % Load on part cooling fan | 0 - 100 | 30? | Usually PETg does not need a fan but helps with briding and details |
+| Retract Distance | How many mm's of filament is sucked back up the nozzle on a retraction | 2mm - 10mm | 6mm | - |
+| Retract Rate | How fast the filament is retracted | 10mm/s - 80mm/s | 35mm/s | - |
+| Fan Speed | % Load on part cooling fan | 0 - 100 | 0 | Usually PETg does not need a fan but helps with briding and details |
+| Print Speed | - | - | 40 | - |
+| Travel Speed | - | - | 80 | - |
 | Flow Rate | - | - | - | - |
 | Wall Width | - | - | - | - |
 | Top / Bottom Width | - | - | - | - |
-| Print Speed | - | - | - | - |
-| Travel Speed | - | - | - | - |
 | Steps per mm | - | - | - | - |
 | Linear Advance Settings?? | - | - | - | - | 
 | Acceleration Settings?? | - | - | - | - |
