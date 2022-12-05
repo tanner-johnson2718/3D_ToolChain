@@ -51,8 +51,9 @@ Print 10mmx10mmx10mm cube. Use Calipers to measure accuracy. Adjust Steps per mm
 | Retract Distance | How many mm's of filament is sucked back up the nozzle on a retraction | 2mm - 10mm | 6mm | - |
 | Retract Rate | How fast the filament is retracted | 10mm/s - 80mm/s | 35mm/s | - |
 | Fan Speed | % Load on part cooling fan | 0 - 100 | 0 | Usually PETg does not need a fan but helps with briding and details |
-| Print Speed | - | - | 40 | - |
-| Travel Speed | - | - | 80 | - |
+| Print Speed | Speed while extruding | 10mm/s - 200mm/s | 40mm/s | - |
+| Travel Speed | Speed while not extruding (traveling) | 50mm/s - 250mm/s | 80mm/s | - |
+| Init Layer Speed Speed | - | - | 10mm/s | - |
 | Flow Rate | - | - | - | - |
 | Wall Width | - | - | - | - |
 | Top / Bottom Width | - | - | - | - |
