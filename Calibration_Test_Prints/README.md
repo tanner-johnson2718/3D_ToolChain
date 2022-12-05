@@ -53,7 +53,8 @@ Print 10mmx10mmx10mm cube. Use Calipers to measure accuracy. Adjust Steps per mm
 | Fan Speed | % Load on part cooling fan | 0 - 100 | 0 | Usually PETg does not need a fan but helps with briding and details |
 | Print Speed | Speed while extruding | 10mm/s - 200mm/s | 40mm/s | - |
 | Travel Speed | Speed while not extruding (traveling) | 50mm/s - 250mm/s | 80mm/s | - |
-| Init Layer Speed Speed | - | - | 10mm/s | - |
+| Init Layer Print Speed | Speed while extruding on first layer | 5mm/s - 40mm/s | 10mm/s | - |
+| Init Layer Travel Speed | Speed while not extruding on first layer | 5mm/s - 80mm/s | 10mm/s | - |
 | Flow Rate | - | - | - | - |
 | Wall Width | - | - | - | - |
 | Top / Bottom Width | - | - | - | - |
