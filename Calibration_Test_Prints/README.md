@@ -56,9 +56,10 @@ Print 10mmx10mmx10mm cube. Use Calipers to measure accuracy. Adjust Steps per mm
 | Travel Speed | Speed while not extruding (traveling) | 50mm/s - 250mm/s | 80mm/s | - |
 | Init Layer Print Speed | Speed while extruding on first layer | 5mm/s - 40mm/s | 15mm/s | - |
 | Init Layer Travel Speed | Speed while not extruding on first layer | 5mm/s - 80mm/s | 15mm/s | - |
+| Wall Width | Number of wall lines | 2-5 | 4 | Take the line width and multiply by number of walls to get wall width in mm |
+| Top / Bottom Width | Number of top and bottom lines | 2-5 | 4 | Take the layer height and multiply by number of walls to get wall width in mm |
 | Flow Rate | - | - | - | - |
-| Wall Width | - | - | - | - |
-| Top / Bottom Width | - | - | - | - |
-| Steps per mm | - | - | - | - |
+| X,Y,Z Steps per mm | - | - | - | - |
+| E Steps per mm | - | - | - | - |
 | Linear Advance Settings?? | - | - | - | - | 
 | Acceleration Settings?? | - | - | - | - |
