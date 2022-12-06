@@ -52,10 +52,10 @@ Print 10mmx10mmx10mm cube. Use Calipers to measure accuracy. Adjust Steps per mm
 | Retract Distance | How many mm's of filament is sucked back up the nozzle on a retraction | 2mm - 10mm | 6mm | - |
 | Retract Rate | How fast the filament is retracted | 10mm/s - 80mm/s | 35mm/s | - |
 | Fan Speed | % Load on part cooling fan | 0 - 100 | 0 | Usually PETg does not need a fan but helps with briding and details |
-| Print Speed | Speed while extruding | 10mm/s - 200mm/s | 40mm/s | - |
-| Travel Speed | Speed while not extruding (traveling) | 50mm/s - 250mm/s | 80mm/s | - |
+| Print Speed | Speed while extruding | 10mm/s - 200mm/s | 40mm/s - 80mm/s | - |
+| Travel Speed | Speed while not extruding (traveling) | 50mm/s - 250mm/s | 40mm/s - 100mm/s | - |
 | Init Layer Print Speed | Speed while extruding on first layer | 5mm/s - 40mm/s | 15mm/s | - |
-| Init Layer Travel Speed | Speed while not extruding on first layer | 5mm/s - 80mm/s | 15mm/s | - |
+| Init Layer Travel Speed | Speed while not extruding on first layer | 5mm/s - 80mm/s | 40mm/s | On prints with long travels, if this value is too low it can cause oozing |
 | Wall Width | Number of wall lines | 2-5 | 4 | Take the line width and multiply by number of walls to get wall width in mm |
 | Top / Bottom Width | Number of top and bottom lines | 2-5 | 4 | Take the layer height and multiply by number of walls to get wall width in mm |
 | Flow Rate | - | - | - | - |
