@@ -7,7 +7,7 @@ Current tool chain is as follows:
 3) [MEME CTLR](meme_ctlr), custom g code sender and printer serial monitor. This is the UI for the printer as modifcations required a custom interface.
 4) Marlin Firmware running on printer
 
-Currently only targeting ender 5 Plus with following components
+Currently only targeting ender 5 Plus with following components and modifications)
 
 | Component | Date Installed | Comment |
 | --- | --- | --- |

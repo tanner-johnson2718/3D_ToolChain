@@ -204,7 +204,7 @@
   #define TEMP_1_PIN                          13  // Analog Input
 #endif
 #ifndef TEMP_BED_PIN
-  #define TEMP_BED_PIN                        14  // Analog Input
+  #define TEMP_BED_PIN                        11  // Analog Input
 #endif
 
 //

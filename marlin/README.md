@@ -10,8 +10,14 @@
 * Download AVR board support in IDE
 * Open marlin.ino in IDE
 * Compile and send image over serial
-* Changed Bed Thermistor to 3.3v i.e. 2 (PK7 on ATMega2560)
-    * in configuratoin.h
 * Mapped Nozzle Thermistor to pin A15 (PK7 on ATMega2560)
     * Was A13 and TEMP_PIN_1 was A15
     * in pin_RAMPS.h
+* Mapped Bed heater to pin A11 (PK3 on ATMega2560)
+    * was A14
+    * in pin_RAMPS.h
+    * set TEMP_SENSOR_BED to 1000 i.e. custom thermistor settings
+        * pull up res = 1000 ohm
+        * R at 25C = 100000
+        * B = 3950
+        * C = 0
