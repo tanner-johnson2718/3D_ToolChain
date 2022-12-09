@@ -21,7 +21,7 @@ pause_recv_thread = 0
 recv_thread_paused = 0
 hide_temp_poll = 1
 
-info_text_lines = 17
+info_text_lines = 9
 info_label_box_text = "\
 Nozzle Temp Current\n\
 Nozzle Temp Target\n\
@@ -30,13 +30,7 @@ Bed Temp Target\n\n\
 X Current\n\
 Y Current\n\
 Z Current\n\
-E Current\n\n\
-Z Offset\n\
-Steps per mm\n\
-Max X vel\n\
-Max Y vel\n\
-Max Z vel\n\
-Max E vel\n"
+E Current\n"
 
 info_value_box_text="\
 0.0 C\n\
@@ -46,27 +40,40 @@ info_value_box_text="\
 0.0 mm\n\
 0.0 mm\n\
 0.0 mm\n\
-0.0 mm\n\n\
-0.0 mm\n\
-0.0 steps\n\
-0.0 m/s\n\
-0.0 m/s\n\
-0.0 m/s\n\
-0.0 m/s"
+0.0 mm\n"
 
-mech_box_text_lines = 10
+mech_box_text_lines = 15
 mech_box_text = "\
-Probe X-off\n\
-Probe Y-off\n\
-Probe Z-off\n\n\
+X Probe offset\n\
+Y Probe offset\n\
+Z Probe offset\n\n\
 X Min\n\
 X Max\n\
 Y Min\n\
 Y Max\n\
 Z Min\n\
 Z Max \n\n\
+X steps per mm\n\
+Y steps per mm\n\
+Z steps per mm\n\
+E steps per mm\n\
+"
 
-" 
+mech_box_value_text ="\
+0.0mm\n\
+0.0mm\n\
+0.0mm\n\n\
+0.0mm\n\
+0.0mm\n\
+0.0mm\n\
+0.0mm\n\
+0.0mm\n\
+0.0mm\n\n\
+0.0mm\n\
+0.0mm\n\
+0.0mm\n\
+0.0mm\n\
+"
 
 current_nozzle_temp = 0.0
 target_nozzle_temp = 0.0
@@ -201,7 +208,7 @@ sg.theme('DarkAmber')
 layout = [  [sg.Text("Send GCODE) "), sg.InputText(key="cmd_box", size=(80,1))],
             [sg.Button("Home", key="home_button"), sg.Button("STOP!", key="STOP"), sg.Button("Pull Stats", key="cord_button"), sg.Button("Level", key="level_button"), sg.Button("Populate SD Table", key="pop_SD"), sg.Button("Cycle Serial", key="cycle_serial_button")],
             [sg.Text("Nozzle Temp:    ", size=(14,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp:       ", size=(14,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset:       ", size=(14,1)), sg.InputText(key="z_off", size=(8,1))],
-            [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box')],
+            [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box'), sg.Text(mech_box_text, size=(20,mech_box_text_lines), key='mech_label_box'), sg.Text(mech_box_value_text, size=(15,mech_box_text_lines), key='mech_value_box')],
             [sg.Table(level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="level_table_ui")],
             [sg.InputText(size=(20,1), key="input_file"), sg.Button("Send Local File to SD", key="send_file_button"), sg.InputText(size=(20,1), key="print_file"), sg.Button("Print", key="print_button")], 
             [sg.Multiline('', key="sd_explorer", size=(60,20))]
@@ -247,15 +254,17 @@ def update_info_label_box():
               str(x_curr)              + " mm\n" +\
               str(y_curr)              + " mm\n" +\
               str(z_curr)              + " mm\n" +\
-              str(e_curr)              + " mm\n\n" +\
-              str(z_off)               + " mm\n" +\
-              str(steps_per_mm)        + " mm\n" +\
-              str(max_x_vel)           + " mm/s\n" +\
-              str(max_y_vel)           + " mm/s\n" +\
-              str(max_z_vel)           + " mm/s\n" +\
-              str(max_e_vel)           + " mm/s" 
+              str(e_curr)              + " mm\n"
 
     info_label_box.update(new_text)
+
+# Update mech info box
+def update_mech_box_label():
+    if __name__ != "__main__":
+        print("ERROR, GUI elements accessed by non main thread")
+        return
+
+    
 
 # Update the SD explorer
 def update_sd_explorer():
