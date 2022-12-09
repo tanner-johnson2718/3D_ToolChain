@@ -74,7 +74,7 @@ mech_box_value_text ="\
 0.0mm\n\
 0.0mm\n\
 "
-
+# Gloval
 current_nozzle_temp = 0.0
 target_nozzle_temp = 0.0
 current_bed_temp = 0.0
@@ -83,8 +83,19 @@ x_curr = 0.0
 y_curr = 0.0
 z_curr = 0.0
 e_curr = 0.0
+x_min = 0.0
+x_max = 0.0
+y_min = 0.0
+y_max = 0.0
+z_min = 0.0
+z_max = 0.0
+x_off = 0.0
+y_off = 0.0
 z_off = 0.0
-steps_per_mm = 0.0
+x_steps_per_mm = 0.0
+y_steps_per_mm = 0.0
+z_steps_per_mm = 0.0
+e_steps_per_mm = 0.0
 max_x_vel = 0.0
 max_y_vel = 0.0
 max_z_vel = 0.0
@@ -123,16 +134,26 @@ def update_global_level_table(levels):
             level_table[i][j+1] = levels[i][j]
     global_lock.release()
 
-def update_global_z_offset(new_z):
+def update_global_z_offset(new_x, new_y, new_z):
     global z_off
+    global x_off
+    global y_off
     global_lock.acquire()
+    x_off = new_x
+    y_off = new_y
     z_off = new_z
     global_lock.release()
 
 def update_global_steps_per_mm(new):
-    global steps_per_mm
+    global x_steps_per_mm
+    global y_steps_per_mm
+    global z_steps_per_mm
+    global e_steps_per_mm
     global_lock.acquire()
-    steps_per_mm = new
+    x_steps_per_mm = new[0]
+    y_steps_per_mm = new[1]
+    z_steps_per_mm = new[2]
+    e_steps_per_mm = new[3]
     global_lock.release()
 
 def update_globals_curr_pos(x,y,z,e):
@@ -190,9 +211,9 @@ def wait_for_ACK(port):
     return error
 
 def cycle_serial_func():
+    global port
     port.close()
     time.sleep(1)
-    del port
     port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
     time.sleep(1)
 
@@ -234,6 +255,7 @@ sd_table_populate = window["pop_SD"]
 input_file_box = window["input_file"]
 input_file_button = window["send_file_button"]
 print_file_box = window["print_file"]
+mech_label_box = window["mech_value_box"]
 
 ###############################################################################
 # GUI Accessor functions. Only the main thread should try to update GUI
@@ -264,6 +286,21 @@ def update_mech_box_label():
         print("ERROR, GUI elements accessed by non main thread")
         return
 
+    new_text = str(x_off) + " mm\n" +\
+               str(y_off) + " mm\n" +\
+               str(z_off) + " mm\n\n" +\
+               str(x_min) + " mm\n" +\
+               str(x_max) + " mm\n" +\
+               str(y_min) + " mm\n" +\
+               str(y_max) + " mm\n" +\
+               str(z_min) + " mm\n" +\
+               str(z_max) + " mm\n\n" +\
+               str(x_steps_per_mm) + " mm\n" +\
+               str(y_steps_per_mm) + " mm\n" +\
+               str(z_steps_per_mm) + " mm\n" +\
+               str(e_steps_per_mm) + " mm\n"
+    
+    mech_label_box.update(new_text)
     
 
 # Update the SD explorer
@@ -398,10 +435,10 @@ def _recver_thread():
             update_global_temps(temps[0], temps[1], temps[2], temps[3])
             if hide_temp_poll:
                 continue
-        elif len(z_offs) == 2:
-            update_global_z_offset(z_offs[1])
+        elif len(z_offs) == 4:
+            update_global_z_offset(z_offs[1], z_offs[2], z_offs[3])
         elif len(steps) == 5:
-            update_global_steps_per_mm(steps[4])
+            update_global_steps_per_mm(steps[1:])
         elif len(pos) > 6:
             update_globals_curr_pos(pos[0], pos[1], pos[2], pos[3])
         elif len(feeds) > 4:
@@ -425,8 +462,9 @@ if __name__ == "__main__":
     # Let the serial port boot
     time.sleep(2)
 
-    # Start temp polling
+    # Start up command
     send(port, "M155 S1")
+    send(port, "M503")
 
     # Start threads
     recver_thread = threading.Thread(target=_recver_thread, name="Recv_Thread")
@@ -496,7 +534,11 @@ if __name__ == "__main__":
 
         # Close and reopen serial port
         elif event == "cycle_serial_button":
+            pause_recv_thread = 1
+            while not recv_thread_paused:
+                time.sleep(1)
             cycle_serial_func()
+            pause_recv_thread = 0
 
         # send local file to SD
         elif event == "send_file_button":
@@ -564,6 +606,7 @@ if __name__ == "__main__":
 
         # Update values in gui elements
         update_info_label_box()
+        update_mech_box_label()
         update_sd_explorer()
         update_level_table()
     
