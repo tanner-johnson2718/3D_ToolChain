@@ -41,7 +41,9 @@ My G-code sener and printer controller, reversed engineered using pronsole as a 
     * Load button is pushed
     * Recver thread is put into pause state
     * Automatic reports (i.e. temp) are suspended
-    * File is read line by line and sent over serial
+    * File is read line by line and sent over serial in ASCII
+        * Line numbers and checksum added to front and end of command
+        * Be sure to reset line numbers prior to starting sending
     * For each line (i.e. gcode command) the sender (main thread) waits for a ACK from the printer and then continues to next line
     * **NOTE** this is only time main thread reads from serial, otherwise its always the recv thread
 * Main Thread Execution:

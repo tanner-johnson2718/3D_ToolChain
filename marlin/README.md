@@ -18,7 +18,15 @@
         * was A14
         * in pin_RAMPS.h
         * set TEMP_SENSOR_BED to 1000 i.e. custom thermistor settings
-            * pull up res = 1000 ohm
+            * pull up res = 800 ohm
             * R at 25C = 100000
             * B = 3950
             * C = 0
+
+# Marlin Key Functions / Files / 
+* queue.cpp - advance()
+* queue.cpp - get_serial_commands()
+* MarlinCore.cpp - loop()
+* pins_RAMPS.h
+* Configuration.h
+* COnfiguration_adv.h

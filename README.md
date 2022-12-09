@@ -1,9 +1,9 @@
 # 3D Printing Tool Chain (Custom Ender 5 Plus)
-Repo to hold scripts, source, and config files for 3D printing tool chain targeting an Ender 5 Plus. Also this repository will also hold any modifications made to the printer. As of current, the modifications will be targeted towards the following requirements)
+Repo to hold scripts, source, and config files for 3D printing tool chain targeting an Ender 5 Plus. Also this repository will hold any modifications made to the printer. As of current, the modifications will be targeted towards the following requirements)
 
 1) Print to tempatures up to 300C
 2) Maintain a chamber a chamber tempature up to  50C - 70C
-3) Custom Firmware and Interface to printer, allowing custom features, more in depth monitoring of harwdare and software, and rapid implementaion of custom features (**This is a bad requirement needs to be refined and tareted with a broad but measurable goal**) 
+3) Custom Firmware and Interface to printer, allowing custom features, more in depth monitoring of harwdare and software, and rapid implementaion of custom features (**This is a bad requirement needs to be refined**) 
 
 The end goal of this project is a a printer capable of printing higher temp plastics. Nylon is the ultimate goal, however PP and PC are possible. Secondary goal is simply education and understanding every aspect of the 3D printing process from slicing to the printer interface to the firmware and finally the mechanical and electrical aspects of 3D printing.
 

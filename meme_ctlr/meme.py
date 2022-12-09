@@ -156,6 +156,21 @@ def send(port, cmd):
 def recv(port):
     return port.readline().decode('ascii')
 
+# wait for an 'ok' ACK
+def wait_for_ACK(port):
+    while True:
+        response = recv(port)
+        print(response)
+        if response.find("ok") > -1:
+            break
+
+def cycle_serial():
+    port.close()
+    time.sleep(1)
+    port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
+    time.sleep(1)
+
+
 port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
 
 ###############################################################################
@@ -265,7 +280,7 @@ def _recver_thread():
     # returns list of floats: current nozzle, target nozzle, current bed, target
     # bed. Else returns empty list
     def parse_temp(line):
-        if line.find(" == T:") == 0:
+        if line.find(" T:") == 0:
             numbers = re.findall(r"[-+]?(?:\d*\.\d+|\d+)", line)
             return numbers
         return []
@@ -507,38 +522,42 @@ if __name__ == "__main__":
                 pause_recv_thread = 1
                 while not recv_thread_paused:
                     time.sleep(1)
-                send(port, "M155 S0")
 
+                # Before sending data set line number to 0
+                send(port, "M110 N0")
+
+                # Start sending data, but wait for response from M28
+                print("Sending M28")
                 send(port, "M28 " + file_name)
+                wait_for_ACK(port)
                 print("Reading " + file_name + "...")
 
                 with open(file_name, encoding="utf-8") as my_file_handle:
                     
                     tot_sent = 0
+                    line = 1
 
                     for chunk in my_file_handle:
 
                         if not (chunk.find("G") == 0 or chunk.find("M") == 0):
                             continue
-                        
-                        chunk_size = len(chunk)
-                        bytes_sent = 0
 
-                        while bytes_sent < chunk_size:
-                            bytes_sent += port.write((chunk[bytes_sent:]).encode('ascii'))
-                            if(bytes_sent < chunk_size):
-                                print("Didnt send full line, sending rest")
+                        # Add line number and strip trailing new line
+                        chunk = "N" + str(line) + " " + chunk.rstrip()
+                        line += 1
+                        sum = 0
+                        for c in chunk:
+                            sum ^= ord(c)
+                        chunk = chunk + '*' + str(sum)
+
+                        send(port, chunk)
 
                         print(chunk)
+                        wait_for_ACK(port)
 
-                        # wait for the ok to proceed
-                        while True:
-                            response = recv(port)
-                            if response.find("ok") > -1:
-                                break
-
-                print("done")
+                print("Sending M29")
                 send(port, "M29")
+                wait_for_ACK(port)
                 pause_recv_thread = 0
                 send(port, "M155 S1")                  # Turn on temp polling
 
