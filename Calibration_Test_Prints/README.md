@@ -36,6 +36,18 @@ Slice Retraction_Spikes.stl with current retraction settings. Print and observe 
 ##  Geometric_Accuracy) 
 Print 10mmx10mmx10mm cube. Use Calipers to measure accuracy. Adjust Steps per mm accordingly. Similarly to calibrate the E steps per mm, mark a point on filament roll just below extruder. Extrude a set amount of filament i.e. 10mm. Measure how much marked point moved. Adjust steps per mm accordingly.
 
+## PID Tuning
+
+PID tuning calibrates the heat / cool cycle used to keep the heated elements of the printer at a constant temp. This should be done infrequently, however, it should be done if making modifcations to the, bed, hot end, or anything affecting the thermal or electrical systems of the printer.
+
+```
+M303 E0 C8 S240 U;PID tune nozzle heater 0, 8 cycles, target temp 240 and use the result
+M303 E-1 C8 S75 U;PID tune bed heater 0, 8 cycles, target temp 240 and use the results
+M500
+M501
+```
+
+
 ## Speed_Test) 
 ## Acceleration_CTRL) 
 ## Line_Width_Test)

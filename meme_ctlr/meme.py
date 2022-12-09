@@ -158,15 +158,20 @@ def recv(port):
 
 # wait for an 'ok' ACK
 def wait_for_ACK(port):
+    error = 0
     while True:
         response = recv(port)
         print(response)
+        if response.find("Error") > -1:
+            error = 1
         if response.find("ok") > -1:
             break
+    return error
 
-def cycle_serial():
+def cycle_serial_func():
     port.close()
     time.sleep(1)
+    del port
     port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
     time.sleep(1)
 
@@ -180,7 +185,7 @@ port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
 # Define Window layout and Theme
 sg.theme('DarkAmber')
 layout = [  [sg.Text("Send GCODE) "), sg.InputText(key="cmd_box", size=(80,1))],
-            [sg.Button("Home", key="home_button"), sg.Button("STOP!", key="STOP"), sg.Button("Pull Stats", key="cord_button"), sg.Button("Level", key="level_button"), sg.Button("Populate SD Table", key="pop_SD"), sg.Button("Cycle Serial", key="cycle_serial")],
+            [sg.Button("Home", key="home_button"), sg.Button("STOP!", key="STOP"), sg.Button("Pull Stats", key="cord_button"), sg.Button("Level", key="level_button"), sg.Button("Populate SD Table", key="pop_SD"), sg.Button("Cycle Serial", key="cycle_serial_button")],
             [sg.Text("Nozzle Temp:    ", size=(14,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp:       ", size=(14,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset:       ", size=(14,1)), sg.InputText(key="z_off", size=(8,1))],
             [sg.Text("X Steps per mm: ", size=(14,1)), sg.InputText(key="x_steps", size=(8,1)),       sg.Text("Y Steps per mm: ", size=(14,1)), sg.InputText(key="y_steps",    size=(8,1)), sg.Text("Z Steps per mm: ", size=(14,1)), sg.InputText(key="z_steps", size=(8,1)), sg.Text("E Steps per mm: ", size=(14,1)), sg.InputText(key="e_steps", size=(8,1))],
             [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box')],
@@ -217,7 +222,6 @@ sd_table_populate = window["pop_SD"]
 input_file_box = window["input_file"]
 input_file_button = window["send_file_button"]
 print_file_box = window["print_file"]
-cycle_serial = window["cycle_serial"]
 
 ###############################################################################
 # GUI Accessor functions. Only the main thread should try to update GUI
@@ -493,10 +497,13 @@ if __name__ == "__main__":
         # Level
         elif event == "level_button":
             send(port, "G28")
-            send(port, "G29 V4")
+            send(port, "G29 P1 V4")
+            send(port, "G29 S0")
+            send(port, "G29 A")
             send(port, "M500")
             send(port, "M501")
-            send(port, "M420 S1 V1")
+            send(port, "M503")
+            send(port, "G29 T0")
 
         # populate SD table
         elif event == "pop_SD":
@@ -509,8 +516,8 @@ if __name__ == "__main__":
             send(port, "M24")
 
         # Close and reopen serial port
-        elif event == "cycle_serial":
-            print("IMPLEMENT ME PLZZZ :)")
+        elif event == "cycle_serial_button":
+            cycle_serial_func()
 
         # send local file to SD
         elif event == "send_file_button":
@@ -545,15 +552,23 @@ if __name__ == "__main__":
                         # Add line number and strip trailing new line
                         chunk = "N" + str(line) + " " + chunk.rstrip()
                         line += 1
+
+                        # strip comments
+                        off = chunk.find(";")
+                        if off > -1:
+                            chunk = chunk[0:off]
                         sum = 0
                         for c in chunk:
                             sum ^= ord(c)
                         chunk = chunk + '*' + str(sum)
+                        
+                        while 1:
+                            send(port, chunk)
 
-                        send(port, chunk)
-
-                        print(chunk)
-                        wait_for_ACK(port)
+                            print(chunk)
+                            code = wait_for_ACK(port)
+                            if not code:
+                                break
 
                 print("Sending M29")
                 send(port, "M29")
