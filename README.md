@@ -19,8 +19,8 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 | Proejct | Date | Comment |
 | --- | --- | --- |
-| (Electronics Enclosure)(Printer_Mods/Electronic_Enclosure) | Oct-Dec 2022 | Removed PSU and main board, printing custom enclosure to move electronics out from underneath printer. Wiring diagrams, electrical specs, and pinout diagrams can all be found there as well. |
-| (Cable Track management system)[Printer_Mods/Cable_Track](Printer_Mods/Cable_Track) | Nov 2022 | [Reddit Inspiration](https://www.reddit.com/r/ender5plus/comments/so2ulf/ender_5_plus_cable_chain_solution/) |
+| [Electronics Enclosure](Printer_Mods/Electronic_Enclosure) | Oct-Dec 2022 | Removed PSU and main board, printing custom enclosure to move electronics out from underneath printer. Wiring diagrams, electrical specs, and pinout diagrams can all be found there as well. |
+| [Cable Track management system](Printer_Mods/Cable_Track) | Nov 2022 | [Reddit Inspiration](https://www.reddit.com/r/ender5plus/comments/so2ulf/ender_5_plus_cable_chain_solution/) |
 | MEME Controller(meme_ctlr) | Oct 2022 - | G code sender and print monitor.  |
 | [Slicer Settings, Calibration, and Test Prints](Calibration_Test_Prints) | Oct 2022 - | Holds documentation on settings/configurations (both firmware and slicer settings). Also has test prints and procedures for calibrating the printer. |
 | [Custom Marlin Firmware](marlin) | Dec 2022 - | **TODO** Need to think about how to document, modify, and track firmware |
