@@ -54,6 +54,20 @@ info_value_box_text="\
 0.0 m/s\n\
 0.0 m/s"
 
+mech_box_text_lines = 10
+mech_box_text = "\
+Probe X-off\n\
+Probe Y-off\n\
+Probe Z-off\n\n\
+X Min\n\
+X Max\n\
+Y Min\n\
+Y Max\n\
+Z Min\n\
+Z Max \n\n\
+
+" 
+
 current_nozzle_temp = 0.0
 target_nozzle_temp = 0.0
 current_bed_temp = 0.0
@@ -187,7 +201,6 @@ sg.theme('DarkAmber')
 layout = [  [sg.Text("Send GCODE) "), sg.InputText(key="cmd_box", size=(80,1))],
             [sg.Button("Home", key="home_button"), sg.Button("STOP!", key="STOP"), sg.Button("Pull Stats", key="cord_button"), sg.Button("Level", key="level_button"), sg.Button("Populate SD Table", key="pop_SD"), sg.Button("Cycle Serial", key="cycle_serial_button")],
             [sg.Text("Nozzle Temp:    ", size=(14,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp:       ", size=(14,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset:       ", size=(14,1)), sg.InputText(key="z_off", size=(8,1))],
-            [sg.Text("X Steps per mm: ", size=(14,1)), sg.InputText(key="x_steps", size=(8,1)),       sg.Text("Y Steps per mm: ", size=(14,1)), sg.InputText(key="y_steps",    size=(8,1)), sg.Text("Z Steps per mm: ", size=(14,1)), sg.InputText(key="z_steps", size=(8,1)), sg.Text("E Steps per mm: ", size=(14,1)), sg.InputText(key="e_steps", size=(8,1))],
             [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box')],
             [sg.Table(level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="level_table_ui")],
             [sg.InputText(size=(20,1), key="input_file"), sg.Button("Send Local File to SD", key="send_file_button"), sg.InputText(size=(20,1), key="print_file"), sg.Button("Print", key="print_button")], 
@@ -200,19 +213,11 @@ window["cmd_box"].bind("<Return>", "enter_hit")
 window["nozzle_target"].bind("<Return>", "enter_hit")
 window["bed_target"].bind("<Return>", "enter_hit")
 window["z_off"].bind("<Return>", "enter_hit")
-window["e_steps"].bind("<Return>", "enter_hit")
-window["x_steps"].bind("<Return>", "enter_hit")
-window["y_steps"].bind("<Return>", "enter_hit")
-window["z_steps"].bind("<Return>", "enter_hit")
 cmd_box = window["cmd_box"]
 info_label_box = window["info_value_box"]
 nozzle_target_temp_input_box = window["nozzle_target"]
 bed_target_temp_input_box = window["bed_target"]
 z_off_input_box = window["z_off"]
-e_steps_input_box = window["e_steps"]
-x_steps_input_box = window["x_steps"]
-y_steps_input_box = window["y_steps"]
-z_steps_input_box = window["z_steps"]
 pull_coordinates_button = window["cord_button"]
 home_button = window["home_button"]
 level_button = window["level_button"]
@@ -453,38 +458,6 @@ if __name__ == "__main__":
             send(port, "M501")
             send(port, "M503")
 
-        # E steps per mm updated
-        elif event == "e_steps" + "enter_hit":
-            val = e_steps_input_box.get()
-            send(port, "M92 E" + val)
-            send(port, "M500")
-            send(port, "M501")
-            send(port, "M503")
-
-        # X steps per mm updated
-        elif event == "x_steps" + "enter_hit":
-            val = x_steps_input_box.get()
-            send(port, "M92 X" + val)
-            send(port, "M500")
-            send(port, "M501")
-            send(port, "M503")
-
-        # Y steps per mm updated
-        elif event == "y_steps" + "enter_hit":
-            val = y_steps_input_box.get()
-            send(port, "M92 Y" + val)
-            send(port, "M500")
-            send(port, "M501")
-            send(port, "M503")
-
-        # Z steps per mm updated
-        elif event == "z_steps" + "enter_hit":
-            val = z_steps_input_box.get()
-            send(port, "M92 Z" + val)
-            send(port, "M500")
-            send(port, "M501")
-            send(port, "M503")
-
         # Pull Stats button pressed
         elif event == "cord_button":
             send(port, "M114")
@@ -497,13 +470,10 @@ if __name__ == "__main__":
         # Level
         elif event == "level_button":
             send(port, "G28")
-            send(port, "G29 P1 V4")
+            send(port, "G29 P1 V4 T0")
             send(port, "G29 S0")
             send(port, "G29 A")
             send(port, "M500")
-            send(port, "M501")
-            send(port, "M503")
-            send(port, "G29 T0")
 
         # populate SD table
         elif event == "pop_SD":
