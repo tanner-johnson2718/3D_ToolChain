@@ -7,16 +7,11 @@ Repo to hold scripts, source, and config files for 3D printing tool chain target
 
 The end goal of this project is a a printer capable of printing higher temp plastics. Nylon is the ultimate goal, however PP and PC are possible. Secondary goal is simply education and understanding every aspect of the 3D printing process from slicing to the printer interface to the firmware and finally the mechanical and electrical aspects of 3D printing.
 
-## Tool Chain
-The tools listed in the table below are used to operate, maintain, and modify the 3D printer.
+## 3rd Party tools used
 
-| Tool | Version | Comments, Add ons, etc. |
-| ---  | ---  | --- |
-| FreeCAD for 3D modeling | 0.20 | No plans to modify or dig into this aspect of the tool chain |
-| Cura for slicing | 5.0 | See [Calibration](Calibration_Test_Prints) for current slicer settings comments on these settings |
-| [MEME CTLR](meme_ctlr) | - |Custom g code sender and printer serial monitor. This is the UI for the printer as modifcations required a custom interface. Also plan to integrate testing g-code generation into the interface |
-| [Custom Marlin Firmware](marlin) | 2.1 bug fix | - |
-| Arduino IDE | 2.0.3 | For building and flasing ATMega 2560 on main control board |
+* FreeCAD 0.20 for 3D modeling
+* Cura 5.0 for slicing 
+* Arduino IDE 2.0.3 for building and flasing ATMega 2560 on main control board |
 
 ## Modifications, Current Hardware, and project directory
 
