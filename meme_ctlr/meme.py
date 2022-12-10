@@ -21,12 +21,16 @@ pause_recv_thread = 0
 recv_thread_paused = 0
 hide_temp_poll = 1
 
-info_text_lines = 9
+info_text_lines = 16
 info_label_box_text = "\
 Nozzle Temp Current\n\
-Nozzle Temp Target\n\
+Nozzle Temp Target\n\n\
 Bed Temp Current\n\
 Bed Temp Target\n\n\
+Chamber Temp Current\n\
+Chamber Temp Target\n\n\
+De-H20 Temp Current\n\
+De-H20 Temp Target\n\n\
 X Current\n\
 Y Current\n\
 Z Current\n\
@@ -34,7 +38,11 @@ E Current\n"
 
 info_value_box_text="\
 0.0 C\n\
+0.0 C\n\n\
 0.0 C\n\
+0.0 C\n\n\
+0.0 C\n\
+0.0 C\n\n\
 0.0 C\n\
 0.0 C\n\n\
 0.0 mm\n\
@@ -60,25 +68,67 @@ E steps per mm\n\
 "
 
 mech_box_value_text ="\
-0.0mm\n\
-0.0mm\n\
-0.0mm\n\n\
-0.0mm\n\
-0.0mm\n\
-0.0mm\n\
-0.0mm\n\
-0.0mm\n\
-0.0mm\n\n\
-0.0mm\n\
-0.0mm\n\
-0.0mm\n\
-0.0mm\n\
+0.0 mm\n\
+0.0 mm\n\
+0.0 mm\n\n\
+0.0 mm\n\
+0.0 mm\n\
+0.0 mm\n\
+0.0 mm\n\
+0.0 mm\n\
+0.0 mm\n\n\
+0.0 mm\n\
+0.0 mm\n\
+0.0 mm\n\
+0.0 mm\n\
 "
-# Gloval
+
+rates_box_line = 18
+rates_box_text = "\
+Max X Vel\n\
+May Y Vel\n\
+Max Z Vel\n\
+Max E Vel\n\n\
+Max X Accel\n\
+Max Y Accel\n\
+Max Z Accel\n\
+Max E Accel\n\n\
+Init Print Accel\n\
+Init Travel Accel\n\
+Init Retract Accel\n\n\
+Junction Deviation\n\
+Min Feedrate\n\
+Min Travel Feedrate\n\
+Min Seg Time\n\
+"
+
+rates_box_values = "\
+0.0 mm/s\n\
+0.0 mm/s\n\
+0.0 mm/s\n\
+0.0 mm/s\n\n\
+0.0 mm/s2\n\
+0.0 mm/s2\n\
+0.0 mm/s2\n\
+0.0 mm/s2\n\n\
+0.0 mm/s2\n\
+0.0 mm/s2\n\
+0.0 mms/s2\n\n\
+0.0\n\
+0.0 mm/s\n\
+0.0 mm/s\n\
+0.0 us\n\
+"
+
+# Globals
 current_nozzle_temp = 0.0
 target_nozzle_temp = 0.0
 current_bed_temp = 0.0
 target_bed_temp = 0.0
+current_chamber_temp = 0.0
+target_chamber_temp = 0.0
+current_dehydrator_temp = 0.0
+target_dehydrator_temp = 0.0
 x_curr = 0.0
 y_curr = 0.0
 z_curr = 0.0
@@ -100,8 +150,19 @@ max_x_vel = 0.0
 max_y_vel = 0.0
 max_z_vel = 0.0
 max_e_vel = 0.0
+max_x_accel = 0.0
+max_y_accel = 0.0
+max_z_accel = 0.0
+max_e_accel = 0.0
+junction = 0.0
+min_feed_rate = 0.0
+min_travel_feed_rate = 0.0
+min_seg_time = 0.0
+init_print_accel = 0.0
+init_travel_accel = 0.0
+init_retract_accel = 0.0
 
-level_table = [["Front", 0,0,0,0], ["Mid F", 0,0,0,0], ["Mid R", 0,0,0,0], ["Rear", 0,0,0,0]]
+level_table = [["Bed", 0,0,0,0, 0,0,0,0], ["Hot End", 0,0,0,0, 0,0,0,0], ["De-H20", 0,0,0,0, 0,0,0,0], ["Chamber", 0,0,0,0, 0,0,0,0]]
 sd_entries = ""
 
 globals_changed = 0
@@ -180,6 +241,40 @@ def update_globals_max_vel(x,y,z,e):
     max_e_vel = e
     global_lock.release()
 
+def update_globals_acces(accels):
+    global max_x_accel
+    global max_y_accel
+    global max_z_accel
+    global max_e_accel
+    global_lock.acquire()
+    max_x_accel = accels[0]
+    max_y_accel = accels[1]
+    max_z_accel = accels[2]
+    max_e_accel = accels[3]
+    global_lock.release()
+
+def update_globals_init_accels(accels):
+    global init_travel_accel
+    global init_print_accel
+    global init_retract_accel
+    global_lock.acquire()
+    init_print_accel = accels[0]
+    init_retract_accel = accels[1]
+    init_travel_accel = accels[2]
+    global_lock.release()
+
+def update_globals_advanced(advanced):
+    global junction
+    global min_feed_rate
+    global min_travel_feed_rate
+    global min_seg_time
+    global_lock.acquire()
+    min_seg_time = advanced[0]
+    min_feed_rate = advanced[1]
+    min_travel_feed_rate = advanced[2]
+    junction = advanced[3]
+    global_lock.release()
+
 def update_globals_sd_list(new):
     global sd_entries
     global_lock.acquire()
@@ -229,8 +324,8 @@ sg.theme('DarkAmber')
 layout = [  [sg.Text("Send GCODE) "), sg.InputText(key="cmd_box", size=(80,1))],
             [sg.Button("Home", key="home_button"), sg.Button("STOP!", key="STOP"), sg.Button("Pull Stats", key="cord_button"), sg.Button("Level", key="level_button"), sg.Button("Populate SD Table", key="pop_SD"), sg.Button("Cycle Serial", key="cycle_serial_button")],
             [sg.Text("Nozzle Temp:    ", size=(14,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp:       ", size=(14,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset:       ", size=(14,1)), sg.InputText(key="z_off", size=(8,1))],
-            [sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box'), sg.Text(mech_box_text, size=(20,mech_box_text_lines), key='mech_label_box'), sg.Text(mech_box_value_text, size=(15,mech_box_text_lines), key='mech_value_box')],
-            [sg.Table(level_table,  ['        ', 'Left    ','Mid L   ','Mid R   ', 'Right   '], num_rows=4, key="level_table_ui")],
+            [sg.Frame("Heat and Pos", [[sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box')]]), sg.Frame("Mechanical Params", [[sg.Text(mech_box_text, size=(20,mech_box_text_lines), key='mech_label_box'), sg.Text(mech_box_value_text, size=(15,mech_box_text_lines), key='mech_value_box')]]), sg.Frame("Rates", [[sg.Text(rates_box_text, size=(20,rates_box_line)), sg.Text(rates_box_values, size=(20, rates_box_line), key="rates_values")]])],
+            [sg.Table(level_table,  ['Thermal', 'P      ','I      ','D      ', 'Index  ', 'PU Res ', 'Res 25C', 'B      ', 'C      '], num_rows=4, key="level_table_ui")],
             [sg.InputText(size=(20,1), key="input_file"), sg.Button("Send Local File to SD", key="send_file_button"), sg.InputText(size=(20,1), key="print_file"), sg.Button("Print", key="print_button")], 
             [sg.Multiline('', key="sd_explorer", size=(60,20))]
         ]
@@ -256,6 +351,7 @@ input_file_box = window["input_file"]
 input_file_button = window["send_file_button"]
 print_file_box = window["print_file"]
 mech_label_box = window["mech_value_box"]
+rates_box = window["rates_values"]
 
 ###############################################################################
 # GUI Accessor functions. Only the main thread should try to update GUI
@@ -270,9 +366,13 @@ def update_info_label_box():
         return
 
     new_text = str(current_nozzle_temp) + " C\n" +\
-              str(target_nozzle_temp)  + " C\n" +\
+              str(target_nozzle_temp)  + " C\n\n" +\
               str(current_bed_temp)    + " C\n" +\
               str(target_bed_temp)     + " C\n\n" +\
+              str(current_chamber_temp) + " C\n" +\
+              str(target_chamber_temp)  + " C\n\n" +\
+              str(current_dehydrator_temp)    + " C\n" +\
+              str(target_dehydrator_temp)     + " C\n\n" +\
               str(x_curr)              + " mm\n" +\
               str(y_curr)              + " mm\n" +\
               str(z_curr)              + " mm\n" +\
@@ -302,6 +402,29 @@ def update_mech_box_label():
     
     mech_label_box.update(new_text)
     
+# Update rates box
+def update_rates_box():
+    if __name__ != "__main__":
+        print("ERROR, GUI elements accessed by non main thread")
+        return
+    
+    new_text = str(max_x_vel) + " mm/s\n" +\
+               str(max_y_vel) + " mm/s\n" +\
+               str(max_z_vel) + " mm/s\n" +\
+               str(max_e_vel) + " mm/s\n\n" +\
+               str(max_x_accel) + " mm/s2\n" +\
+               str(max_y_accel) + " mm/s2\n" +\
+               str(max_z_accel) + " mm/s2\n" +\
+               str(max_e_accel) + " mm/s2\n\n" +\
+               str(init_print_accel) + " mm/s2\n" +\
+               str(init_travel_accel) + " mm/s2\n" +\
+               str(init_retract_accel) + " mm/s2\n\n" +\
+               str(junction) + "\n" +\
+               str(min_feed_rate) + " mm/s\n" +\
+               str(min_travel_feed_rate) + " mm/s\n" +\
+               str(min_seg_time) + " us\n"
+
+    rates_box.update(new_text)
 
 # Update the SD explorer
 def update_sd_explorer():
@@ -369,6 +492,27 @@ def _recver_thread():
             return numbers
         return []
 
+    # Loof for accel data
+    def parse_accels(line):
+        if line.find("M201") > -1:
+            numbers = re.findall(r"[-+]?(?:\d*\.\d+|\d+)", line)
+            return numbers
+        return []
+
+    # Look for advanced movement setting
+    def parse_advanced_move(line):
+        if line.find("M205") > -1:
+            numbers = re.findall(r"[-+]?(?:\d*\.\d+|\d+)", line)
+            return numbers
+        return []
+
+    # Look for init accels
+    def parse_init_accels(line):
+        if line.find("M204") > -1:
+            numbers = re.findall(r"[-+]?(?:\d*\.\d+|\d+)", line)
+            return numbers
+        return []
+
     # look for level table
     def parse_level_table(line):
         if line.find("Bilinear") == 0:
@@ -428,6 +572,9 @@ def _recver_thread():
         steps = parse_steps_per_mm(serial_input)
         pos = parse_pos(serial_input)
         feeds =  parse_feed_rate(serial_input)
+        accels = parse_accels(serial_input)
+        init_accels = parse_init_accels(serial_input)
+        advanced = parse_advanced_move(serial_input)
         levels = parse_level_table(serial_input)
         sd_list = parse_sd_list(serial_input)
 
@@ -443,6 +590,12 @@ def _recver_thread():
             update_globals_curr_pos(pos[0], pos[1], pos[2], pos[3])
         elif len(feeds) > 4:
             update_globals_max_vel(feeds[1],feeds[2],feeds[3],feeds[4])
+        elif len(accels) > 4:
+            update_globals_acces(accels[1:])
+        elif len(init_accels) > 3:
+            update_globals_init_accels(init_accels[1:])
+        elif len(advanced) > 4:
+            update_globals_advanced(advanced[1:])
         elif len(levels) > 0:
             update_global_level_table(levels)
         elif len(sd_list) > 0:
@@ -607,6 +760,7 @@ if __name__ == "__main__":
         # Update values in gui elements
         update_info_label_box()
         update_mech_box_label()
+        update_rates_box()
         update_sd_explorer()
         update_level_table()
     

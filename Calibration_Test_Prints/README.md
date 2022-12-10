@@ -1,5 +1,5 @@
 # Calibration Test Prints
-## Z_Off_Test)
+## Z_Off_Test
 Print a 50mmX50mmX1mm square at slow speed in center of build plate. This print is just a simple test to verify printer works and Z offset is close. While printing fine tune Z offset. Best way to get an initial Z offset is the following)
 * Set Z off to 0.0.
 * Home
@@ -12,10 +12,10 @@ Print a 50mmX50mmX1mm square at slow speed in center of build plate. This print 
 
 On the printed square, the print lines should overlap and form a uniform square of material. Watch for rough tough top finish (too close) and gaps in lines (too far).
 
-## Level_Test)
+## Level_Test
 Print 25mmX25mmx1mm squares at center and at four corners near edges of build plate. Verify good bed adhesion and proper z offset at four corners. This test just verifies the ABL is functioning properly.
 
-## Temp_Tower)
+## Temp_Tower
 Slice temp tower STL using current printer configs. Use the temp_adj.py script to insert temp adjustments at the layers where temp is supposed to change. Printed object should show what temp is optimal (minimal stringing, cleanest extrusions, crisp letters, etc). Temp tower STLs included in this directory.
 
 | Temp (PLA) | Temp (PETg) | Layers |
@@ -30,10 +30,10 @@ Slice temp tower STL using current printer configs. Use the temp_adj.py script t
 | 185 | 225 | 240 - 275 |
 | 180 | 220| 275 - 310 |
 
-##  Retraction_Spikes)
+##  Retraction_Spikes
 Slice Retraction_Spikes.stl with current retraction settings. Print and observe stingy-ness, pooling, under/over extrusion, etc. Also look closely at layer end lines as this where retractions occur. Adjust accordingly. 
 
-##  Geometric_Accuracy) 
+##  Geometric_Accuracy
 Print 10mmx10mmx10mm cube. Use Calipers to measure accuracy. Adjust Steps per mm accordingly. Similarly to calibrate the E steps per mm, mark a point on filament roll just below extruder. Extrude a set amount of filament i.e. 10mm. Measure how much marked point moved. Adjust steps per mm accordingly.
 
 ## PID Tuning
@@ -47,17 +47,21 @@ M500 ;Save to EEPROM
 M501 ;Load from EEPROM
 ```
 
-## Speed_Test) 
-## Acceleration_CTRL) 
-## Line_Width_Test)
-## Flow_Rate_Test) 
+## Speed_Test
+## Acceleration Test
+## Advanced Movement Test (Junction Deviation)
 
-# Current Calibration Parameters (GCode and Slicer configurable only)
+# Calibration and Settings Table
+
+## Slicer Setting
+
+The following settings are usually set in the slicer and will change frequently from print to print and material to material
+
 | Parameter | Description | Value Ranges | Current Values | Comments |
 | --- | --- | --- | --- | --- |
 | Nozzle Diameter | Not a parameter but size of nozzle is good to track | .2mm - 1.0mm | .4mm | Brass |
 | Layer Height | Height of individual layer of plastic | .1mm - .32mm | .16mm - .32mm | Affects quality and is a function of the nozzle size |
-| Initial Layer Height | Height of individual layer of plastic on first layer | .1mm - .32mm | .16mm - .32mm | Same as above but can make this value smaller  |
+| Initial Layer Height | Height of individual layer of plastic on first layer | .1mm - .32mm | .16mm - .32mm | Same as above but can make this value smaller to get better squish on first layer |
 | Z offset | Additive modifier such that at Z=0, the nozzle is just touching the bed | [-4.0mm, 0.0mm] | -1.75 | Check this when changing nozzles, or messing with hot end |
 | Line Width | How wide each line of plastic is | +/- 50% of nozzle size | .3mm - .5mm | Can be used to get the affect of smaller / larger nozzle sizes without actually changing nozzles. When line width > nozzle diameter, increasing temp and flow rate can help |
 | Nozzle Temp | Depends on material. Current values for PETg | 220 - 260 | 240 | Lower end gives better retraction but worse inital layer bed adhesion and under extrusion |
@@ -72,21 +76,22 @@ M501 ;Load from EEPROM
 | Wall Width | Number of wall lines | 2-5 | 4 | Take the line width and multiply by number of walls to get wall width in mm |
 | Top / Bottom Width | Number of top and bottom lines | 2-5 | 4 | Take the layer height and multiply by number of walls to get wall width in mm |
 | Flow Rate | - | - | - | - |
-| X,Y,Z Steps per mm | - | - | - | - |
-| E Steps per mm | - | - | - | - |
-| Fade Height | - | - | - | - |
-| Velocity | - | - | - | - |
-| Acceleration Settings?? | - | - | - | - |
-| Jerk Settings | - | - | - | - |
+
+## Firmware Settings
+| Parameter | Description | Value Ranges | Current Values | Comments |
+| X,Y,Z and E Steps per mm | Mechanical parameters that set by the gear ratios of the stepper motors. Determine how many steps executed by the motor correspond to a mm of linear movement on a given axix | Always 80,80,800 for XYZ, E is in around 93 | 80,80,800,93 | The E steps can change based on the material. The depth at which the extruder grabs the plastic will change this value |
+| Fade Height | Bed Leveling will compensate for bed divations. At which height the firmware stops accounting for these is the fade height | 2-10mm | 2mm | If there is no fade bed deviations will propegate geometric errors |
+| Max Velocity | Max linear velocity of all axis | XY: [250,500] Z:[5,15] E:[35,100] | 250,250,10,50 | - |
+| Max Acceleration Settings | Max acceleration of all axis | XY: [1000,5000] Z:[50,100] E:[1000,10000] | 1000,1000,50,1000 | - |
+| Junction Deviation?? | - | - | - | - |
+| Min Segment Time?? | - | - | - | - |
+| Min Feedrate?? | - | - | - | - |
+| Min Travel Feedrate?? | - | - | - | - |
 | Linear Advance Settings?? | - | - | - | - | 
 
 ## Starter G-Code
 
 ```
-M201 X500.00 Y500.00 Z100.00 E5000.00 ;Setup machine max acceleration
-M203 X500.00 Y500.00 Z10.00 E50.00 ;Setup machine max feedrate
-M204 P500.00 R1000.00 T500.00 ;Setup Print/Retract/Travel acceleration
-M205 X8.00 Y8.00 Z0.40 E5.00 ;Setup Jerk
 M220 S100 ;Reset Feedrate
 M221 S100 ;Reset Flowrate
 
