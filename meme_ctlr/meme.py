@@ -20,6 +20,7 @@ killed = 0
 pause_recv_thread = 0
 recv_thread_paused = 0
 hide_temp_poll = 1
+hide_pos_poll = 1
 
 info_text_lines = 16
 info_label_box_text = "\
@@ -588,6 +589,8 @@ def _recver_thread():
             update_global_steps_per_mm(steps[1:])
         elif len(pos) > 6:
             update_globals_curr_pos(pos[0], pos[1], pos[2], pos[3])
+            if hide_pos_poll:
+                continue
         elif len(feeds) > 4:
             update_globals_max_vel(feeds[1],feeds[2],feeds[3],feeds[4])
         elif len(accels) > 4:
@@ -617,6 +620,7 @@ if __name__ == "__main__":
 
     # Start up command
     send(port, "M155 S1")
+    send(port, "M154 S1")
     send(port, "M503")
 
     # Start threads
@@ -749,6 +753,7 @@ if __name__ == "__main__":
                 wait_for_ACK(port)
                 pause_recv_thread = 0
                 send(port, "M155 S1")                  # Turn on temp polling
+                send(port, "M154 S1")
 
             except Exception as e:
                 print("ERROR reading " + file_name)
@@ -756,6 +761,7 @@ if __name__ == "__main__":
                 send(port, "M29")
                 pause_recv_thread = 0
                 send(port, "M155 S1")                  # Turn on temp polling
+                send(port, "M154 S1")
 
         # Update values in gui elements
         update_info_label_box()
