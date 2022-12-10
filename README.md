@@ -47,7 +47,6 @@ The end goal of this project is a a printer capable of printing higher temp plas
 | Z Rails | Sept 2022 | Stock w/ Z axis POM Lead nut and spring https://www.amazon.com/dp/B07XYR3F4C?psc=1&ref=ppx_yo2ov_dt_b_product_details |
 
 ## Tasking
-* Look into mechanical issues and werid sounds while printing
 * MEME ctlr level only on corners
 * meme ctlr better integrate leveling
 * leveling isn't taking into account clips
