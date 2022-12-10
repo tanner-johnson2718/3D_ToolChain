@@ -79,6 +79,7 @@ The following settings are usually set in the slicer and will change frequently 
 
 ## Firmware Settings
 | Parameter | Description | Value Ranges | Current Values | Comments |
+| --- | --- | --- | --- | --- |
 | X,Y,Z and E Steps per mm | Mechanical parameters that set by the gear ratios of the stepper motors. Determine how many steps executed by the motor correspond to a mm of linear movement on a given axix | Always 80,80,800 for XYZ, E is in around 93 | 80,80,800,93 | The E steps can change based on the material. The depth at which the extruder grabs the plastic will change this value |
 | Fade Height | Bed Leveling will compensate for bed divations. At which height the firmware stops accounting for these is the fade height | 2-10mm | 2mm | If there is no fade bed deviations will propegate geometric errors |
 | Max Velocity | Max linear velocity of all axis | XY: [250,500] Z:[5,15] E:[35,100] | 250,250,10,50 | - |
