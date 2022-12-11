@@ -46,6 +46,15 @@ G30 X310 Y325 ;Back Right
 After tuning the Z offset and ensuring a level Bed, on can do a simple test to verify the above and make sure filament will stick to the bed. This can be done by simply extruding a line of material onto the bed (at various locations if one so chooses). To do this we need to specify the following values:
 
 * $d_f$ : Diameter of filament (usually 1.75mm)
+* $w$ : Line width (usually nozzle diameter, see [below](#slicer-setting))
+* $h$ : Layer height
+* $L$ : The length of the linear movement
+
+Assume a rectangluar cross section as Cura does (other slicers such as Slic3r uses a different cross section [calculation](https://manual.slic3r.org/advanced/flow-math)). Now the amount of material we need to extrude, $E$ is calculated as the following)
+
+```math
+\pi \frac{(d_f)^2}{4} E = whL
+```
 
 ## Temp_Tower
 Slice temp tower STL using current printer configs. Use the temp_adj.py script to insert temp adjustments at the layers where temp is supposed to change. Printed object should show what temp is optimal (minimal stringing, cleanest extrusions, crisp letters, etc). Temp tower STLs included in this directory.
