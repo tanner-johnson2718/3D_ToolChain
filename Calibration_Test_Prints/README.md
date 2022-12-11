@@ -59,7 +59,9 @@ This simply states the volume of the material inputed through the extruder needs
 
 $$ E = \frac{4wh(L-w)}{\pi d_f^2} $$
 
-Now we can execute the following gcode to test a single line extrusion
+Now we can execute the following gcode to test a single line extrusion. Assume have the following inputs)
+
+* 
 
 ```
 G28     ;Home
@@ -71,7 +73,10 @@ M104 S{NOZ_TEMP}  ;Set Nozzle Temp
 M190 S{BED_TEMP}  ;Wait for bed to reach temp
 M109 S{NOZ_TEMP}  ;Wait for Nozzle to reach temp
 
-
+M82    ;absolute extrusion mode
+G92 E0 ;Reste extrusion counter
+G0 X{$X_i$ +- w/2} Y{Y_START +- w/2} Z{LAYER_HEIGHT}
+G1 X{X_END -+ w/2} Y{Y_END -+ w/2}
 ```
 
 ## Temp_Tower
