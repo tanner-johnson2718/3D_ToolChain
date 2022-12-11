@@ -782,7 +782,7 @@ if __name__ == "__main__":
             #send(port, "M190 " + str(target_nozzle_temp))
             #send(port, "M109 " + str(target_nozzle_temp))
             send(port, "M82")
-            send(port, "M92 E0")
+            send(port, "G92 E0")
             send(port, "G0 X" + str(x_i) + " Y" + str(y_i) + " Z" + str(h) + " F" + str(v_t))
             send(port, "G1 X" + str(x_f) + " Y" + str(y_f) + " E" + str(e) + " F" + str(v_p))
             send(port, "G1 E" + str(e-r) + " F" + str(v_r))

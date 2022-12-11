@@ -47,6 +47,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
 | Z Rails | Sept 2022 | Stock w/ Z axis POM Lead nut and spring https://www.amazon.com/dp/B07XYR3F4C?psc=1&ref=ppx_yo2ov_dt_b_product_details |
 
 ## Tasking
+### MEME
 * meme ctlr custom extrustion
     * Straight Line
     * L shape with specified angle
@@ -60,10 +61,13 @@ The end goal of this project is a a printer capable of printing higher temp plas
     * There is an issue with how we send multiple commands. A command is only registered if an ok ACK is sent back. With the reciever on a different thread than the sender, theres no way for sender to verify the printer ACK its send
         * Should look into the serial buffer size on the serial TX/RX chip
     * Every send should also output a "sending"
+    * Save off a log and create a dummy printer for debug
 * meme ctlr refine doc
+* thermistor curcuit doc
+* Fade height
+
+### Enclosure
 * enclosure finish cad and look into ammeters
 * Cut t slot Al for elctronics enclosure
 * Get running with skr board
 * enclosure doc fan and go over power draw doc (i.e. board, heated bed, etc)
-* thermistor curcuit doc
-* Fade height
