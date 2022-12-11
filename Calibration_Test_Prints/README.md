@@ -57,7 +57,7 @@ $$\pi \frac{d_f^2}{4} E = wh(L - w)$$
 
 This simply states the volume of the material inputed through the extruder needs to equal the volume of the line we intend to draw. The term $(L-w)$ is to compensate for the fact that the nozzle does travel the entire length of the extruded line, it starts and stop half a line width away from the limits of the line. So,
 
-$$ E = \frac{4wh(L-w)}{\pi d_f^2}
+$$ E = \frac{4wh(L-w)}{\pi d_f^2} $$
 
 
 ## Temp_Tower
