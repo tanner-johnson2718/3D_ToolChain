@@ -52,9 +52,8 @@ After tuning the Z offset and ensuring a level Bed, on can do a simple test to v
 
 Assume a rectangluar cross section as Cura does (other slicers such as Slic3r uses a different cross section [calculation](https://manual.slic3r.org/advanced/flow-math)). Now the amount of material we need to extrude, $E$ is calculated as the following)
 
-```math
-\pi \frac{(d_f)^2}{4} E = whL
-```
+$$\pi \frac{(d_f)^2}{4} E = whL$$
+
 
 ## Temp_Tower
 Slice temp tower STL using current printer configs. Use the temp_adj.py script to insert temp adjustments at the layers where temp is supposed to change. Printed object should show what temp is optimal (minimal stringing, cleanest extrusions, crisp letters, etc). Temp tower STLs included in this directory.
