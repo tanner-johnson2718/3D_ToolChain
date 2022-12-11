@@ -17,7 +17,7 @@ Print 25mmX25mmx1mm squares at center and at four corners near edges of build pl
 
 ### UBL Basic
 
-UBL will measure the bed distance on a mesh and correct any deviations. Below is the GCODE sequence to execute this process, measure the mesh, and store it.
+UBL will measure the bed distance on a mesh and correct any deviations. Below is the GCODE sequence to execute this process, measure the mesh, and store it. Also be sure to have the temp of bed and nozzle stable during this procedure at what ever printing temp you plan to use.
 
 ```
 G28 ;Home
@@ -27,7 +27,19 @@ G29 A ;Activate UBL
 M500 ;Save current mesh in EEPROM
 ```
 
-### UBL Custom Mesh
+### UBL Corner Mesh Measuring (Tramming)
+
+To assist in adjusting the 4 Corners of the bed one can run the following procedure. This will not store any mesh data it will simple measure the 4 corners and output the Z delta. X and Y values were chosen to get the probe reasonably close the points of adjustment. Following this procedure, run a full bed level to save the mesh as described above. Also be sure to have the temp of bed and nozzle stable during this procedure at what ever printing temp you plan to use.
+
+```
+G28 ;Home
+G30 X30 Y50 ;Front Left
+G30 X310 Y50 ; Front Right (Can only get so close given )
+G30 X30 Y325 ;Back Left
+G30 X310 Y325 ;Back Right
+```
+
+**NOTE** The goal here is NOT to get the Z values close to 0, its to get them as close to each other as possible. Z = 0 is measured at center of build plate not the corners.
 
 ## Temp_Tower
 Slice temp tower STL using current printer configs. Use the temp_adj.py script to insert temp adjustments at the layers where temp is supposed to change. Printed object should show what temp is optimal (minimal stringing, cleanest extrusions, crisp letters, etc). Temp tower STLs included in this directory.
@@ -117,12 +129,15 @@ G28 ;Home
 G29 A ; Verify UBL is activated
 G29 L0 ; Load last saved mesh
 
+;Purge Line, Cura Standard, Adding a 5mm at 45mm/s retraction
+;With the added retraction, make sure to always add a brim or skirt to reset line
 G92 E0 ;Reset Extruder
 G1 Z2.0 F3000 ;Move Z Axis up
 G1 X10.1 Y20 Z0.28 F5000.0 ;Move to start position
 G1 X10.1 Y200.0 Z0.28 F1500.0 E15 ;Draw the first line
 G1 X10.4 Y200.0 Z0.28 F5000.0 ;Move to side a little
 G1 X10.4 Y20 Z0.28 F1500.0 E30 ;Draw the second line
+G1 E25 F2700  ;5mm retraction at 45mm/s
 G92 E0 ;Reset Extruder
 G1 Z2.0 F3000 ;Move Z Axis up
 ```
@@ -130,13 +145,13 @@ G1 Z2.0 F3000 ;Move Z Axis up
 ## Ending G-Code
 ```
 G91 ;Relative positioning
-G1 E-2 F2700 ;Retract a bit
-G1 E-2 Z0.2 F2400 ;Retract and raise Z
+G1 E-5 F2700 ;Retract a bit
+G1 E-5 Z0.2 F2400 ;Retract and raise Z
 G1 X5 Y5 F3000 ;Wipe out
 G1 Z10 ;Raise Z more
 G90 ;Absolute positioning
 
-G1 X{machine_width} Y{machine_depth} ;Present print
+G1 X180 Y25 Z100 ;Present print
 M106 S0 ;Turn-off fan
 M104 S0 ;Turn-off hotend
 M140 S0 ;Turn-off bed
