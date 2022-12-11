@@ -52,7 +52,8 @@ After tuning the Z offset and ensuring a level Bed, on can do a simple test to v
 
 Assume a rectangluar cross section as Cura does (other slicers such as Slic3r uses a different cross section [calculation](https://manual.slic3r.org/advanced/flow-math)). Now the amount of material we need to extrude, $E$ is calculated as the following)
 
-$$\pi \frac{(d_f)^2}{4} E = whL$$
+
+$$\pi \frac{d_f^2}{4} E = whL$$
 
 
 ## Temp_Tower
