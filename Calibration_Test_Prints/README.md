@@ -50,10 +50,14 @@ After tuning the Z offset and ensuring a level Bed, on can do a simple test to v
 * $h$ : Layer height
 * $L$ : The length of the linear movement
 
-Assume a rectangluar cross section as Cura does (other slicers such as Slic3r uses a different cross section [calculation](https://manual.slic3r.org/advanced/flow-math)). Now the amount of material we need to extrude, $E$ is calculated as the following)
+Assume a rectangluar cross section as Cura does (other slicers such as Slic3r uses a different cross section [calculation](https://manual.slic3r.org/advanced/flow-math)). Now the amount of material we need to extrude, $E$ is calculated as the following.
 
 
-$$\pi \frac{d_f^2}{4} E = whL$$
+$$\pi \frac{d_f^2}{4} E = wh(L - w)$$
+
+This simply states the volume of the material inputed through the extruder needs to equal the volume of the line we intend to draw. The term $(L-w)$ is to compensate for the fact that the nozzle does travel the entire length of the extruded line, it starts and stop half a line width away from the limits of the line. So,
+
+$$ E = \frac{4wh(L-w)}{\pi d_f^2}
 
 
 ## Temp_Tower
