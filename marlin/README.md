@@ -30,5 +30,3 @@
 * pins_RAMPS.h
 * Configuration.h
 * COnfiguration_adv.h
-
-# Leveling

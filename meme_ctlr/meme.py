@@ -690,6 +690,7 @@ if __name__ == "__main__":
             send(port, "G29 S0")
             send(port, "G29 A")
             send(port, "M500")
+            send(port, "G29 P5")
 
         # populate SD table
         elif event == "pop_SD":

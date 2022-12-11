@@ -41,6 +41,12 @@ G30 X310 Y325 ;Back Right
 
 **NOTE** The goal here is NOT to get the Z values close to 0, its to get them as close to each other as possible. Z = 0 is measured at center of build plate not the corners.
 
+## Linear Extrusion Test
+
+After tuning the Z offset and ensuring a level Bed, on can do a simple test to verify the above and make sure filament will stick to the bed. This can be done by simply extruding a line of material onto the bed (at various locations if one so chooses). To do this we need to specify the following values:
+
+* $d_f$ : Diameter of filament (usually 1.75mm)
+
 ## Temp_Tower
 Slice temp tower STL using current printer configs. Use the temp_adj.py script to insert temp adjustments at the layers where temp is supposed to change. Printed object should show what temp is optimal (minimal stringing, cleanest extrusions, crisp letters, etc). Temp tower STLs included in this directory.
 
@@ -129,15 +135,12 @@ G28 ;Home
 G29 A ; Verify UBL is activated
 G29 L0 ; Load last saved mesh
 
-;Purge Line, Cura Standard, Adding a 5mm at 45mm/s retraction
-;With the added retraction, make sure to always add a brim or skirt to reset line
 G92 E0 ;Reset Extruder
 G1 Z2.0 F3000 ;Move Z Axis up
 G1 X10.1 Y20 Z0.28 F5000.0 ;Move to start position
 G1 X10.1 Y200.0 Z0.28 F1500.0 E15 ;Draw the first line
 G1 X10.4 Y200.0 Z0.28 F5000.0 ;Move to side a little
 G1 X10.4 Y20 Z0.28 F1500.0 E30 ;Draw the second line
-G1 E25 F2700  ;5mm retraction at 45mm/s
 G92 E0 ;Reset Extruder
 G1 Z2.0 F3000 ;Move Z Axis up
 ```
