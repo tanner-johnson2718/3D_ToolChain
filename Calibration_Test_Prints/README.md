@@ -85,13 +85,13 @@ M109 S{T_n}  ;Wait for Nozzle to reach temp
 M82    ;absolute extrusion mode
 G92 E0 ;Reset extrusion counter
 G0 X{X_i +- w/2} Y{Y_i +- w/2} Z{LAYER_HEIGHT} F{60*V_t} ;Determine +- based on travel direction
-G1 X{X_f -+ w/2} Y{Y_j -+ w/2} E{E} F{60*V_p}
+G1 X{X_f -+ w/2} Y{Y_f -+ w/2} E{E} F{60*V_p}
 G1 E{E-R} F{60*V_r}
 
 G91
-G1 X5 Y5 Z10
+G0 X5 Y5 Z5
 G90
-G0 X180 Y25 Z80
+G0 X180 Y25 Z10
 ```
 
 ## Temp_Tower

@@ -7,6 +7,7 @@ import serial
 import re
 import threading
 import time
+import math
 
 ###############################################################################
 # Global Consts
@@ -328,7 +329,12 @@ layout = [  [sg.Text("Send GCODE) "), sg.InputText(key="cmd_box", size=(80,1))],
             [sg.Frame("Heat and Pos", [[sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box')]]), sg.Frame("Mechanical Params", [[sg.Text(mech_box_text, size=(20,mech_box_text_lines), key='mech_label_box'), sg.Text(mech_box_value_text, size=(15,mech_box_text_lines), key='mech_value_box')]]), sg.Frame("Rates", [[sg.Text(rates_box_text, size=(20,rates_box_line)), sg.Text(rates_box_values, size=(20, rates_box_line), key="rates_values")]])],
             [sg.Table(level_table,  ['Thermal', 'P      ','I      ','D      ', 'Index  ', 'PU Res ', 'Res 25C', 'B      ', 'C      '], num_rows=4, key="level_table_ui")],
             [sg.InputText(size=(20,1), key="input_file"), sg.Button("Send Local File to SD", key="send_file_button"), sg.InputText(size=(20,1), key="print_file"), sg.Button("Print", key="print_button")], 
-            [sg.Multiline('', key="sd_explorer", size=(60,20))]
+            [sg.Multiline('', key="sd_explorer", size=(60,20))],
+            [sg.Frame("Extrusion Test", [[sg.Text("X Start",size=(10,1)), sg.InputText(key="extrusion_x_start",size=(8,1)),sg.Text("Velocity Print",size=(20,1)), sg.InputText(key="extrusion_v_print",size=(8,1)), sg.Text("Line Width", size=(20,1)), sg.InputText(key="extrusion_line_width", size=(8,1))],
+                                         [sg.Text("X End",size=(10,1)), sg.InputText(key="extrusion_x_end",size=(8,1)),sg.Text("Velocity Travel",size=(20,1)), sg.InputText(key="extrusion_v_travel",size=(8,1)), sg.Text("Layer Height", size=(20,1)), sg.InputText(key="extrusion_layer_height", size=(8,1))],
+                                         [sg.Text("Y Start",size=(10,1)), sg.InputText(key="extrusion_y_start",size=(8,1)),sg.Text("Velocity Retract",size=(20,1)), sg.InputText(key="extrusion_v_retract",size=(8,1)), sg.Text("Flow Multiplier", size=(20,1)), sg.InputText(key="extrusion_flow", size=(8,1))],
+                                         [sg.Text("Y End",size=(10,1)), sg.InputText(key="extrusion_y_end",size=(8,1)),sg.Text("Retract Distance",size=(20,1)), sg.InputText(key="extrusion_retract_dist",size=(8,1)), sg.Button("Single Line Test",key="extrusion_test")]]
+                    )]
         ]
 
 # Create the Window and define elements
@@ -709,6 +715,81 @@ if __name__ == "__main__":
                 time.sleep(1)
             cycle_serial_func()
             pause_recv_thread = 0
+
+        # extrusion test, single line
+        elif event == "extrusion_test":
+            print("Starting Single Line Extrusion Test")
+
+            # pull all the params
+            x_i = float(window["extrusion_x_start"].get())
+            x_f = float(window["extrusion_x_end"].get())
+            y_i = float(window["extrusion_y_start"].get())
+            y_f = float(window["extrusion_y_end"].get())
+            v_t = float(window["extrusion_v_travel"].get())
+            v_p = float(window["extrusion_v_print"].get())
+            v_r = float(window["extrusion_v_retract"].get())
+            r = float(window["extrusion_retract_dist"].get())
+            w = float(window["extrusion_line_width"].get())
+            h =  float(window["extrusion_layer_height"].get())
+            flow_multi =  float(window["extrusion_flow"].get())
+
+            # Calculate actual starting and finishing pos
+            if x_i < x_f:
+                x_i = float(x_i) + (float(w)/2.0)
+                x_f = float(x_f) - (float(w)/2.0)
+            else:
+                x_i = float(x_i) - (float(w)/2.0)
+                x_f = float(x_f) + (float(w)/2.0)
+
+            if y_i < y_f:
+                y_i = float(y_i) + (float(w)/2.0)
+                y_f = float(y_f) - (float(w)/2.0)
+            else:
+                y_i = float(y_i) - (float(w)/2.0)
+                y_f = float(y_f) + (float(w)/2.0)
+
+            # Adjust velocity from mm/s to mm/min
+            v_p *= 60
+            v_t *= 60
+            v_r *= 60
+
+            # Calculate extrustion value
+            l = math.sqrt(abs(x_i - x_f)*abs(x_i - x_f) + abs(y_i - y_f)*abs(y_i - y_f))
+            e = 0.415752039*float(w)*float(h)*l
+
+            # Report before sending
+            print("X Start         = " + str(x_i))
+            print("X End           = " + str(x_f))
+            print("Y Start         = " + str(y_i))
+            print("Y End           = " + str(y_f))
+            print("V Print         = " + str(v_p))
+            print("V Travel        = " + str(v_t))
+            print("V Retract       = " + str(v_r))
+            print("Retract Dist    = " + str(r))
+            print("Line Width      = " + str(w))
+            print("Layer Height    = " + str(h))
+            print("Flow Multiplier = " + str(flow_multi))
+            print("Bed Temp        = " + str(target_bed_temp))
+            print("Nozzle Temp     = " + str(target_nozzle_temp))
+            print("E               = " + str(e))
+
+            # send
+            send(port, "G28")
+            #send(port, "G29 A")
+            #send(port, "G29 L0")
+            #send(port, "M140 " + str(target_bed_temp))
+            #send(port, "M104 " + str(target_bed_temp))
+            #send(port, "M190 " + str(target_nozzle_temp))
+            #send(port, "M109 " + str(target_nozzle_temp))
+            send(port, "M82")
+            send(port, "M92 E0")
+            send(port, "G0 X" + str(x_i) + " Y" + str(y_i) + " Z" + str(h) + " F" + str(v_t))
+            send(port, "G1 X" + str(x_f) + " Y" + str(y_f) + " E" + str(e) + " F" + str(v_p))
+            send(port, "G1 E" + str(e-r) + " F" + str(v_r))
+            send(port, "G91")
+            send(port, "G0 X5 Y5 Z5")
+            send(port, "G90")
+            send(port, "G0 X180 Y25 Z10")
 
         # send local file to SD
         elif event == "send_file_button":
