@@ -48,10 +48,11 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 ## Tasking
 * MEME ctlr level only on corners
-* meme ctlr better integrate leveling
-* leveling isn't taking into account clips
-* Cut t slot Al for elctronics enclosure
-* enclosure finish cad and look into ammeters
-* enclosure doc fan and go over power draw doc (i.e. board, heated bed, etc)
 * meme ctlr custom extrustion
+* meme ctlr re-org code.
+    * Make a central key map to hold all globals, their keys and any gui elements
 * meme ctlr refine doc
+* enclosure finish cad and look into ammeters
+* Cut t slot Al for elctronics enclosure
+* Get running with skr board
+* enclosure doc fan and go over power draw doc (i.e. board, heated bed, etc)

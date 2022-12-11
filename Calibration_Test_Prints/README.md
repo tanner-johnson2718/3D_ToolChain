@@ -13,7 +13,21 @@ Print a 50mmX50mmX1mm square at slow speed in center of build plate. This print 
 On the printed square, the print lines should overlap and form a uniform square of material. Watch for rough tough top finish (too close) and gaps in lines (too far).
 
 ## Level_Test
-Print 25mmX25mmx1mm squares at center and at four corners near edges of build plate. Verify good bed adhesion and proper z offset at four corners. This test just verifies the ABL is functioning properly.
+Print 25mmX25mmx1mm squares at center and at four corners near edges of build plate. Verify good bed adhesion and proper z offset at four corners. This test just verifies the ABL is functioning properly. Printing this is usually unnessacsy unless there is good reason to believe the ABL is not working. See below for guidance on leveling using the ABL system
+
+### UBL Basic
+
+UBL will measure the bed distance on a mesh and correct any deviations. Below is the GCODE sequence to execute this process, measure the mesh, and store it.
+
+```
+G28 ;Home
+G29 P1 V4 T0 ;Measure full mesh, full verbosity and output human readable table
+G29 S0 ;Store mesh in slot 0
+G29 A ;Activate UBL
+M500 ;Save current mesh in EEPROM
+```
+
+### UBL Custom Mesh
 
 ## Temp_Tower
 Slice temp tower STL using current printer configs. Use the temp_adj.py script to insert temp adjustments at the layers where temp is supposed to change. Printed object should show what temp is optimal (minimal stringing, cleanest extrusions, crisp letters, etc). Temp tower STLs included in this directory.
@@ -49,7 +63,7 @@ M501 ;Load from EEPROM
 
 ## Speed_Test
 ## Acceleration Test
-## Advanced Movement Test (Junction Deviation)
+## Cornering Test
 
 # Calibration and Settings Table
 
@@ -84,6 +98,9 @@ The following settings are usually set in the slicer and will change frequently 
 | Fade Height | Bed Leveling will compensate for bed divations. At which height the firmware stops accounting for these is the fade height | 2-10mm | 2mm | If there is no fade bed deviations will propegate geometric errors |
 | Max Velocity | Max linear velocity of all axis | XY: [250,500] Z:[5,15] E:[35,100] | 250,250,10,50 | - |
 | Max Acceleration Settings | Max acceleration of all axis | XY: [1000,5000] Z:[50,100] E:[1000,10000] | 1000,1000,50,1000 | - |
+| Init Print Acceleration | The acceleration it uses to print | See max Acceleration | 200 | - |
+| Init Travel Acceleration | The acceleration it uses to travel | See max Acceleration | 200 | - |
+| Init Retract Acceleration | The acceleration it uses to travel | See max Acceleration | 200 | - |
 | Junction Deviation?? | - | - | - | - |
 | Min Segment Time?? | - | - | - | - |
 | Min Feedrate?? | - | - | - | - |

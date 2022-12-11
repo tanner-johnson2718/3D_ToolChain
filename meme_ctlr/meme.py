@@ -323,7 +323,7 @@ port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
 # Define Window layout and Theme
 sg.theme('DarkAmber')
 layout = [  [sg.Text("Send GCODE) "), sg.InputText(key="cmd_box", size=(80,1))],
-            [sg.Button("Home", key="home_button"), sg.Button("STOP!", key="STOP"), sg.Button("Pull Stats", key="cord_button"), sg.Button("Level", key="level_button"), sg.Button("Populate SD Table", key="pop_SD"), sg.Button("Cycle Serial", key="cycle_serial_button")],
+            [sg.Button("Home", key="home_button"), sg.Button("STOP!", key="STOP"), sg.Button("Disable Steppers", key="kill_steps"), sg.Button("Pull Stats", key="cord_button"), sg.Button("Level", key="level_button"), sg.Button("Populate SD Table", key="pop_SD"), sg.Button("Cycle Serial", key="cycle_serial_button")],
             [sg.Text("Nozzle Temp:    ", size=(14,1)), sg.InputText(key="nozzle_target", size=(8,1)), sg.Text("Bed Temp:       ", size=(14,1)), sg.InputText(key="bed_target", size=(8,1)), sg.Text("Z Offset:       ", size=(14,1)), sg.InputText(key="z_off", size=(8,1))],
             [sg.Frame("Heat and Pos", [[sg.Text(info_label_box_text, size=(20,info_text_lines), key='info_label_box'), sg.Text(info_value_box_text, size=(15,info_text_lines), key='info_value_box')]]), sg.Frame("Mechanical Params", [[sg.Text(mech_box_text, size=(20,mech_box_text_lines), key='mech_label_box'), sg.Text(mech_box_value_text, size=(15,mech_box_text_lines), key='mech_value_box')]]), sg.Frame("Rates", [[sg.Text(rates_box_text, size=(20,rates_box_line)), sg.Text(rates_box_values, size=(20, rates_box_line), key="rates_values")]])],
             [sg.Table(level_table,  ['Thermal', 'P      ','I      ','D      ', 'Index  ', 'PU Res ', 'Res 25C', 'B      ', 'C      '], num_rows=4, key="level_table_ui")],
@@ -637,6 +637,10 @@ if __name__ == "__main__":
         # emergency stop
         elif event == "STOP":
             send(port, "M112")
+
+        # Kill Steppers
+        elif event == "kill_steps":
+            send(port, "M84")
 
         # Enter hit while in command box
         elif event == "cmd_box" + "enter_hit":
