@@ -20,11 +20,11 @@ Print 25mmX25mmx1mm squares at center and at four corners near edges of build pl
 UBL will measure the bed distance on a mesh and correct any deviations. Below is the GCODE sequence to execute this process, measure the mesh, and store it. Also be sure to have the temp of bed and nozzle stable during this procedure at what ever printing temp you plan to use.
 
 ```
-G28 ;Home
+G28          ;Home
 G29 P1 V4 T0 ;Measure full mesh, full verbosity and output human readable table
-G29 S0 ;Store mesh in slot 0
-G29 A ;Activate UBL
-M500 ;Save current mesh in EEPROM
+G29 S0       ;Store mesh in slot 0
+G29 A        ;Activate UBL
+M500         ;Save current mesh in EEPROM
 ```
 
 ### UBL Corner Mesh Measuring (Tramming)
@@ -33,9 +33,9 @@ To assist in adjusting the 4 Corners of the bed one can run the following proced
 
 ```
 G28 ;Home
-G30 X30 Y50 ;Front Left
-G30 X310 Y50 ; Front Right (Can only get so close given )
-G30 X30 Y325 ;Back Left
+G30 X30 Y50   ;Front Left
+G30 X310 Y50  ;Front Right (Can only get so close given )
+G30 X30 Y325  ;Back Left
 G30 X310 Y325 ;Back Right
 ```
 
@@ -59,6 +59,20 @@ This simply states the volume of the material inputed through the extruder needs
 
 $$ E = \frac{4wh(L-w)}{\pi d_f^2} $$
 
+Now we can execute the following gcode to test a single line extrusion
+
+```
+G28     ;Home
+G29 A   ;Activate UBL
+G29 L0  ;Load saved mesh
+
+M140 S{BED_TEMP}  ;Set Bed Temp
+M104 S{NOZ_TEMP}  ;Set Nozzle Temp
+M190 S{BED_TEMP}  ;Wait for bed to reach temp
+M109 S{NOZ_TEMP}  ;Wait for Nozzle to reach temp
+
+
+```
 
 ## Temp_Tower
 Slice temp tower STL using current printer configs. Use the temp_adj.py script to insert temp adjustments at the layers where temp is supposed to change. Printed object should show what temp is optimal (minimal stringing, cleanest extrusions, crisp letters, etc). Temp tower STLs included in this directory.

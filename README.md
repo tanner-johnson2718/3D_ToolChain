@@ -48,11 +48,11 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 ## Tasking
 * meme ctlr custom extrustion
-    * Investigate cura caclulations
     * Straight Line
     * L shape with specified angle
-    * Circle
+    * Circle (how does cura do this)
     * Hows does accel control work in cura (corning)
+* Calibration flow rate doc and tests
 * meme ctlr re-org code.
     * Make a central key map to hold all globals, their keys and any gui elements
 * meme ctlr refine doc
