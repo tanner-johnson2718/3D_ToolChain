@@ -5,7 +5,7 @@ import math
 
 # Grab the current active document
 DOC = FreeCAD.activeDocument()
-SKETCH_NAME = "TARGET"
+SKETCH_NAME = "Sketch015"
 
 print("Hex Tile Maco starting..")
 
@@ -97,13 +97,14 @@ class Hexagon:
         contrain_pos(self.line_numbers[5], self.p6.x, self.p6.y)       
         
 class HexGrid:
-    def __init__(self, side, start_x, start_y, n_row, n_col, brim_width):
+    def __init__(self, side, start_x, start_y, n_row, n_col, brim_x, brim_y):
         self.side = side
         self.start_x = start_x
         self.start_y = start_y
         self.n_row = n_row
         self.n_col = n_col
-        self.brim_width = brim_width
+        self.brim_x = brim_x
+        self.brim_y = brim_y
 
         self.y_delta = self.side * math.sin(math.radians(60))
         self.x_delta = self.side * math.cos(math.radians(60))
@@ -117,20 +118,53 @@ class HexGrid:
             for j in range(0, self.n_col):
                 self.hexs[i][j] = Hexagon()
 
-                grid_x = self.start_x + j*(self.side + self.x_delta + self.brim_width)
-                grid_y = self.start_y - i*(2 * self.y_delta + self.brim_width)
+                grid_x = self.start_x + j*(self.side + self.x_delta + self.brim_x)
+                grid_y = self.start_y - i*(2 * self.y_delta + self.brim_y)
                 
                 if j%2 == 0:
                     # even
                     self.hexs[i][j].define_horizontally(self.side, grid_x, grid_y)
                 else:
                     # odd
-                    self.hexs[i][j].define_horizontally(self.side, grid_x, grid_y - self.y_delta - (self.brim_width/2))
+                    self.hexs[i][j].define_horizontally(self.side, grid_x, grid_y - self.y_delta - (self.brim_y/2))
 
     def draw(self, sketch_object):
         for i in range(0, self.n_row):
             for j in range(0, self.n_col):
                 self.hexs[i][j].draw(sketch_object)
+
+# Specify a hexagon size, compute spacing and n_cols and n_rows matrix. Fix corner hexagons on perimeter.
+# number of columns must be odd. Number of rows >= 2, Number of columns >= 3
+class HexPlate:
+    def __init__(self, hex_size, plate_x, plate_y, perimeter, min_brim, max_n_row, max_n_col):
+        y_delta = hex_size * math.sin(math.radians(60))
+        x_delta = hex_size * math.cos(math.radians(60))
+
+        x_start = -(plate_x/2.0) + perimeter
+        y_start = (plate_y/2.0) - perimeter - y_delta
+
+        y_travel = plate_y - 2*perimeter
+
+        for n in range(2, max_n_row):
+            brim_y = (y_travel - n*2.0*y_delta) / (n-1)
+            if brim_y < min_brim:
+                break
+            else:
+                print("N_r = " + str(n) + "   B_y = " + str(brim_y))
+
+        x_travel = plate_x - 2*perimeter
+
+        for n in range(3, max_n_col):
+            if n%2 == 0:
+                continue
+
+            brim_x = (x_travel - (((2.0*n) - ((n-1)/2))*hex_size)) / (n-1)
+            if brim_x < min_brim:
+                break
+            else:
+                print("N_c = " + str(n) + "   B_x = " + str(brim_x))
+
+
 
 # Main macro code
 def hexagon():
@@ -150,7 +184,8 @@ def hexagon():
 
     print("Found Sketch")
 
-    hex_grid = HexGrid(side=10, start_x=-30, start_y=50, n_row=4, n_col=5, brim_width=5)
+    hex_plate = HexPlate(hex_size=10, plate_x=130, plate_y=130, perimeter=5, min_brim=5, max_n_row=10, max_n_col=10)
+    hex_grid = HexGrid(side=10, start_x=-60, start_y=51.3397, n_row=5, n_col=5, brim_x=10, brim_y=8.349364905389038)
     hex_grid.compute()
     hex_grid.draw(sketch)
         

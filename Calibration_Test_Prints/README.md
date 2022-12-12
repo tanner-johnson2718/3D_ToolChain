@@ -143,7 +143,7 @@ The following settings are usually set in the slicer and will change frequently 
 | Initial Layer Height | Height of individual layer of plastic on first layer | .1mm - .32mm | .16mm - .32mm | Same as above but can make this value smaller to get better squish on first layer |
 | Z offset | Additive modifier such that at Z=0, the nozzle is just touching the bed | [-4.0mm, 0.0mm] | -1.75 | Check this when changing nozzles, or messing with hot end |
 | Line Width | How wide each line of plastic is | +/- 50% of nozzle size | .3mm - .5mm | Can be used to get the affect of smaller / larger nozzle sizes without actually changing nozzles. When line width > nozzle diameter, increasing temp and flow rate can help |
-| Nozzle Temp | Depends on material. Current values for PETg | 220 - 260 | 240 | Lower end gives better retraction but worse inital layer bed adhesion and under extrusion |
+| Nozzle Temp | Depends on material. Current values for PETg | 220 - 260 | 230 | Lower end gives better retraction but worse inital layer bed adhesion and under extrusion |
 | Bed Temp | Temp of heated bed | 50 - 80 | 75 | PLA 50-60, PETg 70-80 | 
 | Retract Distance | How many mm's of filament is sucked back up the nozzle on a retraction | 2mm - 10mm | 6mm | - |
 | Retract Rate | How fast the filament is retracted | 10mm/s - 80mm/s | 35mm/s | - |
@@ -201,7 +201,7 @@ G1 X5 Y5 F3000 ;Wipe out
 G1 Z10 ;Raise Z more
 G90 ;Absolute positioning
 
-G1 X180 Y25 Z100 ;Present print
+G1 X180 Y25;Present print
 M106 S0 ;Turn-off fan
 M104 S0 ;Turn-off hotend
 M140 S0 ;Turn-off bed

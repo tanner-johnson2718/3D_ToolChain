@@ -9,7 +9,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 ## 3rd Party tools used
 
-* FreeCAD 0.18.4 for 3D modeling
+* FreeCAD 0.20 for 3D modeling
 * Cura 5.0 for slicing 
 * Arduino IDE 2.0.3 for building and flasing ATMega 2560 on main control board |
 
