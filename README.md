@@ -19,14 +19,14 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 | Proejct *| Date | Comment |
 | --- | --- | --- |
-| <ul><li>[ ]</li><li> [Electronics Enclosure](Printer_Mods/Electronic_Enclosure) | Oct-Dec 2022 | Removed PSU and main board, printing custom enclosure to move electronics out from underneath printer. Wiring diagrams, electrical specs, and pinout diagrams can all be found there as well. |
-| <ul><li>[x]</li><li> [Cable Track management system](Printer_Mods/Cable_Track) | Nov 2022 | [Stole from Reddit](https://www.reddit.com/r/ender5plus/comments/so2ulf/ender_5_plus_cable_chain_solution/) |
-| <ul><li>[ ]</li><li> [MEME Controller](meme_ctlr) | Oct 2022 - | G code sender and print monitor.  |
-| <ul><li>[ ]</li><li> [Slicer Settings, Calibration, and Test Prints](Calibration_Test_Prints) | Oct 2022 - | Holds documentation on settings/configurations (both firmware and slicer settings). Also has test prints and procedures for calibrating the printer. |
-| <ul><li>[ ]</li><li> [Custom Marlin Firmware](marlin) | Dec 2022 - | **TODO** Need to think about how to document, modify, and track firmware changes |
-| <ul><li>[x]</li><li>[Designs](Designs) | Dec 2022 | FreeCad Scripts and generic designs, images, and models used for 3D printing and likely to be used in more than a singular project |
+| [Electronics Enclosure](Printer_Mods/Electronic_Enclosure) | Oct-Dec 2022 | Removed PSU and main board, printing custom enclosure to move electronics out from underneath printer. Wiring diagrams, electrical specs, and pinout diagrams can all be found there as well. |
+| :heavy_check_mark: [Cable Track management system](Printer_Mods/Cable_Track) | Nov 2022 | [Stole from Reddit](https://www.reddit.com/r/ender5plus/comments/so2ulf/ender_5_plus_cable_chain_solution/) |
+| [MEME Controller](meme_ctlr) | Oct 2022 - | G code sender and print monitor.  |
+|  [Slicer Settings, Calibration, and Test Prints](Calibration_Test_Prints) | Oct 2022 - | Holds documentation on settings/configurations (both firmware and slicer settings). Also has test prints and procedures for calibrating the printer. |
+| [Custom Marlin Firmware](marlin) | Dec 2022 - | **TODO** Need to think about how to document, modify, and track firmware changes |
+| :heavy_check_mark: [Designs](Designs) | Dec 2022 | FreeCad Scripts and generic designs, images, and models used for 3D printing and likely to be used in more than a singular project |
 
-* Check box indicates project is closed or no futher work is required at the moment.
+* Check indicates project is closed or no futher work is required at the moment.
 
 
 ### Current Hardware
