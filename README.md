@@ -24,6 +24,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
 | [MEME Controller](meme_ctlr) | Oct 2022 - | G code sender and print monitor.  |
 | [Slicer Settings, Calibration, and Test Prints](Calibration_Test_Prints) | Oct 2022 - | Holds documentation on settings/configurations (both firmware and slicer settings). Also has test prints and procedures for calibrating the printer. |
 | [Custom Marlin Firmware](marlin) | Dec 2022 - | **TODO** Need to think about how to document, modify, and track firmware changes |
+| [Designs](Designs) | Dec 2022 - | FreeCad Scripts and generic designs, images, and models used for 3D printing and likely to be used in more than a singular project |
 
 
 ### Current Hardware
@@ -72,5 +73,4 @@ The end goal of this project is a a printer capable of printing higher temp plas
     * display?
 
 ### Designs
-* Hexagon tile script
 * Reorg and integrate other design repos to this one
