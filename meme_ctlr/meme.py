@@ -95,9 +95,9 @@ Max X Accel\n\
 Max Y Accel\n\
 Max Z Accel\n\
 Max E Accel\n\n\
-Init Print Accel\n\
-Init Travel Accel\n\
-Init Retract Accel\n\n\
+Print Accel\n\
+Travel Accel\n\
+Retract Accel\n\n\
 Junction Deviation\n\
 Min Feedrate\n\
 Min Travel Feedrate\n\

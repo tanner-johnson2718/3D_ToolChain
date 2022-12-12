@@ -9,7 +9,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 ## 3rd Party tools used
 
-* FreeCAD 0.20 for 3D modeling
+* FreeCAD 0.18.4 for 3D modeling
 * Cura 5.0 for slicing 
 * Arduino IDE 2.0.3 for building and flasing ATMega 2560 on main control board |
 
@@ -51,8 +51,6 @@ The end goal of this project is a a printer capable of printing higher temp plas
 * meme ctlr custom extrustion
     * Straight Line
     * L shape with specified angle
-    * Circle (how does cura do this)
-    * Hows does accel control work in cura (corning)
     * Extrusion multiplier, how does cura do it?
 * Calibration flow rate doc and tests
 * meme ctlr re-org code.
@@ -64,10 +62,15 @@ The end goal of this project is a a printer capable of printing higher temp plas
     * Save off a log and create a dummy printer for debug
 * meme ctlr refine doc
 * thermistor curcuit doc
-* Fade height
 
 ### Enclosure
-* enclosure finish cad and look into ammeters
+* enclosure finish cad
 * Cut t slot Al for elctronics enclosure
 * Get running with skr board
 * enclosure doc fan and go over power draw doc (i.e. board, heated bed, etc)
+* ammeters and do I needd another MCU for chamber temp management
+    * display?
+
+### Designs
+* Hexagon tile script
+* Reorg and integrate other design repos to this one
