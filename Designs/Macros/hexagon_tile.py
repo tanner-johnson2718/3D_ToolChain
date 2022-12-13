@@ -5,7 +5,7 @@ import math
 
 # Grab the current active document
 DOC = FreeCAD.activeDocument()
-SKETCH_NAME = "Sketch015"
+SKETCH_NAME = "Sketch020"
 
 print("Hex Tile Maco starting..")
 
@@ -184,8 +184,8 @@ def hexagon():
 
     print("Found Sketch")
 
-    hex_plate = HexPlate(hex_size=10, plate_x=130, plate_y=130, perimeter=5, min_brim=5, max_n_row=10, max_n_col=10)
-    hex_grid = HexGrid(side=10, start_x=-60, start_y=51.3397, n_row=5, n_col=5, brim_x=10, brim_y=8.349364905389038)
+    hex_plate = HexPlate(hex_size=10, plate_x=130, plate_y=245, perimeter=5, min_brim=5, max_n_row=10, max_n_col=10)
+    hex_grid = HexGrid(side=10, start_x=-60, start_y=108.84, n_row=9, n_col=5, brim_x=10, brim_y=9.889428414850133)
     hex_grid.compute()
     hex_grid.draw(sketch)
         
