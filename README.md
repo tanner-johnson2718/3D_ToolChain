@@ -68,7 +68,6 @@ The end goal of this project is a a printer capable of printing higher temp plas
 * program statistics i.e. mem usage etc.
 
 ### Enclosure
-* enclosure finish cad
 * Cut t slot Al for elctronics enclosure
 * Get running with skr board
 * enclosure doc fan and go over power draw doc (i.e. board, heated bed, etc)
