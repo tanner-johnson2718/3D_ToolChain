@@ -13,7 +13,7 @@ import math
 # Global Consts
 ###############################################################################
 
-port_dev = "/dev/ttyUSB0"
+port_dev = "/dev/ttyACM0"
 baud = 115200
 serial_timeout = 1
 port = 0                  # forward declaration of serial port obj
