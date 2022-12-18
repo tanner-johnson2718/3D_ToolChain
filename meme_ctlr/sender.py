@@ -67,6 +67,11 @@ class Sender:
 
         self.cv.acquire()
 
+        if len(self.Q) == 0:
+            print("ERROR in ACK(), ACKed empty Q")
+            self.cv.release()
+            return
+
         if self.Q[0].time_sent < 0:
             print("ERROR in ACK, tried to ACK a command that has not ben sent")
             self.cv.release()
@@ -91,7 +96,7 @@ class Sender:
             self.cv.acquire()
             wait_ret = self.cv.wait(timeout=self.timeout)
 
-            print("Send thread awoken")
+            # print("Send thread awoken")
 
             if self.killed:
                 break
@@ -106,7 +111,8 @@ class Sender:
 
             # notified by an enQ
             if self.Q[0].time_sent < 0:
-                self.port.write((self.Q[0].command+"\n"))
+                self.port.write((self.Q[0].command+"\n").encode('ascii'))
+                print("SENT) " + self.Q[0].command)
                 self.Q[0].timestamp_sent(self.start_time)
 
             # notified by an ACK
@@ -117,7 +123,7 @@ class Sender:
                 self.Q.pop(0)
 
                 if len(self.Q) > 0:
-                    self.port.write((self.Q[0].command+"\n"))
+                    self.port.write((self.Q[0].command+"\n").encode('ascii'))
                     self.Q[0].timestamp_sent(self.start_time)
 
             self.cv.release()

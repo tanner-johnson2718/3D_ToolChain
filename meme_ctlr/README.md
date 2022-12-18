@@ -4,7 +4,7 @@ G code sender, printer montoring and control, and interface for executing testin
 
 # Serial Communication
 
-* Sending and recv-ing commands is done over through the USB serial port (/dev/ttyUSB0)
+* Sending and recv-ing commands is done over through the USB serial port (/dev/ttyACM0 for skr mini E3 V3.0)
 * Commands are send in ascii delimited by a new line char
 * The command protocal is [G-code](../marlin/Marlin_Docs/_gcode/)
 * All commands, if properly recv-ed by the printer, are ACK-ed with a response "ok" 
@@ -38,3 +38,9 @@ G code sender, printer montoring and control, and interface for executing testin
     * If its and ACK, notify sender thread
     * If its printer state, push that to the global table
     * Global table should contain matching criteria to determine if input contains state
+* Maintains "parse table" dictionary.
+    * First index is internal key
+    * Second index is in ['prefix', 'regex', 'multiline']
+        * prefix should be a unique prefix that identifies the input from the printer as a response to a specific command
+        * regex is the regex string to pull whatever data is relavent from response
+        * multi line = 0 or 1 indicating if its a multiline response
