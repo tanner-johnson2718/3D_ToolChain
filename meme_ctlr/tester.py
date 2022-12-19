@@ -1,6 +1,6 @@
 import sender
 import recver
-import sys
+import gui
 import threading
 import time
 import serial
@@ -21,7 +21,12 @@ recv_thread.start()
 
 r.define_matching_entry("M203", "M203", r"[-+]?(?:\d*\.\d+|\d+)", 0)
 
-s.enQ("M20")
+s.enQ("M203")
+s.enQ("M105")
+s.enQ("M203")
+s.enQ("M105")
+
+gui.gui_start()
 
 time.sleep(10)
 

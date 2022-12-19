@@ -20,8 +20,8 @@ port = 0                  # forward declaration of serial port obj
 killed = 0
 pause_recv_thread = 0
 recv_thread_paused = 0
-hide_temp_poll = 1
-hide_pos_poll = 1
+hide_temp_poll = 0
+hide_pos_poll = 0
 
 info_text_lines = 16
 info_label_box_text = "\

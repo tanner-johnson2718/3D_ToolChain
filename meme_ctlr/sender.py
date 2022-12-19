@@ -109,14 +109,19 @@ class Sender:
                 self.cv.release()
                 break
 
-            # notified by an enQ
+            # notified by an enQ and its ready to be sent
             if self.Q[0].time_sent < 0:
                 self.port.write((self.Q[0].command+"\n").encode('ascii'))
-                print("SENT) " + self.Q[0].command)
+                # print("SENT) " + self.Q[0].command)
                 self.Q[0].timestamp_sent(self.start_time)
 
+            # notified by an enQ but not ready to be sent
+            elif self.Q[0].time_ACKed < 0:
+                self.cv.release()
+                continue
+
             # notified by an ACK
-            else:
+            elif (self.Q[0].time_enQed > 0) and (self.Q[0].time_sent > 0) and (self.Q[0].time_ACKed > 0):
                 if not self.file_handle == -1:
                     self.file_handle.write(self.Q[0].get_csv_report())
 
@@ -125,6 +130,9 @@ class Sender:
                 if len(self.Q) > 0:
                     self.port.write((self.Q[0].command+"\n").encode('ascii'))
                     self.Q[0].timestamp_sent(self.start_time)
+
+            else:
+                print("ERROR in Sender thread, SHOULD NOT be HERE!")
 
             self.cv.release()
         self.file_handle.close()
