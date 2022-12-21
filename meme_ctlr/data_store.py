@@ -34,19 +34,21 @@ class DataStore():
 ###############################################################################
     class StateMap():
         def __init__(self):
-            self.key2index = {"M155 S1" : 0, 
-                              "M154 S1" : 1, 
+            self.key2index = {"M155 S5" : 0, 
+                              "M154 S5" : 1,
+                              "M27 S5"  : 5, 
                               "M851"    : 2,
                               "M92"     : 3,
                               "M204"    : 4}
-            self.prefix = ["T:", "X:","M851","M92", "M204"]
-            self.values = [[0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0], [0,0,0,0], [0,0,0]]
-            self.regex = [r"[-+]?(?:\d*\.\d+|\d+)", r"[-+]?(?:\d*\.\d+|\d+)", r"[-+]?(?:\d*\.\d+|\d+)", r"[-+]?(?:\d*\.\d+|\d+)", r"[-+]?(?:\d*\.\d+|\d+)"]
+            self.prefix = ["T:", "X:","M851","M92", "M204", "SD printing"]
+            self.values = [[0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0], [0,0,0,0], [0,0,0], [0,0]]
+            self.regex = r"[-+]?(?:\d*\.\d+|\d+)"
             self.description = ["Returns Nozzle and Bed Temp every second.",
                                 "Returns X,Y,Z,E pos every second.",
                                 "Distance from probe to nozzle.",
                                 "Steps per mm",
-                                "Get current print, retract, and travel acceleration settings."]
+                                "Get current print, retract, and travel acceleration settings.",
+                                "Get SD printing progress"]
 
     def __init__(self):
         self.kill_switch = 0
@@ -144,10 +146,10 @@ class DataStore():
         self.sendQ_cv.release()
 
         # parse the input and see if it matches any prefixes in the state map
-        for i in range(0,len(self.state.regex)):
+        for i in range(0,len(self.state.key2index.keys())):
             index = line.find(self.state.prefix[i])
             if index > -1:
-                nums = re.findall(self.state.regex[i], line[(index+len(self.state.prefix[i])):])
+                nums = re.findall(self.state.regex, line[(index+len(self.state.prefix[i])):])
                 if len(nums) == len(self.state.values[i]):
                     self.state.values[i] = nums
 

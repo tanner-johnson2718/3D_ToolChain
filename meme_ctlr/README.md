@@ -17,3 +17,7 @@ G code sender, printer montoring and control, and interface for executing testin
 # TODO
 * Doc base arch
 * program stats and deal with unbounded sendQ
+* Start up commands
+* Subcription system) I want parsed values from command x,y,z at a regular time interval
+* Programmatic way of adding to the pased command list i.e. state map
+* send data over sockets instead of 
