@@ -1,8 +1,10 @@
-import tkinter
-import tkinter.messagebox
 import customtkinter
 
+###############################################################################
+# Globals to share data between the GUI manager and the GUI itself
+###############################################################################
 Serial_Q = []
+CMD_Q = []   # -> Key value list tuple
 GUI_killed = 0
 
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -12,7 +14,7 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 # GUI class is inherited from custom tkinter. It holds all GUI elements and 
 # also holds the global table encapsulating what is displayed on th GUI. The
 # GUI SHALL NOT be accessed, created or modifed directly through this class
-# and the GUI_Man class shall be used. See GUI_Man for details on this.
+# and the GUI_Man class shall be used instead. See GUI_Man for details on this.
 ###############################################################################
 class GUI(customtkinter.CTk):
     def __init__(self, IO_poll_interval):
@@ -191,7 +193,6 @@ class GUI(customtkinter.CTk):
         # Define terminal and input box
         self.terminal = customtkinter.CTkTextbox(master=self.printer_frame_RHS, width=800,height=600)
         self.terminal.grid(row=0, column=0, padx=padx, pady=pady)
-        #self.terminal.configure(state="disabled")  # configure textbox to be read-only
         self.terminal.insert("0.0", "Test")
         self.input_gcode = customtkinter.CTkEntry(master=self.printer_frame_RHS,width=800,height=50)
         self.input_gcode.grid(row=1, column=0, padx=padx, pady=pady)
@@ -210,12 +211,15 @@ class GUI(customtkinter.CTk):
             self.terminal.insert("end", Serial_Q[0])
             Serial_Q.pop(0)
 
-        
+        while len(CMD_Q) > 0:
+            self.global_table
 
         self.after(self.IO_poll_interval, self.poll)
 
 ###############################################################################
-# Public GUI manager class. 
+# Public GUI manager class. This class encapsulates and faciltates data
+# transfer between GUI and other threads. All communication is done via shared
+# global Qs and a global kill flag.
 ###############################################################################
 
 class GUI_Man:
