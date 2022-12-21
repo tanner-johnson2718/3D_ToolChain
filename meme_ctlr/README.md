@@ -16,7 +16,7 @@ G code sender, printer montoring and control, and interface for executing testin
 
 # Backend Architecture
 
-![alt text]("MEME_Backend.png")
+![alt]("MEME_Backend.png")
 
 # TODO
 * Doc base arch
