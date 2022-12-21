@@ -51,13 +51,13 @@ def subscription_poster():
         while not killed:
             ds.push_next_send("M204")
             time.sleep(2)
-            temps = ds.get_state("M155 S5")
+            temps = ds.get_state("M155")
             fifo1.write("Temp Nozzle Current) " + str(temps[0]) + "\n")
             fifo1.write("Temp Nozzle Target) " + str(temps[1]) + "\n")
             fifo1.write("Temp Bed Current) " + str(temps[2]) + "\n")
             fifo1.write("Temp Bed Target) " + str(temps[3]) + "\n\n")
 
-            pos = ds.get_state("M154 S5")
+            pos = ds.get_state("M154")
             fifo1.write("X) " + str(pos[0]) + "\n")
             fifo1.write("Y) " + str(pos[1]) + "\n")
             fifo1.write("Z) " + str(pos[2]) + "\n")

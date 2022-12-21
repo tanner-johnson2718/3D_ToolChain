@@ -14,10 +14,14 @@ G code sender, printer montoring and control, and interface for executing testin
 * sudo apt-get install python3-tk
 * Python 3.8.10
 
+# Backend Architecture
+
+![alt text]("MEME_Backend.png")
+
 # TODO
 * Doc base arch
 * program stats and deal with unbounded sendQ
-* Start up commands
+* Start up commands and macros
 * Subcription system) I want parsed values from command x,y,z at a regular time interval
-* Programmatic way of adding to the pased command list i.e. state map
-* send data over sockets instead of 
+* Programmatic way of adding to the parsed command list i.e. state map
+* send data over sockets instead of pipe (or can choose between the two)
