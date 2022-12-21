@@ -1,6 +1,5 @@
 import data_store
 import threading
-import time
 import serial
 import os
 
@@ -12,9 +11,9 @@ killed = 0
 ds = data_store.DataStore(0, 0)
 port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
 
-pipe_name = "./pipe"
-os.mkfifo(pipe_name, 0o600)
-os.system("gnome-terminal -e 'bash -c \"cat " + pipe_name + "\"'")
+response_pipe_name = "./response_pipe"
+os.mkfifo(response_pipe_name, 0o600)
+os.system("gnome-terminal -e 'bash -c \"cat " + response_pipe_name + "\"'")
 
 def recv_thread():
     print("Recv Thread Starting...")
@@ -33,7 +32,7 @@ def send_thread():
     print("Send Thread Stopping...")
 
 def response_poster():
-    with open(pipe_name, "w") as fifo:
+    with open(response_pipe_name, "w") as fifo:
         print("Response Thread Starting...")
         while not killed:
             r = ds.wait_on_next_response()
@@ -56,6 +55,8 @@ while not killed:
     if t == "q":
         killed = 1
         break
+    elif t == "":
+        continue
     else:
         ds.push_next_send(t)
 
@@ -64,4 +65,4 @@ send_t.join()
 response_t.join()
 recv_t.join()
 port.close()
-os.system("rm -rf __pycache__ " + pipe_name)
+os.system("rm -rf __pycache__ " + response_pipe_name)
