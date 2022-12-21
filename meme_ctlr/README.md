@@ -15,6 +15,5 @@ G code sender, printer montoring and control, and interface for executing testin
 * Python 3.8.10
 
 # TODO
-* implement state map
 * Doc base arch
 * program stats and deal with unbounded sendQ

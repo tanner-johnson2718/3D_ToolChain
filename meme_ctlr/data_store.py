@@ -18,8 +18,58 @@
 
 import time
 import threading
+import re
 
 class DataStore():
+
+###############################################################################
+# Define the state map. Each entry's key is the gcode command that gets
+# that data. The second indecies in the table are one of the following)
+#    -> prefix      : unique prefix of the response from printer
+#    -> description : short text description of command
+#    -> regex       : regex to pull relavent data from reponse
+#    -> labels      : Text labels of the values returned by command
+#    -> values      : numerical values returned by command
+#    -> gui         : list of gui elements to be updated 
+###############################################################################
+    class StateMap():
+        def __init__(self):
+            self.key2index = {"M155 S1" : 0, 
+                              "M154 S1" : 1, 
+                              "M851"    : 2,
+                              "M92"     : 3,
+                              "M204"    : 4}
+            self.prefix = ["T:", "X:","M851","M92", "M204"]
+            self.values = [[0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0], [0,0,0,0], [0,0,0]]
+            self.regex = [r"[-+]?(?:\d*\.\d+|\d+)", r"[-+]?(?:\d*\.\d+|\d+)", r"[-+]?(?:\d*\.\d+|\d+)", r"[-+]?(?:\d*\.\d+|\d+)", r"[-+]?(?:\d*\.\d+|\d+)"]
+            self.description = ["Returns Nozzle and Bed Temp every second.",
+                                "Returns X,Y,Z,E pos every second.",
+                                "Distance from probe to nozzle.",
+                                "Steps per mm",
+                                "Get current print, retract, and travel acceleration settings."]
+
+    def __init__(self):
+        self.kill_switch = 0
+        self.start_time = time.time()
+
+        self.sendQ = []                             # List of send job objects
+        self.sendQ_cv =  threading.Condition()      # Controls and notifies on sendQ activity
+        self.response_cv = threading.Condition()    # Notifys when a response is recved
+        self.current_sendQ_index = 0
+        self.most_recent_response = ""              # Holds most recent reponse
+
+        self.state = DataStore.StateMap()
+
+    def kill(self):
+        self.kill_switch = 1
+
+        self.sendQ_cv.acquire()
+        self.sendQ_cv.notify_all()
+        self.sendQ_cv.release()
+
+        self.response_cv.acquire()
+        self.response_cv.notify_all()
+        self.response_cv.release()
 
 ###############################################################################
 # Send Job class holds commands and meta data of a command to be sent.
@@ -44,69 +94,6 @@ class DataStore():
 
         def get_csv_report(self):
             return self.command + "," + str(float(self.time_enQed)) + "," + str(float(self.time_sent)) + "," + str(float(self.time_ACKed)) + "\n"
-
-###############################################################################
-# Define the state map. Each entry's key is the gcode command that gets
-# that data. The second indecies in the table are one of the following)
-#    -> prefix      : unique prefix of the response from printer
-#    -> description : short text description of command
-#    -> regex       : regex to pull relavent data from reponse
-#    -> labels      : Text labels of the values returned by command
-#    -> values      : numerical values returned by command
-#    -> gui         : list of gui elements to be updated 
-###############################################################################
-    class StateMap():
-        def __init__(self):
-            self.state_map = {}
-            self.state_map["M155 S1"] = {}
-            self.state_map["M155 S1"]["prefix"] = "T:"
-            self.state_map["M155 S1"]["description"] = "Returns Nozzle and Bed Temp every second."
-            self.state_map["M155 S1"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
-            self.state_map["M155 S1"]["labels"] = ["Nozzle Current", "Nozzle Target", "Bed Current", "Bed Target"]
-            self.state_map["M155 S1"]["values"] = [0,0,0,0]
-            self.state_map["M155 S1"]["gui"] = []
-            self.state_map["M154 S1"] = {}
-            self.state_map["M154 S1"]["prefix"] = "X:"
-            self.state_map["M154 S1"]["description"] = "Returns X,Y,Z,E pos every second."
-            self.state_map["M154 S1"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
-            self.state_map["M154 S1"]["labels"] = ["X Curr", "Y Curr", "Z Curr", "E Curr"]
-            self.state_map["M154 S1"]["values"] = [0,0,0,0]
-            self.state_map["M154 S1"]["gui"] = []
-            self.state_map["M851"] = {}
-            self.state_map["M851"]["prefix"] = "M851"
-            self.state_map["M851"]["description"] = "Distance from probe to nozzle."
-            self.state_map["M851"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
-            self.state_map["M851"]["labels"] = ["X Probe Off", "Y Probe Off", "Z Probe Off"]
-            self.state_map["M851"]["values"] = [0,0,0]
-            self.state_map["M851"]["gui"] = []
-            self.state_map["M92"] = {}
-            self.state_map["M92"]["prefix"] = "M92"
-            self.state_map["M92"]["description"] = "Steps per mm"
-            self.state_map["M92"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
-            self.state_map["M92"]["labels"] = ["X Steps per mm", "Y  Steps per mm", "Z Steps per mm", "E  Steps per mm"]
-            self.state_map["M92"]["values"] = [0,0,0,0]
-            self.state_map["M92"]["gui"] = []
-
-    def __init__(self):
-        self.kill_switch = 0
-        self.start_time = time.time()
-
-        self.sendQ = []                             # List of send job objects
-        self.sendQ_cv =  threading.Condition()      # Controls and notifies on sendQ activity
-        self.response_cv = threading.Condition()    # Notifys when a response is recved
-        self.current_sendQ_index = 0
-        self.most_recent_response = ""              # Holds most recent reponse
-
-    def kill(self):
-        self.kill_switch = 1
-
-        self.sendQ_cv.acquire()
-        self.sendQ_cv.notify_all()
-        self.sendQ_cv.release()
-
-        self.response_cv.acquire()
-        self.response_cv.notify_all()
-        self.response_cv.release()
 
 ###############################################################################
 # Public sendQ access functions
@@ -156,7 +143,13 @@ class DataStore():
             return
         self.sendQ_cv.release()
 
-        # TODO, parse the input and see if it matches any prefixes in the state map
+        # parse the input and see if it matches any prefixes in the state map
+        for i in range(0,len(self.state.regex)):
+            index = line.find(self.state.prefix[i])
+            if index > -1:
+                nums = re.findall(self.state.regex[i], line[(index+len(self.state.prefix[i])):])
+                if len(nums) == len(self.state.values[i]):
+                    self.state.values[i] = nums
 
     def wait_on_next_response(self):
         self.response_cv.acquire()
@@ -165,11 +158,12 @@ class DataStore():
         self.response_cv.release()
         return ret
 
-    
-
 ###############################################################################
 # Public state map access functions
 ###############################################################################
+
+    def get_state(self, key):
+        return self.state.values[self.state.key2index[key]]
 
 ###############################################################################
 # Private helper functions. There are 3 important state)
