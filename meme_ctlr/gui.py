@@ -1,12 +1,5 @@
 import customtkinter
 
-###############################################################################
-# Globals to share data between the GUI manager and the GUI itself
-###############################################################################
-Serial_Q = []
-CMD_Q = []   # -> Key value list tuple
-GUI_killed = 0
-
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
@@ -17,10 +10,8 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 # and the GUI_Man class shall be used instead. See GUI_Man for details on this.
 ###############################################################################
 class GUI(customtkinter.CTk):
-    def __init__(self, IO_poll_interval):
+    def __init__(self):
         super().__init__()
-
-        self.IO_poll_interval = IO_poll_interval
 
 ###############################################################################
 # Create Base GUI and base layout for selecting the various frames
@@ -106,51 +97,6 @@ class GUI(customtkinter.CTk):
         self.select_frame_by_name("frame_3")
 
 ###############################################################################
-# Define the global table. Each entry's key is the gcode command that gets
-# that data. The second indecies in the table are one of the following)
-#    -> prefix      : unique prefix of the response from printer
-#    -> description : short text description of command
-#    -> regex       : regex to pull relavent data from reponse
-#    -> labels      : Text labels of the values returned by command
-#    -> values      : numerical values returned by command
-#    -> gui         : list of gui elements to be updated 
-###############################################################################
-
-    def define_global_table(self):
-        self.global_table = {}
-        self.global_table["M155 S1"] = {}
-        self.global_table["M155 S1"]["prefix"] = "T:"
-        self.global_table["M155 S1"]["description"] = "Returns Nozzle and Bed Temp every second."
-        self.global_table["M155 S1"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
-        self.global_table["M155 S1"]["labels"] = ["Nozzle Current", "Nozzle Target", "Bed Current", "Bed Target"]
-        self.global_table["M155 S1"]["values"] = [0,0,0,0]
-        self.global_table["M155 S1"]["gui"] = []
-
-        self.global_table["M154 S1"] = {}
-        self.global_table["M154 S1"]["prefix"] = "X:"
-        self.global_table["M154 S1"]["description"] = "Returns X,Y,Z,E pos every second."
-        self.global_table["M154 S1"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
-        self.global_table["M154 S1"]["labels"] = ["X Curr", "Y Curr", "Z Curr", "E Curr"]
-        self.global_table["M154 S1"]["values"] = [0,0,0,0]
-        self.global_table["M154 S1"]["gui"] = []
-
-        self.global_table["M851"] = {}
-        self.global_table["M851"]["prefix"] = "M851"
-        self.global_table["M851"]["description"] = "Distance from probe to nozzle."
-        self.global_table["M851"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
-        self.global_table["M851"]["labels"] = ["X Probe Off", "Y Probe Off", "Z Probe Off"]
-        self.global_table["M851"]["values"] = [0,0,0]
-        self.global_table["M851"]["gui"] = []
-
-        self.global_table["M92"] = {}
-        self.global_table["M92"]["prefix"] = "M92"
-        self.global_table["M92"]["description"] = "Steps per mm"
-        self.global_table["M92"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
-        self.global_table["M92"]["labels"] = ["X Steps per mm", "Y  Steps per mm", "Z Steps per mm", "E  Steps per mm"]
-        self.global_table["M92"]["values"] = [0,0,0,0]
-        self.global_table["M92"]["gui"] = []
-
-###############################################################################
 # Printing Frame defintion. The printing frame will have the following)
 #    -> Current pos, temps, printing file, print progress bar
 #        -> All this will be left justified in a single column
@@ -197,48 +143,6 @@ class GUI(customtkinter.CTk):
         self.input_gcode = customtkinter.CTkEntry(master=self.printer_frame_RHS,width=800,height=50)
         self.input_gcode.grid(row=1, column=0, padx=padx, pady=pady)
 
-###############################################################################
-# IO poll function to pull data from outside of GUI into the GUI
-###############################################################################
-    def poll(self):
-        global Serial_Q
-        global GUI_killed
 
-        if GUI_killed == 1:
-            self.quit()
-
-        while len(Serial_Q) > 0:
-            self.terminal.insert("end", Serial_Q[0])
-            Serial_Q.pop(0)
-
-        while len(CMD_Q) > 0:
-            self.global_table
-
-        self.after(self.IO_poll_interval, self.poll)
-
-###############################################################################
-# Public GUI manager class. This class encapsulates and faciltates data
-# transfer between GUI and other threads. All communication is done via shared
-# global Qs and a global kill flag.
-###############################################################################
-
-class GUI_Man:
-
-    def __init__(self, IO_poll_interval):
-        self.IO_poll_interval = IO_poll_interval
-        return
-
-    def push_serial_input(self, line):
-        global Serial_Q
-        Serial_Q.append(line)
-        return
-    def push_command_response(self):
-        return
-
-    def kill(self):
-        global GUI_killed
-        GUI_killed = 1
-    def thread(self):
-        self.app = GUI(self.IO_poll_interval)
-        self.app.after(self.IO_poll_interval, self.app.poll)
-        self.app.mainloop()
+app = GUI()
+app.mainloop()

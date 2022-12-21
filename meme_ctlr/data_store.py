@@ -81,8 +81,6 @@ class DataStore():
                 return ret
 
     def push_reponse_line(self, line):
-
-        print(line)
         
         # Grab CV, append line to response list of current open command and 
         # notify anyone waiting on response input 
@@ -153,3 +151,45 @@ class DataStore():
 
     def advance_Q(self):
         self.current_sendQ_index += 1
+
+###############################################################################
+# Define the global table. Each entry's key is the gcode command that gets
+# that data. The second indecies in the table are one of the following)
+#    -> prefix      : unique prefix of the response from printer
+#    -> description : short text description of command
+#    -> regex       : regex to pull relavent data from reponse
+#    -> labels      : Text labels of the values returned by command
+#    -> values      : numerical values returned by command
+#    -> gui         : list of gui elements to be updated 
+###############################################################################
+
+
+global_table = {}
+global_table["M155 S1"] = {}
+global_table["M155 S1"]["prefix"] = "T:"
+global_table["M155 S1"]["description"] = "Returns Nozzle and Bed Temp every second."
+global_table["M155 S1"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
+global_table["M155 S1"]["labels"] = ["Nozzle Current", "Nozzle Target", "Bed Current", "Bed Target"]
+global_table["M155 S1"]["values"] = [0,0,0,0]
+global_table["M155 S1"]["gui"] = []
+global_table["M154 S1"] = {}
+global_table["M154 S1"]["prefix"] = "X:"
+global_table["M154 S1"]["description"] = "Returns X,Y,Z,E pos every second."
+global_table["M154 S1"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
+global_table["M154 S1"]["labels"] = ["X Curr", "Y Curr", "Z Curr", "E Curr"]
+global_table["M154 S1"]["values"] = [0,0,0,0]
+global_table["M154 S1"]["gui"] = []
+global_table["M851"] = {}
+global_table["M851"]["prefix"] = "M851"
+global_table["M851"]["description"] = "Distance from probe to nozzle."
+global_table["M851"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
+global_table["M851"]["labels"] = ["X Probe Off", "Y Probe Off", "Z Probe Off"]
+global_table["M851"]["values"] = [0,0,0]
+global_table["M851"]["gui"] = []
+global_table["M92"] = {}
+global_table["M92"]["prefix"] = "M92"
+global_table["M92"]["description"] = "Steps per mm"
+global_table["M92"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
+global_table["M92"]["labels"] = ["X Steps per mm", "Y  Steps per mm", "Z Steps per mm", "E  Steps per mm"]
+global_table["M92"]["values"] = [0,0,0,0]
+global_table["M92"]["gui"] = []
