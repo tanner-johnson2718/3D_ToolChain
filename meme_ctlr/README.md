@@ -10,7 +10,7 @@ G code sender, printer montoring and control, and interface for executing testin
 * All commands, if properly recv-ed by the printer, are ACK-ed with a response "ok" 
 
 # Dependancies
-* pip3 install pysimplegui
+* pip3 install customtkinter
 * sudo apt-get install python3-tk
 * Python 3.8.10
 
@@ -19,13 +19,12 @@ G code sender, printer montoring and control, and interface for executing testin
 ![Alt text](arch.png)
 
 ## GUI Thread
-* Init GUI
-* Blocks on user input and GUI events
-* Pulls from global table and updates GUI elements
-    * The global table stores current user input and printer state
-* When GUI events are triggered, generally there is some short computation that needs to be done (i.e. calculate movement) followed by sending command(s) to the printer
-    * Commands that need to be sent are enQ-ed to the sender thread to be sent
-    * **ASSUME** that all triggered events are "fire and forget". Specifically, assume that all sequences of commands that need to be sent and or any computation that needs to be done are not dependant on responses from printer nor are dependant on state updated by executing commands earlier in the command sequence.
+* Uses [customtkinter](https://github.com/TomSchimansky/CustomTkinter) python GUI frame work
+* Defines a series of tabs that pack similiar functionality together
+    * Printer Tab for seeing current temps, pos, etc and provides terminal to send G code
+    * ... MORE TABS
+* Organizes printer state and corresponding GUI elements in the "global table"
+* Accessor funtions are provided to 
 
 ## Sender Thread
 * Blocks until one of the following occur, an enQ, an ACK, a kill message, or a timeout.

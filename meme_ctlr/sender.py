@@ -31,7 +31,8 @@ class Sender:
             return self.command + "," + str(float(self.time_enQed)) + "," + str(float(self.time_sent)) + "," + str(float(self.time_ACKed)) + "\n"
 
 ###############################################################################
-# Public functions. Called to create, enQ, and ACK commands.
+# Public functions. Called to create, enQ, and ACK commands. These functions
+# are called from another thread.
 ###############################################################################
 
     def __init__(self, port, log_file=""):
