@@ -46,10 +46,48 @@ class DataStore():
             return self.command + "," + str(float(self.time_enQed)) + "," + str(float(self.time_sent)) + "," + str(float(self.time_ACKed)) + "\n"
 
 ###############################################################################
-# Public data store access functions
+# Define the state map. Each entry's key is the gcode command that gets
+# that data. The second indecies in the table are one of the following)
+#    -> prefix      : unique prefix of the response from printer
+#    -> description : short text description of command
+#    -> regex       : regex to pull relavent data from reponse
+#    -> labels      : Text labels of the values returned by command
+#    -> values      : numerical values returned by command
+#    -> gui         : list of gui elements to be updated 
 ###############################################################################
+    class StateMap():
+        def __init__(self):
+            self.state_map = {}
+            self.state_map["M155 S1"] = {}
+            self.state_map["M155 S1"]["prefix"] = "T:"
+            self.state_map["M155 S1"]["description"] = "Returns Nozzle and Bed Temp every second."
+            self.state_map["M155 S1"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
+            self.state_map["M155 S1"]["labels"] = ["Nozzle Current", "Nozzle Target", "Bed Current", "Bed Target"]
+            self.state_map["M155 S1"]["values"] = [0,0,0,0]
+            self.state_map["M155 S1"]["gui"] = []
+            self.state_map["M154 S1"] = {}
+            self.state_map["M154 S1"]["prefix"] = "X:"
+            self.state_map["M154 S1"]["description"] = "Returns X,Y,Z,E pos every second."
+            self.state_map["M154 S1"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
+            self.state_map["M154 S1"]["labels"] = ["X Curr", "Y Curr", "Z Curr", "E Curr"]
+            self.state_map["M154 S1"]["values"] = [0,0,0,0]
+            self.state_map["M154 S1"]["gui"] = []
+            self.state_map["M851"] = {}
+            self.state_map["M851"]["prefix"] = "M851"
+            self.state_map["M851"]["description"] = "Distance from probe to nozzle."
+            self.state_map["M851"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
+            self.state_map["M851"]["labels"] = ["X Probe Off", "Y Probe Off", "Z Probe Off"]
+            self.state_map["M851"]["values"] = [0,0,0]
+            self.state_map["M851"]["gui"] = []
+            self.state_map["M92"] = {}
+            self.state_map["M92"]["prefix"] = "M92"
+            self.state_map["M92"]["description"] = "Steps per mm"
+            self.state_map["M92"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
+            self.state_map["M92"]["labels"] = ["X Steps per mm", "Y  Steps per mm", "Z Steps per mm", "E  Steps per mm"]
+            self.state_map["M92"]["values"] = [0,0,0,0]
+            self.state_map["M92"]["gui"] = []
 
-    def __init__(self, disk_push_size, state_file):
+    def __init__(self):
         self.kill_switch = 0
         self.start_time = time.time()
 
@@ -58,6 +96,21 @@ class DataStore():
         self.response_cv = threading.Condition()    # Notifys when a response is recved
         self.current_sendQ_index = 0
         self.most_recent_response = ""              # Holds most recent reponse
+
+    def kill(self):
+        self.kill_switch = 1
+
+        self.sendQ_cv.acquire()
+        self.sendQ_cv.notify_all()
+        self.sendQ_cv.release()
+
+        self.response_cv.acquire()
+        self.response_cv.notify_all()
+        self.response_cv.release()
+
+###############################################################################
+# Public sendQ access functions
+###############################################################################
 
     def push_next_send(self, gcode):
         self.sendQ_cv.acquire()
@@ -112,19 +165,11 @@ class DataStore():
         self.response_cv.release()
         return ret
 
-    def pull_state(self, key, index):
-        return
+    
 
-    def kill(self):
-        self.kill_switch = 1
-
-        self.sendQ_cv.acquire()
-        self.sendQ_cv.notify_all()
-        self.sendQ_cv.release()
-
-        self.response_cv.acquire()
-        self.response_cv.notify_all()
-        self.response_cv.release()
+###############################################################################
+# Public state map access functions
+###############################################################################
 
 ###############################################################################
 # Private helper functions. There are 3 important state)
@@ -151,45 +196,3 @@ class DataStore():
 
     def advance_Q(self):
         self.current_sendQ_index += 1
-
-###############################################################################
-# Define the global table. Each entry's key is the gcode command that gets
-# that data. The second indecies in the table are one of the following)
-#    -> prefix      : unique prefix of the response from printer
-#    -> description : short text description of command
-#    -> regex       : regex to pull relavent data from reponse
-#    -> labels      : Text labels of the values returned by command
-#    -> values      : numerical values returned by command
-#    -> gui         : list of gui elements to be updated 
-###############################################################################
-
-
-global_table = {}
-global_table["M155 S1"] = {}
-global_table["M155 S1"]["prefix"] = "T:"
-global_table["M155 S1"]["description"] = "Returns Nozzle and Bed Temp every second."
-global_table["M155 S1"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
-global_table["M155 S1"]["labels"] = ["Nozzle Current", "Nozzle Target", "Bed Current", "Bed Target"]
-global_table["M155 S1"]["values"] = [0,0,0,0]
-global_table["M155 S1"]["gui"] = []
-global_table["M154 S1"] = {}
-global_table["M154 S1"]["prefix"] = "X:"
-global_table["M154 S1"]["description"] = "Returns X,Y,Z,E pos every second."
-global_table["M154 S1"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
-global_table["M154 S1"]["labels"] = ["X Curr", "Y Curr", "Z Curr", "E Curr"]
-global_table["M154 S1"]["values"] = [0,0,0,0]
-global_table["M154 S1"]["gui"] = []
-global_table["M851"] = {}
-global_table["M851"]["prefix"] = "M851"
-global_table["M851"]["description"] = "Distance from probe to nozzle."
-global_table["M851"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
-global_table["M851"]["labels"] = ["X Probe Off", "Y Probe Off", "Z Probe Off"]
-global_table["M851"]["values"] = [0,0,0]
-global_table["M851"]["gui"] = []
-global_table["M92"] = {}
-global_table["M92"]["prefix"] = "M92"
-global_table["M92"]["description"] = "Steps per mm"
-global_table["M92"]["regex"] = r"[-+]?(?:\d*\.\d+|\d+)"
-global_table["M92"]["labels"] = ["X Steps per mm", "Y  Steps per mm", "Z Steps per mm", "E  Steps per mm"]
-global_table["M92"]["values"] = [0,0,0,0]
-global_table["M92"]["gui"] = []

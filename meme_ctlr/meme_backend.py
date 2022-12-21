@@ -8,7 +8,7 @@ baud = 115200
 serial_timeout = 1
 killed = 0
 
-ds = data_store.DataStore(0, 0)
+ds = data_store.DataStore()
 port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
 
 response_pipe_name = "./response_pipe"

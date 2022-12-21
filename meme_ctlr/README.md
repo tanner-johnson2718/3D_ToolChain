@@ -13,3 +13,8 @@ G code sender, printer montoring and control, and interface for executing testin
 * pip3 install customtkinter
 * sudo apt-get install python3-tk
 * Python 3.8.10
+
+# TODO
+* implement state map
+* Doc base arch
+* program stats and deal with unbounded sendQ
