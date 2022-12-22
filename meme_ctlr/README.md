@@ -32,6 +32,13 @@ These data elements are accessed through the following functions:
 4) **wait_on_next_response().** Blocks until a response from the printer has been recved. Returns most recent response string.
 5) **get_state(key).** Returns current state value of the given key. **TODO**, flesh this call out more.
 
+## Backend
+Implements all IO.
+* **Send/Recv Thread.** Blocks on IO from printer via serial and registers IO with the data store
+* **Response Publisher.** Thread to push ALL unparsed responses from printer over a port. This could be a pipe for local debugging or a socket for a networed UI to capture.
+* **Command Recv/Macro.** Thread to recv commands and macros over a port and push them to the send Q. **TODO** need to decide format for macros, how to add and how to delete them.
+* **Sub Thread.** **TODO** flesh this out more along with get_state function to define API for subscribing to state.
+
 # TODO
 * program stats and deal with unbounded sendQ
 * Start up commands and macros
