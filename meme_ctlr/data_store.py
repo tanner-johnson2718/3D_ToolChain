@@ -23,43 +23,42 @@ import re
 class DataStore():
 
 ###############################################################################
-# Define the state map. Each entry's key is the gcode command that gets
-# that data. The second indecies in the table are one of the following)
-#    -> prefix      : unique prefix of the response from printer
-#    -> description : short text description of command
-#    -> regex       : regex to pull relavent data from reponse
-#    -> labels      : Text labels of the values returned by command
-#    -> values      : numerical values returned by command
-#    -> gui         : list of gui elements to be updated 
+# Define the state map. The state map holds a list of commands that return
+# state of the printer. A dictionary maps the key
 ###############################################################################
     class StateMap():
         def __init__(self):
-            self.key2index = {"M155" : 0, 
-                              "M154" : 1,
-                              "M27"  : 5, 
-                              "M851" : 2,
-                              "M92"  : 3,
-                              "M204" : 4}
-            self.prefix = ["T:", "X:","M851","M92", "M204", "SD printing"]
-            self.values = [[0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0], [0,0,0,0], [0,0,0], [0,0]]
+            self.state = {"nozzle temp current" : 0,
+                          "nozzle temp target"  : 0,
+                          "bed temp current"    : 0,
+                          "bed temp target"     : 0,
+                          "X Pos"               : 0,
+                          "Y Pos"               : 0,
+                          "Z Pos"               : 0,
+                          "E Pos"               : 0,
+                          "Print Accel"         : 0,
+                          "Travel Accel"        : 0,
+                          "Retract Accel"       : 0,
+                          "SD Progress"         : 0,
+                          "SD Total"            : 0}
+
+            self.cmd2key = {"M155" : ["nozzle temp current", "nozzle temp target", "bed temp current", "bed temp target"], 
+                            "M154" : ["X Pos","Y Pos","Z Pos","E Pos"],
+                            "M27"  : ["SD Progress","SD Total"], 
+                            "M204" : ["Print Accel","Retract Accel","Travel Accel"]}
+
+            self.cmd2prefix = {"M155" : "T:", 
+                               "M154" : "X:",
+                               "M27"  : "SD printing", 
+                               "M204" : "M204"}
             self.regex = r"[-+]?(?:\d*\.\d+|\d+)"
-            self.description = ["Returns Nozzle and Bed Temp every second.",
-                                "Returns X,Y,Z,E pos every second.",
-                                "Distance from probe to nozzle.",
-                                "Steps per mm",
-                                "Get current print, retract, and travel acceleration settings.",
-                                "Get SD printing progress"]
 
     def __init__(self):
         self.kill_switch = 0
         self.start_time = time.time()
-
         self.sendQ = []                             # List of send job objects
         self.sendQ_cv =  threading.Condition()      # Controls and notifies on sendQ activity
-        self.response_cv = threading.Condition()    # Notifys when a response is recved
         self.current_sendQ_index = 0
-        self.most_recent_response = ""              # Holds most recent reponse
-
         self.state = DataStore.StateMap()
 
     def kill(self):
@@ -68,10 +67,6 @@ class DataStore():
         self.sendQ_cv.acquire()
         self.sendQ_cv.notify_all()
         self.sendQ_cv.release()
-
-        self.response_cv.acquire()
-        self.response_cv.notify_all()
-        self.response_cv.release()
 
 ###############################################################################
 # Send Job class holds commands and meta data of a command to be sent.
@@ -124,16 +119,10 @@ class DataStore():
 
     def push_reponse(self, line):
         
-        # Grab CV, append line to response list of current open command and 
-        # notify anyone waiting on response input 
+        # Grab CV, append line to response list of current open command
         self.sendQ_cv.acquire()
         if self.is_open():
             self.sendQ[self.current_sendQ_index].responses.append(line)
-
-        self.response_cv.acquire()
-        self.most_recent_response = line
-        self.response_cv.notify_all()
-        self.response_cv.release()
 
         # recved an ACK, update timestamp on current send job, inc the index,
         # and notify anyone waiting on sendQ activity
@@ -146,26 +135,24 @@ class DataStore():
         self.sendQ_cv.release()
 
         # parse the input and see if it matches any prefixes in the state map
-        for i in range(0,len(self.state.key2index.keys())):
-            index = line.find(self.state.prefix[i])
-            if index > -1:
-                nums = re.findall(self.state.regex, line[(index+len(self.state.prefix[i])):])
-                if len(nums) == len(self.state.values[i]):
-                    self.state.values[i] = nums
-
-    def wait_response(self):
-        self.response_cv.acquire()
-        self.response_cv.wait()
-        ret = self.most_recent_response
-        self.response_cv.release()
-        return ret
+        for cmd_key in self.state.cmd2prefix.keys():
+            if line.find(self.state.cmd2prefix[cmd_key]) > -1:
+                nums = re.findall(self.state.regex, line)
+                for i in range(0, len(self.state.cmd2key[cmd_key])):
+                    self.state.state[self.state.cmd2key[cmd_key][i]] = nums[i]
+        
 
 ###############################################################################
 # Public state map access functions
 ###############################################################################
 
     def query(self, key):
-        return self.state.values[self.state.key2index[key]]
+        if key in self.state.state.keys():
+            return self.state.state[key]
+        return ""
+
+    def get_all_state_keys(self):
+        return self.state.state.keys()
 
 ###############################################################################
 # Private helper functions. There are 3 important state)
