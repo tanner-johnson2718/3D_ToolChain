@@ -39,19 +39,15 @@ Implements all IO.
 * **Sub Thread.** **TODO** flesh this out more along with get_state function to define API for subscribing to state.
 
 ### Network API
-The applciation protocol for communicating with the back end follows the following. All packets are 64bytes. The end of a packets data section is padded with null bytes. 
+The applciation protocol for communicating with the back end follows the following. All packets are at most 64 bytes and are terminated with a new line. All packets have a 4 byte ascii packet idetifying prefix, followed by an ascii space, followed by the payload.
 
 | API Call | Example Packet Structure | Comments | 
 | --- | --- | --- |
-| Send Command | \|c\|m\|d\| \|M\|5\|0\|3\|null\|...\|null\| | cmd in ascii followed by space followed by command (max 59 char) |
-| Sub Reponses Request | \|s\|u\|b\|R\|\<V\>\|null\|...\|null\| | subR in ascii followed by 0,1,2 ascii int. V=0 -> Dont sent serial input. V=1 -> Send serial input but filter out polled responses (like auto temp report). V=2 -> Send all serial input. |
+| Send Command | b'cmdG M503\n' | cmdG in ascii followed by space followed by command (max 59 char) |
+| Sub Reponses Request | b'subR 1\n' | subR in ascii followed by 0,1,2 ascii int. V=0 -> Dont sent serial input. V=1 -> Send serial input but filter out polled responses (like auto temp report). V=2 -> Send all serial input. |
 * register macro
 * deregister macro
 * get all macros
-* unsub to responses
-* add response filter
-* remove response filter
-* see all filters
 * sub to state
 * unsub to state
 * see all subs
