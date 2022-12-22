@@ -40,7 +40,7 @@ Implements all IO.
 * **Sub Thread.** **TODO** flesh this out more along with get_state function to define API for subscribing to state.
 
 # TODO
-* program stats and deal with unbounded sendQ
+* program stats and deal with unbounded sendQ and logging
 * Start up commands and macros
 * Subcription system) I want parsed values from command x,y,z at a regular time interval
 * Programmatic way of adding to the parsed command list i.e. state map
