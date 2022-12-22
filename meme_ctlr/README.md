@@ -43,8 +43,8 @@ The applciation protocol for communicating with the back end follows the followi
 
 | API Call | Example Packet Structure | Comments | 
 | --- | --- | --- |
-| Send Command | `\|c|m|d| |M|5|0|3|null|...|null|` | cmd in ascii followed by space followed by command (max 59 char) |
-| Sub Reponses Request | `|s|u|b|R|<V>|null|...|null|` | subR in ascii followed by 0,1,2 ascii int. V=0 -> Dont sent serial input. V=1 -> Send serial input but filter out polled responses (like auto temp report). V=2 -> Send all serial input. |
+| Send Command | \|c\|m\|d\| \|M\|5\|0\|3\|null\|...\|null\| | cmd in ascii followed by space followed by command (max 59 char) |
+| Sub Reponses Request | \|s\|u\|b\|R\|<V>\|null\|...\|null\| | subR in ascii followed by 0,1,2 ascii int. V=0 -> Dont sent serial input. V=1 -> Send serial input but filter out polled responses (like auto temp report). V=2 -> Send all serial input. |
 * register macro
 * deregister macro
 * get all macros
