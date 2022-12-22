@@ -1,7 +1,13 @@
 import customtkinter
+import threading
+import time
 
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
+
+response_Q = []
+cmd_fifo_name = "./cmd_pipe"
+cmd_fifo = open(cmd_fifo_name, "w")
 
 ###############################################################################
 # GUI class is inherited from custom tkinter. It holds all GUI elements and 
@@ -12,6 +18,8 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 class GUI(customtkinter.CTk):
     def __init__(self):
         super().__init__()
+
+        self.after(500, self.poll_response)
 
 ###############################################################################
 # Create Base GUI and base layout for selecting the various frames
@@ -142,7 +150,46 @@ class GUI(customtkinter.CTk):
         self.terminal.insert("0.0", "Test")
         self.input_gcode = customtkinter.CTkEntry(master=self.printer_frame_RHS,width=800,height=50)
         self.input_gcode.grid(row=1, column=0, padx=padx, pady=pady)
+        self.input_gcode.bind('<Return>', self.send_gcode)
 
+###############################################################################
+# Polling fuctions and IO functions
+###############################################################################
+
+    def poll_response(self):
+        global response_Q
+        while len(response_Q) > 0:
+            self.terminal.insert("end", response_Q.pop(0))
+        self.after(500, app.poll_response)
+
+    def send_gcode(self, something):
+        cmd = self.input_gcode.get()
+        cmd_fifo.write( cmd + "\n")
+        cmd_fifo.flush()
+
+
+###############################################################################
+# Start
+###############################################################################
+
+response_pipe_name = "./response_pipe"
+killed = 0
+
+def response_reader():
+    with open(response_pipe_name, "r") as fifo:
+        print("Response Reader Starting...")
+        while not killed:
+            line = fifo.readline()
+            response_Q.append(line)
+    print("Response Thread Stopping...")
+
+response_t = threading.Thread(target=response_reader, name="Response Thread")
+response_t.start()
 
 app = GUI()
 app.mainloop()
+
+# GUI exited
+killed = 1
+response_t.join()
+cmd_fifo.close()

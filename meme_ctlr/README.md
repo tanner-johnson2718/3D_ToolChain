@@ -11,8 +11,8 @@ G code sender, printer montoring and control, and interface for executing testin
 
 # Dependancies
 * Python 3.8.10
-* nodejs
-* npm
+* python-tk
+* custom tkinter
 
 # Backend Architecture
 
@@ -45,3 +45,5 @@ Implements all IO.
 * Subcription system) I want parsed values from command x,y,z at a regular time interval
 * Programmatic way of adding to the parsed command list i.e. state map
 * send data over sockets instead of pipe (or can choose between the two)
+* Filter response output
+* Clean up and fill out GUId

@@ -13,11 +13,11 @@ ds = data_store.DataStore()
 port = serial.Serial(port = port_dev, baudrate = baud, timeout = serial_timeout)
 
 response_pipe_name = "./response_pipe"
-os.mkfifo(response_pipe_name, 0o600)
-os.system("gnome-terminal -e 'bash -c \"cat " + response_pipe_name + "\"'")
-
 sub_pipe_name = "./sub_pipe"
-os.mkfifo(sub_pipe_name, 0o600)
+cmd_pipe_name = "./cmd_pipe"
+os.mkfifo(response_pipe_name)
+os.mkfifo(sub_pipe_name)
+os.mkfifo(cmd_pipe_name)
 os.system("gnome-terminal -e 'bash -c \"cat " + sub_pipe_name + "\"'")
 
 def recv_thread():
@@ -44,6 +44,19 @@ def response_poster():
             fifo.write(r)
             fifo.flush()
     print("Response Thread Stopping...")
+
+def cmd_thead():
+    try:
+        with open(cmd_pipe_name, "r") as fifo:
+            print("CMD thread starting...")
+            while not killed:
+                cmd = fifo.readline()
+                if killed:
+                    break
+                cmd = cmd[0:(len(cmd)-1)]
+                ds.push_next_send(cmd)
+    except:
+        print("CMD thread stopping...")
 
 def subscription_poster():
     with open(sub_pipe_name, "w") as fifo1:
@@ -85,19 +98,22 @@ response_t.start()
 sub_t = threading.Thread(target=subscription_poster, name="Sub Thread")
 sub_t.start()
 
+cmd_t = threading.Thread(target=cmd_thead, name="CMD Thread")
+cmd_t.start()
+
 while not killed:
-    t = input("cmd) ")
+    t = input("quit? ")
     if t == "q":
         killed = 1
         break
     elif t == "":
         continue
-    else:
-        ds.push_next_send(t)
 
 ds.kill()
 send_t.join()
 response_t.join()
 recv_t.join()
+cmd_t.join()
+sub_t.join()
 port.close()
-os.system("rm -rf __pycache__ " + response_pipe_name + " " + sub_pipe_name)
+os.system("rm -rf __pycache__ " + response_pipe_name + " " + sub_pipe_name + " " + cmd_pipe_name)
