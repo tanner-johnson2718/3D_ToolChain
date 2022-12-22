@@ -4,6 +4,11 @@ import serial
 import os
 import time
 
+import socket
+
+HOST = "127.0.0.1"
+PORT = 65432 
+
 port_dev = "/dev/ttyACM0"
 baud = 115200
 serial_timeout = 1
@@ -28,23 +33,42 @@ def send_thread():
             port.write((cmd+"\n").encode('ascii'))
     print("Send Thread Stopping...")
 
+def server_thread():
+    print("Server Thread Starting...")
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((HOST, PORT))
+        s.listen()
+        conn, addr = s.accept()
+        with conn:
+            print(f"Connected by {addr}")
+            while not killed:
+                line = ds.wait_response()
+                if (not killed) and (line != ""):
+                    conn.sendall(line.encode('ascii'))
+
+    print("Server Thread Stopping...")
 
 send_t = threading.Thread(target=send_thread, name="Send_Thread")
-send_t.start()
-
 recv_t = threading.Thread(target=recv_thread, name="Recv_Thread")
+server_t = threading.Thread(target=server_thread, name="Server_Thread")
 recv_t.start()
+send_t.start()
+server_t.start()
 
 while not killed:
-    t = input("quit? ")
+    t = input("cmd) ")
     if t == "q":
         killed = 1
         break
     elif t == "":
         continue
+    else:
+        ds.push_cmd(t)
+
 
 ds.kill()
 send_t.join()
 recv_t.join()
+server_t.join()
 port.close()
 os.system("rm -rf __pycache__ ")

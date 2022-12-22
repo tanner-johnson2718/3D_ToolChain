@@ -39,6 +39,23 @@ Implements all IO.
 * **Command Recv/Macro.** Thread to recv commands and macros over a port and push them to the send Q. **TODO** need to decide format for macros, how to add and how to delete them.
 * **Sub Thread.** **TODO** flesh this out more along with get_state function to define API for subscribing to state.
 
+### Network API
+
+* send command
+* subscribe to responses
+
+* register macro
+* deregister macro
+* get all macros
+
+* unsub to responses
+* add response filter
+* remove response filter
+* see all filters
+* sub to state
+* unsub to state
+* see all subs
+
 # TODO
 * program stats and deal with unbounded sendQ and logging
 * Start up commands and macros
@@ -47,3 +64,5 @@ Implements all IO.
 * send data over sockets instead of pipe (or can choose between the two)
 * Filter response output
 * Clean up and fill out GUId
+* SD stuff
+* storing macros, filters, and command state map thingy
