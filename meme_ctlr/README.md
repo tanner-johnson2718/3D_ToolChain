@@ -10,9 +10,9 @@ G code sender, printer montoring and control, and interface for executing testin
 * All commands, if properly recv-ed by the printer, are ACK-ed with a response "ok" 
 
 # Dependancies
-* pip3 install customtkinter
-* sudo apt-get install python3-tk
 * Python 3.8.10
+* nodejs
+* npm
 
 # Backend Architecture
 
