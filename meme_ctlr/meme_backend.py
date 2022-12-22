@@ -17,13 +17,13 @@ def recv_thread():
     while not killed:
         serial_input = port.readline().decode('ascii')
         if (not killed) and (serial_input != ""):
-            ds.push_reponse_line(serial_input)
+            ds.push_reponse(serial_input)
     print("Recv Thread Stopping...")
 
 def send_thread():
     print("Send Thread Starting...")
     while not killed:
-        cmd = ds.wait_on_next_to_send()
+        cmd = ds.wait_cmd()
         if (not killed) and isinstance(cmd, str):
             port.write((cmd+"\n").encode('ascii'))
     print("Send Thread Stopping...")

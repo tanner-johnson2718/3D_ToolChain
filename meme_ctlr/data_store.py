@@ -101,7 +101,7 @@ class DataStore():
 # Public sendQ access functions
 ###############################################################################
 
-    def push_next_send(self, gcode):
+    def push_cmd(self, gcode):
         self.sendQ_cv.acquire()
 
         self.sendQ.append(DataStore.SendJob(gcode))
@@ -110,7 +110,7 @@ class DataStore():
 
         self.sendQ_cv.release()
 
-    def wait_on_next_to_send(self):
+    def wait_cmd(self):
         while not self.kill_switch:
             self.sendQ_cv.acquire()
             self.sendQ_cv.wait()
@@ -122,7 +122,7 @@ class DataStore():
                 self.sendQ_cv.release()
                 return ret
 
-    def push_reponse_line(self, line):
+    def push_reponse(self, line):
         
         # Grab CV, append line to response list of current open command and 
         # notify anyone waiting on response input 
@@ -153,7 +153,7 @@ class DataStore():
                 if len(nums) == len(self.state.values[i]):
                     self.state.values[i] = nums
 
-    def wait_on_next_response(self):
+    def wait_response(self):
         self.response_cv.acquire()
         self.response_cv.wait()
         ret = self.most_recent_response
@@ -164,7 +164,7 @@ class DataStore():
 # Public state map access functions
 ###############################################################################
 
-    def get_state(self, key):
+    def query(self, key):
         return self.state.values[self.state.key2index[key]]
 
 ###############################################################################
