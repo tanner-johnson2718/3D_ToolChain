@@ -41,18 +41,13 @@ Implements all IO.
 ### Network API
 The applciation protocol for communicating with the back end follows the following. All packets are at most 64 bytes and are terminated with a new line. All packets have a 4 byte ascii packet idetifying prefix, followed by an ascii space, followed by the payload.
 
-| API Call | Sender | Example Packet Structure | Comments | 
-| --- | --- | --- | --- |
-| Send Command | Client | b'cmdG M503\n' | Client sends 'cmdG 'in ascii followed by gcode command (max 59 char) |
-| Subscribe to Serial Reponses | Client | b'subR 1\n' | Client sends 'subR ' in ascii followed by 0,1,2 in ascii. V=0 -> Dont sent serial input. V=1 -> Send serial input but filter out polled responses (like auto temp report). V=2 -> Send all serial input. |
-| Subscribe to State | Client | b'subS nozzle temp current\n' | Client sends 'subS ' followed by state key |
-* register macro
-* deregister macro
-* get all macros
-* unsub to state
+| API Call | Sender | Example Packet Structure | Response | Comments | 
+| --- | --- | --- | --- | --- |
+| Send Command | Client | b'cmdG M503\n' | none | Client sends 'cmdG 'in ascii followed by gcode command (max 59 char) |
+| Subscribe to Serial Reponses | Client | b'subR 1\n' | b'subR ...' | Client sends 'subR ' in ascii followed by 0,1,2 in ascii. V=0 -> Dont sent serial input. V=1 -> Send serial input but filter out polled responses (like auto temp report). V=2 -> Send all serial input. Server responds with subR prefix followed by command |
+| Subscribe to State | Client | b'subS nozzle temp current\n' | b'subS key value' | Client sends 'subS ' followed by state key. Resend the same subS request to unsub. Server responds with subS prefix followed by key followed by value |
 
 # TODO
-* program stats and deal with unbounded sendQ and logging
-* macros
+* deal with unbounded sendQ and logging
+* macros and storing them
 * SD stuff
-* storing macros and logging

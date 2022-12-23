@@ -5,6 +5,7 @@ import os
 import select
 import time
 import socket
+import tracemalloc as tm
 
 HOST = "127.0.0.1"
 PORT = 65432
@@ -67,7 +68,8 @@ def parse_packet(packet):
         response_verbosity = v
 
     # Subscribe to state. Check if valid key. If key has auto poll feature
-    # send cmd + "S1"
+    # send cmd + "S1". If key is already in poll list, remove it and if its
+    # an auto poll, send cmd + S0
     elif prefix == 'subS':
         global poll_list
 
@@ -76,7 +78,10 @@ def parse_packet(packet):
             print("ERROR in parse packet, invalid key sub: " + str(key))
             return
         if key in poll_list:
-            return
+            poll_list.remove(key)
+            if ds.is_auto_poll(key):
+                ds.push_cmd(ds.state.key2cmd[key] + " S0")
+                return
         
         poll_list.append(key)
 
@@ -92,7 +97,7 @@ def filter_and_send_response(serial_input):
         return
     elif response_verbosity == 2:
         client_send_lock.acquire()
-        conn.sendall(serial_input)
+        conn.sendall(b'subR ' + serial_input)
         client_send_lock.release()
     elif response_verbosity == 1:
         for key in poll_list:
@@ -100,7 +105,7 @@ def filter_and_send_response(serial_input):
             if serial_input.decode('ascii').find(prefix) > -1:
                 return
         client_send_lock.acquire()
-        conn.sendall(serial_input)
+        conn.sendall(b'subR ' + serial_input)
         client_send_lock.release()
     else:
         print("ERROR in filter, invalid response verbosity: " + str(response_verbosity))
@@ -140,10 +145,10 @@ def polling_thread():
             if not ds.is_auto_poll(key):
                 ds.push_cmd(ds.state.key2cmd[key])
             client_send_lock.acquire()
-            conn.sendall( (key + " " + str(ds.query(key)) + '\n').encode('ascii') )
+            conn.sendall( ("subS " +  key + " " + str(ds.query(key)) + '\n').encode('ascii') )
             client_send_lock.release()
+    print("Polling Thread Stopping...")
             
-
 send_t = threading.Thread(target=send_thread, name="Send_Thread")
 recv_t = threading.Thread(target=recv_thread, name="Recv_Thread")
 server_t = threading.Thread(target=server_thread, name="Server_Thread")
@@ -154,23 +159,28 @@ send_t.start()
 server_t.start()
 poll_t.start()
 
+tm.start()
+
 while not killed:
-    t = input("cmd) ")
+    t = input("snap) ")
     if t == "quit":
         killed = 1
         break
-    elif t == "":
-        continue
-    elif t.find("query ") == 0:
-        print(ds.query(t[6:]))
+    
+    snap = tm.take_snapshot()
+    for s in snap.statistics('filename'):
+        print(s)
+    print()
 
 
+tm.stop()
 ds.kill()
 
 send_t.join()
 recv_t.join()
 server_t.join()
 poll_t.join()
+
 
 port.close()
 conn.close()
