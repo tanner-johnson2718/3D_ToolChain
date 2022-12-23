@@ -32,11 +32,11 @@ These data elements are accessed through the following functions:
 4) `query(key)` Returns current state value of the given key. Keys are short state decriptions like `nozzle temp current`. `get_all_state_keys()` returns list of acceptable keys.
 
 ## Backend
-Implements all IO.
+Implements all IO and networking functionality 
 * **Send/Recv Thread.** Blocks on IO from printer via serial and registers IO with the data store
 * **Response Publisher.** Thread to push ALL unparsed responses from printer over a port. This could be a pipe for local debugging or a socket for a networed UI to capture.
-* **Command Recv/Macro.** Thread to recv commands and macros over a port and push them to the send Q. **TODO** need to decide format for macros, how to add and how to delete them.
-* **Sub Thread.** **TODO** flesh this out more along with get_state function to define API for subscribing to state.
+* **Server thread.** Thread to recv commands and macros over a socket and push them to the send Q. Handles all incoming packets, parses them, and takes apporpiate action.
+* **Polling Thread.** Polls subscribed state and sends reports to client over network at 1s interval.
 
 ### Network API
 The applciation protocol for communicating with the back end follows the following. All packets are at most 64 bytes and are terminated with a new line. All packets have a 4 byte ascii packet idetifying prefix, followed by an ascii space, followed by the payload.
