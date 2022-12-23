@@ -41,22 +41,18 @@ Implements all IO.
 ### Network API
 The applciation protocol for communicating with the back end follows the following. All packets are at most 64 bytes and are terminated with a new line. All packets have a 4 byte ascii packet idetifying prefix, followed by an ascii space, followed by the payload.
 
-| API Call | Example Packet Structure | Comments | 
-| --- | --- | --- |
-| Send Command | b'cmdG M503\n' | cmdG in ascii followed by space followed by command (max 59 char) |
-| Sub Reponses Request | b'subR 1\n' | subR in ascii followed by 0,1,2 ascii int. V=0 -> Dont sent serial input. V=1 -> Send serial input but filter out polled responses (like auto temp report). V=2 -> Send all serial input. |
+| API Call | Sender | Example Packet Structure | Comments | 
+| --- | --- | --- | --- |
+| Send Command | Client | b'cmdG M503\n' | Client sends 'cmdG 'in ascii followed by gcode command (max 59 char) |
+| Subscribe to Serial Reponses | Client | b'subR 1\n' | Client sends 'subR ' in ascii followed by 0,1,2 in ascii. V=0 -> Dont sent serial input. V=1 -> Send serial input but filter out polled responses (like auto temp report). V=2 -> Send all serial input. |
+| Subscribe to State | Client | b'subS nozzle temp current\n' | Client sends 'subS ' followed by state key |
 * register macro
 * deregister macro
 * get all macros
-* sub to state
 * unsub to state
-* see all subs
 
 # TODO
 * program stats and deal with unbounded sendQ and logging
 * macros
-* Subcription system) I want parsed values from command x,y,z at a regular time interval
-* send data over sockets instead of pipe (or can choose between the two)
-* Filter response output
 * SD stuff
-* storing macros, filters, and command state map thingy
+* storing macros and logging

@@ -3,13 +3,14 @@ import threading
 import serial
 import os
 import select
-
+import time
 import socket
 
 HOST = "127.0.0.1"
 PORT = 65432
 PACKET_SIZE = 64
 response_verbosity = 0
+poll_list = []
 
 port_dev = "/dev/ttyACM0"
 baud = 115200
@@ -27,6 +28,8 @@ print("Waiting for client...")
 conn, addr = listening_sock.accept()
 conn.setblocking(0)
 print(f"Connected by {addr}")
+
+client_send_lock = threading.Semaphore(1)
 
 def parse_packet(packet):
     if len(packet) >= 64:
@@ -63,6 +66,23 @@ def parse_packet(packet):
         global response_verbosity
         response_verbosity = v
 
+    # Subscribe to state. Check if valid key. If key has auto poll feature
+    # send cmd + "S1"
+    elif prefix == 'subS':
+        global poll_list
+
+        key = packet[5:].decode('ascii')
+        if not ds.is_state_key(key):
+            print("ERROR in parse packet, invalid key sub: " + str(key))
+            return
+        if key in poll_list:
+            return
+        
+        poll_list.append(key)
+
+        if ds.is_auto_poll(key):
+            ds.push_cmd(ds.state.key2cmd[key] + " S1")
+
     else:
         print("ERROR in parse packet, invalid prefix: " + prefix)
 
@@ -71,7 +91,19 @@ def filter_and_send_response(serial_input):
     if response_verbosity == 0:
         return
     elif response_verbosity == 2:
+        client_send_lock.acquire()
         conn.sendall(serial_input)
+        client_send_lock.release()
+    elif response_verbosity == 1:
+        for key in poll_list:
+            prefix = ds.get_prefix(key)
+            if serial_input.decode('ascii').find(prefix) > -1:
+                return
+        client_send_lock.acquire()
+        conn.sendall(serial_input)
+        client_send_lock.release()
+    else:
+        print("ERROR in filter, invalid response verbosity: " + str(response_verbosity))
 
 def recv_thread():
     print("Recv Thread Starting...")
@@ -96,17 +128,31 @@ def server_thread():
         ready = select.select([conn], [], [], serial_timeout)
         if ready[0]:
             msg = conn.recv(PACKET_SIZE)
-            print(msg)
             parse_packet(msg)
                 
     print("Server Thread Stopping...")
 
+def polling_thread():
+    print("Polling Thread Starting...")
+    while not killed:
+        time.sleep(1)
+        for key in poll_list:
+            if not ds.is_auto_poll(key):
+                ds.push_cmd(ds.state.key2cmd[key])
+            client_send_lock.acquire()
+            conn.sendall( (key + " " + str(ds.query(key)) + '\n').encode('ascii') )
+            client_send_lock.release()
+            
+
 send_t = threading.Thread(target=send_thread, name="Send_Thread")
 recv_t = threading.Thread(target=recv_thread, name="Recv_Thread")
 server_t = threading.Thread(target=server_thread, name="Server_Thread")
+poll_t = threading.Thread(target=polling_thread, name="Poll Thread")
+
 recv_t.start()
 send_t.start()
 server_t.start()
+poll_t.start()
 
 while not killed:
     t = input("cmd) ")
@@ -120,9 +166,11 @@ while not killed:
 
 
 ds.kill()
+
 send_t.join()
 recv_t.join()
 server_t.join()
+poll_t.join()
 
 port.close()
 conn.close()

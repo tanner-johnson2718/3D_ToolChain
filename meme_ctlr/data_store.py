@@ -24,7 +24,7 @@ class DataStore():
 
 ###############################################################################
 # Define the state map. The state map holds a list of commands that return
-# state of the printer. A dictionary maps the key
+# state of the printer.
 ###############################################################################
     class StateMap():
         def __init__(self):
@@ -41,6 +41,25 @@ class DataStore():
                           "Retract Accel"       : 0,
                           "SD Progress"         : 0,
                           "SD Total"            : 0}
+
+            self.key2cmd = {"nozzle temp current" : "M155",
+                            "nozzle temp target"  : "M155",
+                            "bed temp current"    : "M155",
+                            "bed temp target"     : "M155",
+                            "X Pos"               : "M154",
+                            "Y Pos"               : "M154",
+                            "Z Pos"               : "M154",
+                            "E Pos"               : "M154",
+                            "Print Accel"         : "M204",
+                            "Travel Accel"        : "M204",
+                            "Retract Accel"       : "M204",
+                            "SD Progress"         : "M27",
+                            "SD Total"            : "M27"}
+
+            self.cmd_auto_poll = {"M155" : True,
+                                  "M154" : True,
+                                  "M27"  : False,
+                                  "M204" : False}
 
             self.cmd2key = {"M155" : ["nozzle temp current", "nozzle temp target", "bed temp current", "bed temp target"], 
                             "M154" : ["X Pos","Y Pos","Z Pos","E Pos"],
@@ -153,6 +172,19 @@ class DataStore():
 
     def get_all_state_keys(self):
         return self.state.state.keys()
+
+    def is_state_key(self, key):
+        return key in self.get_all_state_keys()
+
+    def get_prefix(self, key):
+        if self.is_state_key(key):
+            cmd = self.state.key2cmd[key]
+            return self.state.cmd2prefix[cmd]
+
+    def is_auto_poll(self, key):
+        if self.is_state_key(key):
+            cmd = self.state.key2cmd[key]
+            return self.state.cmd_auto_poll[cmd]
 
 ###############################################################################
 # Private helper functions. There are 3 important state)
