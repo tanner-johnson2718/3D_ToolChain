@@ -11,8 +11,7 @@ G code sender, printer montoring and control, and interface for executing testin
 
 # Dependancies
 * Python 3.8.10
-* python-tk
-* custom tkinter
+* textual
 
 # Backend Architecture
 
