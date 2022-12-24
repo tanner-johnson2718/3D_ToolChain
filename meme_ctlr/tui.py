@@ -1,24 +1,24 @@
 from textual.app import App, ComposeResult
+from textual.widgets import TextLog, Header, Footer, Static
+from textual import events
 from textual.containers import Container
-from textual.widgets import Header, Footer, Label
 
 
-class StopwatchApp(App):
-    """A Textual app to manage stopwatches."""
-
-    BINDINGS = [("d", "toggle_dark", "Toggle dark mode")]
+class MEME(App):
+    CSS_PATH="tui.css"
+    BINDINGS=[("a","a_binding","ASS")]
 
     def compose(self) -> ComposeResult:
-        """Create child widgets for the app."""
-        yield Header(True)
+        yield Static("Sidebar", id="sidebar")
+        yield Header()
         yield Footer()
-        yield Container(Label("Hello"), Label("Hello 2"))
+        yield TextLog(id="t1", classes="box")
+        yield TextLog(id="t2", classes="box")
 
-    def action_toggle_dark(self) -> None:
-        """An action to toggle dark mode."""
-        self.dark = not self.dark
+    def on_key(self, event: events.Key) -> None:
+        self.query_one("#t1",TextLog).write(event.character)
 
 
 if __name__ == "__main__":
-    app = StopwatchApp()
+    app = MEME()
     app.run()

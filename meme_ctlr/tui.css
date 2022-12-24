@@ -1,0 +1,17 @@
+Screen {
+    layout: grid;
+    grid-size: 1 2;
+}
+
+.box {
+    height: 100%;
+    border: solid rgb(69, 69, 69);
+}
+
+#sidebar {
+    dock: left;
+    width: 15;
+    height: 100%;
+    color: rgb(69, 69, 69);
+    background:  rgb(69, 69, 69);
+}
