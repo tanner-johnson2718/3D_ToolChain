@@ -51,7 +51,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 ## Tasking
 
-* Update this doc for new board
+* Update this doc for new board, new hotend fan, new partcooler, and adding quick connects to hot end
 * Update Designs doc for hex script
 
 ### Testing / calibration
