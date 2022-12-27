@@ -51,4 +51,5 @@ The applciation protocol for communicating with the back end follows the followi
 * macros and storing them
 * SD stuff
 * Implement actual GUI
-* Update picture and backend doc (verify data store doc is good)
+* Update picture and backend doc (verify all doc is good)
+* Handle client or server dying

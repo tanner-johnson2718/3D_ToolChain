@@ -1,18 +1,12 @@
 from textual.app import App, ComposeResult
 from textual.widgets import TextLog, Header, Footer, Static, Input
-from textual import events
-from textual.containers import Container
 
-import threading
-import socket
-import time
+import asyncio
 
 HOST = "127.0.0.1"
 PORT = 65432
 PACKET_SIZE = 64
 killed = 0
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 class MEME(App):
     CSS_PATH="tui.css"
@@ -26,9 +20,18 @@ class MEME(App):
         yield TextLog(id="t2", classes="box")
         yield Input(id="i1", classes="box")
 
+        
+        asyncio.create_task(self.recv_thread())
+
     def on_input_submitted(self, event : Input.Submitted):
         text = self.query_one("#i1").value
         self.query_one("#t2").write(text)
+
+    async def recv_thread(self):
+        self.reader, self.writer = await asyncio.open_connection(HOST, PORT)
+        while True:
+            data = await self.reader.read(PACKET_SIZE)
+            self.query_one("#t2").write(data.decode('ascii'))
 
 
 app = MEME()
