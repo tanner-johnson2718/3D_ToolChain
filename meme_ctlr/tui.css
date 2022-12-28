@@ -21,3 +21,8 @@ Screen {
     dock: left;
     width: 30;
 }
+
+#Debug_Term {
+    dock: right;
+    width: 50;
+}

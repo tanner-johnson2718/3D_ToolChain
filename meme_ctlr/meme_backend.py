@@ -25,6 +25,7 @@ listening_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 listening_sock.bind((HOST, PORT))
 listening_sock.listen()
 
+
 print("Waiting for client...")
 conn, addr = listening_sock.accept()
 conn.setblocking(0)
@@ -81,7 +82,7 @@ def parse_packet(packet):
             poll_list.remove(key)
             if ds.is_auto_poll(key):
                 ds.push_cmd(ds.state.key2cmd[key] + " S0")
-                return
+            return
         
         poll_list.append(key)
 
@@ -100,6 +101,8 @@ def filter_and_send_response(serial_input):
         conn.sendall(b'subR ' + serial_input)
         client_send_lock.release()
     elif response_verbosity == 1:
+        if serial_input.decode("ascii") == "ok\n":
+            return
         for key in poll_list:
             prefix = ds.get_prefix(key)
             if serial_input.decode('ascii').find(prefix) > -1:
@@ -141,12 +144,21 @@ def polling_thread():
     print("Polling Thread Starting...")
     while not killed:
         time.sleep(1)
+
+        computed_poll_list = set([ds.state.key2cmd[i] for i in poll_list])
+
+        client_send_lock.acquire()
+        conn.sendall("subS \n".encode('ascii'))
+
+        # Send all the commands to the printer
+        for cmd in computed_poll_list:
+            if not ds.state.cmd_auto_poll[cmd]:
+                ds.push_cmd(cmd)
+        
+        # Send state to client
         for key in poll_list:
-            if not ds.is_auto_poll(key):
-                ds.push_cmd(ds.state.key2cmd[key])
-            client_send_lock.acquire()
             conn.sendall( ("subS " +  key + " " + str(ds.query(key)) + '\n').encode('ascii') )
-            client_send_lock.release()
+        client_send_lock.release()
     print("Polling Thread Stopping...")
             
 send_t = threading.Thread(target=send_thread, name="Send_Thread")
@@ -158,6 +170,11 @@ recv_t.start()
 send_t.start()
 server_t.start()
 poll_t.start()
+
+time.sleep(1)
+for key in ds.state.cmd_auto_poll:
+    if ds.state.cmd_auto_poll[key]:
+        ds.push_cmd(key + "S0")
 
 tm.start()
 

@@ -39,34 +39,44 @@ class MEME(App):
         one.add_leaf("Max Y Accel mm/s2")
         one.add_leaf("Max Z Accel mm/s2")
         one.add_leaf("Max E Accel mm/s2")
-        sub = tree.root.add("Report Verbosity", expand=False)
-        sub.add_leaf("Off")
-        sub.add_leaf("Filtered")
-        sub.add_leaf("Unfiltered")
+        self.sub = tree.root.add("Report Verbosity", expand=False)
+        self.sub0 = self.sub.add_leaf("Off")
+        self.sub1 =self.sub.add_leaf("Filtered")
+        self.sub2 =self.sub.add_leaf("Unfiltered")
 
         yield Static("Sidebar", id="sidebar")
-        yield Header(show_clock=True)
         yield tree
-        yield TextLog(id="t1", classes="box")
-        yield TextLog(id="t2", classes="box")
+        yield TextLog(id="State_Term", classes="box")
+        yield TextLog(id="Response_Term", classes="box")
         yield Input(id="i1", classes="box")
+        yield TextLog(id="Debug_Term")
 
         self.writer_lock = asyncio.Lock()
         asyncio.create_task(self.recv_thread())
 
     async def on_input_submitted(self, event : Input.Submitted):
         text = self.query_one("#i1").value
-        self.query_one("#t2").write("Sending -> " + text)
+        send_str = "cmdG " + str(text) + "\n"
+        self.query_one("#Debug_Term").write("Send -> " + send_str[:-1])
 
         await self.writer_lock.acquire()
-        self.writer.write((text+"\n").encode('ascii'))
+        self.writer.write(send_str.encode('ascii'))
         self.writer_lock.release()
 
     async def on_tree_node_selected(self, message : Tree.NodeSelected):
+        send_str = ""
         if message.node._parent.id == self.cont.id:
-            await self.writer_lock.acquire()
             send_str = "subS " + str(message.node._label) + "\n"
-            self.query_one("#t2").write("Sending -> " + send_str)
+        elif message.node.id == self.sub0.id:
+            send_str = "subR 0\n"
+        elif message.node.id == self.sub1.id:
+            send_str = "subR 1\n"
+        elif message.node.id == self.sub2.id:
+            send_str = "subR 2\n"
+
+        if not send_str == "":
+            self.query_one("#Debug_Term").write("Send -> " + send_str[:-1])
+            await self.writer_lock.acquire()
             self.writer.write((send_str).encode('ascii'))
             self.writer_lock.release()
 
@@ -77,14 +87,19 @@ class MEME(App):
             data = await self.reader.read(PACKET_SIZE)
             buffer += data.decode('ascii')
 
+            self.query_one("#Debug_Term").write("Recv -> " + buffer[:-1])
+
             while '\n' in buffer:
                 index = buffer.find('\n')
                 prefix = buffer[0:4]
                 buffer_temp = buffer[5:index]
                 if prefix == "subR":
-                    self.query_one("#t2").write(buffer_temp)
-                else:
-                    target = "#t1"
+                    self.query_one("#Response_Term").write(buffer_temp)
+                elif prefix == "subS":
+                    if len(buffer_temp) > 0:
+                        self.query_one("#State_Term", TextLog).write(buffer_temp)
+                    else:
+                        self.query_one("#State_Term", TextLog).clear()
                 buffer = buffer[(index+1):]
 
 

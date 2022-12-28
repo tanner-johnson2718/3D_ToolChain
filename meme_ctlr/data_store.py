@@ -43,7 +43,7 @@ class DataStore():
                           "SD Total"            : 0}
 
             self.key2cmd = {"Nozzle Temp Current" : "M155",
-                            "Nozzle temp Target"  : "M155",
+                            "Nozzle Temp Target"  : "M155",
                             "Bed Temp Current"    : "M155",
                             "Bed Temp Target"     : "M155",
                             "X Pos"               : "M154",
@@ -155,7 +155,9 @@ class DataStore():
 
         # parse the input and see if it matches any prefixes in the state map
         for cmd_key in self.state.cmd2prefix.keys():
-            if line.find(self.state.cmd2prefix[cmd_key]) > -1:
+            index = line.find(self.state.cmd2prefix[cmd_key])
+            if index > -1:
+                line = line[index:]
                 nums = re.findall(self.state.regex, line)
                 for i in range(0, len(self.state.cmd2key[cmd_key])):
                     self.state.state[self.state.cmd2key[cmd_key][i]] = nums[i]
