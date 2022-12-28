@@ -51,6 +51,3 @@ The applciation protocol for communicating with the back end follows the followi
 # TODO
 * macros and storing them
 * SD stuff
-* Handle client or server dying
-* Not Parsing M204 right
-* Werid sub behavior on tui

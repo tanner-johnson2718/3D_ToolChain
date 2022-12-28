@@ -72,14 +72,12 @@ class MEME(App):
         buffer = ""
         while True:
             data = await self.reader.read(PACKET_SIZE)
-            buffer = data.decode('ascii')
+            buffer += data.decode('ascii')
 
             self.query_one("#Debug_Term").write("Recv -> " + buffer[:-1])
 
             while ('\n' in buffer) and (len(buffer) > 5):
                 index = buffer.find('\n')
-                if index == -1:
-                    break
                 prefix = buffer[0:4]
                 buffer_temp = buffer[5:index]
                 if prefix == "subR":

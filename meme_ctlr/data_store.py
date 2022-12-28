@@ -155,9 +155,10 @@ class DataStore():
 
         # parse the input and see if it matches any prefixes in the state map
         for cmd_key in self.state.cmd2prefix.keys():
-            index = line.find(self.state.cmd2prefix[cmd_key])
+            prefix = self.state.cmd2prefix[cmd_key]
+            index = line.find(prefix)
             if index > -1:
-                line = line[index:]
+                line = line[(index+len(prefix)):]
                 nums = re.findall(self.state.regex, line)
                 for i in range(0, len(self.state.cmd2key[cmd_key])):
                     self.state.state[self.state.cmd2key[cmd_key][i]] = nums[i]

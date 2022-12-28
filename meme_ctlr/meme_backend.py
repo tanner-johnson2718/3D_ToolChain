@@ -98,7 +98,10 @@ def filter_and_send_response(serial_input):
         return
     elif response_verbosity == 2:
         client_send_lock.acquire()
-        conn.sendall(b'subR ' + serial_input)
+        try:
+            conn.sendall(b'subR ' + serial_input)
+        except:
+            print("Failed to send packet to client")
         client_send_lock.release()
     elif response_verbosity == 1:
         if serial_input.decode("ascii") == "ok\n":
@@ -108,7 +111,10 @@ def filter_and_send_response(serial_input):
             if serial_input.decode('ascii').find(prefix) > -1:
                 return
         client_send_lock.acquire()
-        conn.sendall(b'subR ' + serial_input)
+        try:
+            conn.sendall(b'subR ' + serial_input)
+        except:
+            print("Failed to send packet to client")
         client_send_lock.release()
     else:
         print("ERROR in filter, invalid response verbosity: " + str(response_verbosity))
@@ -131,12 +137,19 @@ def send_thread():
     print("Send Thread Stopping...")
 
 def server_thread():
+    global killed
     print("Server Thread Starting...")
     while not killed:
         ready = select.select([conn], [], [], serial_timeout)
         if ready[0]:
-            msg = conn.recv(PACKET_SIZE)
-            parse_packet(msg)
+            try:
+                msg = conn.recv(PACKET_SIZE)
+                if not msg:
+                    killed = 1
+                    break
+                parse_packet(msg)
+            except:
+                continue
                 
     print("Server Thread Stopping...")
 
@@ -148,7 +161,10 @@ def polling_thread():
         computed_poll_list = set([ds.state.key2cmd[i] for i in poll_list])
 
         client_send_lock.acquire()
-        conn.sendall("subS \n".encode('ascii'))
+        try:
+            conn.sendall("subS \n".encode('ascii'))
+        except:
+            print("Failed to send packet to client")
 
         # Send all the commands to the printer
         for cmd in computed_poll_list:
@@ -157,7 +173,10 @@ def polling_thread():
         
         # Send state to client
         for key in poll_list:
-            conn.sendall( ("subS " +  key + " " + str(ds.query(key)) + '\n').encode('ascii') )
+            try:
+                conn.sendall( ("subS " +  key + " " + str(ds.query(key)) + '\n').encode('ascii') )
+            except:
+                print("Failed to send packet to client")
         client_send_lock.release()
     print("Polling Thread Stopping...")
             
@@ -179,16 +198,11 @@ for key in ds.state.cmd_auto_poll:
 tm.start()
 
 while not killed:
-    t = input("snap) ")
-    if t == "quit":
-        killed = 1
-        break
-    
+    time.sleep(1)
     snap = tm.take_snapshot()
     for s in snap.statistics('filename'):
         print(s)
     print()
-
 
 tm.stop()
 ds.kill()
