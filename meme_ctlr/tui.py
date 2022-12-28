@@ -32,6 +32,13 @@ class MEME(App):
         self.sub0 = self.sub.add_leaf("Off")
         self.sub1 =self.sub.add_leaf("Filtered")
         self.sub2 =self.sub.add_leaf("Unfiltered")
+        self.macros = tree.root.add("Macros", expand=True)
+        self.macros.add_leaf("Home")
+        self.macros.add_leaf("Tram")
+        self.macros.add_leaf("Level")
+        self.macros.add_leaf("Emergency Stop")
+        self.macros.add_leaf("Disable Steppers")
+        self.macros.add_leaf("Pull SD Files")
 
         yield Static("Sidebar", id="sidebar")
         yield tree
@@ -62,6 +69,8 @@ class MEME(App):
             send_str = "subR 1\n"
         elif message.node.id == self.sub2.id:
             send_str = "subR 2\n"
+        elif message.node._parent.id == self.macros.id:
+            send_str = "cmdM " + str(message.node._label) + "\n"
 
         if not send_str == "":
             self.query_one("#Debug_Term").write("Send -> " + send_str[:-1])

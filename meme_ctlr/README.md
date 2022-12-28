@@ -45,9 +45,9 @@ The applciation protocol for communicating with the back end follows the followi
 | API Call | Sender | Example Packet Structure | Response | Comments | 
 | --- | --- | --- | --- | --- |
 | Send Command | Client | b'cmdG M503\n' | none | Client sends 'cmdG 'in ascii followed by gcode command (max 59 char) |
+| Send Macro | Client | b'cmdM Home' | none | Client sends 'cmdM ' followe by a stored macro |
 | Subscribe to Serial Reponses | Client | b'subR 1\n' | b'subR ...' | Client sends 'subR ' in ascii followed by 0,1,2 in ascii. V=0 -> Dont sent serial input. V=1 -> Send serial input but filter out polled responses (like auto temp report). V=2 -> Send all serial input. Server responds with subR prefix followed by responses from printer |
 | Subscribe to State | Client | b'subS nozzle temp current\n' | b'subS key value' | Client sends 'subS ' followed by state key. Resend the same subS request to unsub. Server responds with subS prefix followed by key followed by value. Before sending a "flurry" of subS key value packets, server will send b'subS \n' to notify client to clear old values. |
 
 # TODO
-* macros and storing them
 * SD stuff

@@ -6,6 +6,7 @@ import select
 import time
 import socket
 import tracemalloc as tm
+import json
 
 HOST = "127.0.0.1"
 PORT = 65432
@@ -13,7 +14,8 @@ PACKET_SIZE = 64
 MEM_TRACING = 0
 response_verbosity = 0
 poll_list = []
-
+macro_file = "./macro.json"
+macros = {}
 port_dev = "/dev/ttyACM0"
 baud = 115200
 serial_timeout = 1
@@ -26,6 +28,9 @@ listening_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 listening_sock.bind((HOST, PORT))
 listening_sock.listen()
 
+# Load macro file json file
+with open(macro_file, "r") as f:
+    macros = dict(json.load(f))
 
 print("Waiting for client...")
 conn, addr = listening_sock.accept()
@@ -89,6 +94,17 @@ def parse_packet(packet):
 
         if ds.is_auto_poll(key):
             ds.push_cmd(ds.state.key2cmd[key] + " S1")
+
+    # Execute a macro, verify that passed macro is in the macro list
+    elif prefix == 'cmdM':
+        macro = packet[5:].decode('ascii')
+
+        if not macro in macros.keys():
+            print("ERROR in parse packet, invalid macro " + macro)
+            return
+
+        for cmd in macros[macro]:
+            ds.push_cmd(cmd)
 
     else:
         print("ERROR in parse packet, invalid prefix: " + prefix)
@@ -158,6 +174,9 @@ def polling_thread():
     print("Polling Thread Starting...")
     while not killed:
         time.sleep(1)
+
+        if killed:
+            break
 
         computed_poll_list = set([ds.state.key2cmd[i] for i in poll_list])
 
