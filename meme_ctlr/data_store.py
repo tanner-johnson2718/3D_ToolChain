@@ -28,10 +28,10 @@ class DataStore():
 ###############################################################################
     class StateMap():
         def __init__(self):
-            self.state = {"nozzle temp current" : 0,
-                          "nozzle temp target"  : 0,
-                          "bed temp current"    : 0,
-                          "bed temp target"     : 0,
+            self.state = {"Nozzle Temp Current" : 0,
+                          "Nozzle Temp Target"  : 0,
+                          "Bed Temp Current"    : 0,
+                          "Bed Temp Target"     : 0,
                           "X Pos"               : 0,
                           "Y Pos"               : 0,
                           "Z Pos"               : 0,
@@ -42,10 +42,10 @@ class DataStore():
                           "SD Progress"         : 0,
                           "SD Total"            : 0}
 
-            self.key2cmd = {"nozzle temp current" : "M155",
-                            "nozzle temp target"  : "M155",
-                            "bed temp current"    : "M155",
-                            "bed temp target"     : "M155",
+            self.key2cmd = {"Nozzle Temp Current" : "M155",
+                            "Nozzle temp Target"  : "M155",
+                            "Bed Temp Current"    : "M155",
+                            "Bed Temp Target"     : "M155",
                             "X Pos"               : "M154",
                             "Y Pos"               : "M154",
                             "Z Pos"               : "M154",
@@ -61,7 +61,7 @@ class DataStore():
                                   "M27"  : False,
                                   "M204" : False}
 
-            self.cmd2key = {"M155" : ["nozzle temp current", "nozzle temp target", "bed temp current", "bed temp target"], 
+            self.cmd2key = {"M155" : ["Nozzle Temp Current", "Nozzle Temp Target", "Bed Temp Current", "Bed Temp Target"], 
                             "M154" : ["X Pos","Y Pos","Z Pos","E Pos"],
                             "M27"  : ["SD Progress","SD Total"], 
                             "M204" : ["Print Accel","Retract Accel","Travel Accel"]}

@@ -1,7 +1,7 @@
 Screen {
     layout: grid;
     grid-size: 1 3;
-    grid-rows: 5fr 5fr 1fr
+    grid-rows: 6fr 6fr 1fr
 }
 
 .box {
@@ -11,8 +11,13 @@ Screen {
 
 #sidebar {
     dock: left;
-    width: 10;
+    width: 30;
     height: 100%;
     color: rgb(69, 69, 69);
     background:  rgb(69, 69, 69);
+}
+
+#tree {
+    dock: left;
+    width: 30;
 }
