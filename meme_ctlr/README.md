@@ -11,7 +11,7 @@ G code sender, printer montoring and control, and interface for executing testin
 
 # Dependancies
 * Python 3.8.10
-* textual
+* textualize TUI 0.20
 
 # Backend Architecture
 
