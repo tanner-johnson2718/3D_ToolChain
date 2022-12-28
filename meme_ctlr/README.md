@@ -49,8 +49,8 @@ The applciation protocol for communicating with the back end follows the followi
 | Subscribe to State | Client | b'subS nozzle temp current\n' | b'subS key value' | Client sends 'subS ' followed by state key. Resend the same subS request to unsub. Server responds with subS prefix followed by key followed by value. Before sending a "flurry" of subS key value packets, server will send b'subS \n' to notify client to clear old values. |
 
 # TODO
-* deal with unbounded sendQ and logging
 * macros and storing them
 * SD stuff
-* Implement actual GUI
 * Handle client or server dying
+* Not Parsing M204 right
+* Werid sub behavior on tui

@@ -212,4 +212,5 @@ class DataStore():
         return ret
 
     def advance_Q(self):
-        self.current_sendQ_index += 1
+        self.sendQ = self.sendQ[1:]
+        self.current_sendQ_index = 0

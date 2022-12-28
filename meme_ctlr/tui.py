@@ -14,7 +14,7 @@ class MEME(App):
     def compose(self) -> ComposeResult:
         tree: Tree[dict] = Tree("Subscriptions", id="tree")
         tree.root.expand()
-        self.cont = tree.root.add("Continuous Monitor", expand=False)
+        self.cont = tree.root.add("Continuous Monitor", expand=True)
         self.cont.add_leaf("Nozzle Temp Current")
         self.cont.add_leaf("Nozzle Temp Target")
         self.cont.add_leaf("Bed Temp Current")
@@ -26,20 +26,7 @@ class MEME(App):
         self.cont.add_leaf("Print Accel")
         self.cont.add_leaf("Retract Accel")
         self.cont.add_leaf("Travel Accel")
-        one = tree.root.add("One Time", expand=False)
-        one.add_leaf("X Steps per mm")
-        one.add_leaf("Y Steps per mm")
-        one.add_leaf("Z Steps per mm")
-        one.add_leaf("E Steps per mm")
-        one.add_leaf("Max X Vel mm/s")
-        one.add_leaf("Max Y Vel mm/s")
-        one.add_leaf("Max Z Vel mm/s")
-        one.add_leaf("Max E Vel mm/s")
-        one.add_leaf("Max X Accel mm/s2")
-        one.add_leaf("Max Y Accel mm/s2")
-        one.add_leaf("Max Z Accel mm/s2")
-        one.add_leaf("Max E Accel mm/s2")
-        self.sub = tree.root.add("Report Verbosity", expand=False)
+        self.sub = tree.root.add("Report Verbosity", expand=True)
         self.sub0 = self.sub.add_leaf("Off")
         self.sub1 =self.sub.add_leaf("Filtered")
         self.sub2 =self.sub.add_leaf("Unfiltered")
@@ -85,12 +72,14 @@ class MEME(App):
         buffer = ""
         while True:
             data = await self.reader.read(PACKET_SIZE)
-            buffer += data.decode('ascii')
+            buffer = data.decode('ascii')
 
             self.query_one("#Debug_Term").write("Recv -> " + buffer[:-1])
 
-            while '\n' in buffer:
+            while ('\n' in buffer) and (len(buffer) > 5):
                 index = buffer.find('\n')
+                if index == -1:
+                    break
                 prefix = buffer[0:4]
                 buffer_temp = buffer[5:index]
                 if prefix == "subR":
@@ -100,6 +89,8 @@ class MEME(App):
                         self.query_one("#State_Term", TextLog).write(buffer_temp)
                     else:
                         self.query_one("#State_Term", TextLog).clear()
+                else:
+                    break
                 buffer = buffer[(index+1):]
 
 
