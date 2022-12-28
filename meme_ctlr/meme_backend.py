@@ -10,6 +10,7 @@ import tracemalloc as tm
 HOST = "127.0.0.1"
 PORT = 65432
 PACKET_SIZE = 64
+MEM_TRACING = 0
 response_verbosity = 0
 poll_list = []
 
@@ -199,10 +200,11 @@ tm.start()
 
 while not killed:
     time.sleep(1)
-    snap = tm.take_snapshot()
-    for s in snap.statistics('filename'):
-        print(s)
-    print()
+    if MEM_TRACING:
+        snap = tm.take_snapshot()
+        for s in snap.statistics('filename'):
+            print(s)
+        print()
 
 tm.stop()
 ds.kill()
@@ -211,7 +213,6 @@ send_t.join()
 recv_t.join()
 server_t.join()
 poll_t.join()
-
 
 port.close()
 conn.close()

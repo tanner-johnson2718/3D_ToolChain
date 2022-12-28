@@ -26,6 +26,8 @@ class MEME(App):
         self.cont.add_leaf("Print Accel")
         self.cont.add_leaf("Retract Accel")
         self.cont.add_leaf("Travel Accel")
+        self.cont.add_leaf("SD Progress")
+        self.cont.add_leaf("SD Total")
         self.sub = tree.root.add("Report Verbosity", expand=True)
         self.sub0 = self.sub.add_leaf("Off")
         self.sub1 =self.sub.add_leaf("Filtered")
@@ -33,10 +35,10 @@ class MEME(App):
 
         yield Static("Sidebar", id="sidebar")
         yield tree
-        yield TextLog(id="State_Term", classes="box")
-        yield TextLog(id="Response_Term", classes="box")
+        yield TextLog(id="State_Term", classes="box", max_lines=1024)
+        yield TextLog(id="Response_Term", classes="box", max_lines=1024)
         yield Input(id="i1", classes="box")
-        yield TextLog(id="Debug_Term")
+        yield TextLog(id="Debug_Term", max_lines=1024)
 
         self.writer_lock = asyncio.Lock()
         asyncio.create_task(self.recv_thread())

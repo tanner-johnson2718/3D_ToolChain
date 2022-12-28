@@ -160,8 +160,9 @@ class DataStore():
             if index > -1:
                 line = line[(index+len(prefix)):]
                 nums = re.findall(self.state.regex, line)
-                for i in range(0, len(self.state.cmd2key[cmd_key])):
-                    self.state.state[self.state.cmd2key[cmd_key][i]] = nums[i]
+                if len(nums) >= len(self.state.cmd2key[cmd_key]):
+                    for i in range(0, len(self.state.cmd2key[cmd_key])):
+                        self.state.state[self.state.cmd2key[cmd_key][i]] = nums[i]
         
 
 ###############################################################################
