@@ -2,6 +2,7 @@ from textual.app import App, ComposeResult
 from textual.widgets import TextLog, Header, Footer, Static, Input, Tree
 
 import asyncio
+import os
 
 HOST = "127.0.0.1"
 PORT = 65432
@@ -12,9 +13,9 @@ class MEME(App):
     CSS_PATH="tui.css"
 
     def compose(self) -> ComposeResult:
-        tree: Tree[dict] = Tree("Subscriptions", id="tree")
+        tree: Tree[dict] = Tree("Clicky Tree", id="tree")
         tree.root.expand()
-        self.cont = tree.root.add("Continuous Monitor", expand=True)
+        self.cont = tree.root.add("Monitor", expand=True)
         self.cont.add_leaf("Nozzle Temp Current")
         self.cont.add_leaf("Nozzle Temp Target")
         self.cont.add_leaf("Bed Temp Current")
@@ -40,6 +41,7 @@ class MEME(App):
         self.macros.add_leaf("Disable Steppers")
         self.macros.add_leaf("Pull SD Files")
         self.macros.add_leaf("Firmware Settings")
+        self.files = tree.root.add("Local .GCO (CLICK)", expand=True)
 
         yield Static("Sidebar", id="sidebar")
         yield tree
@@ -72,6 +74,42 @@ class MEME(App):
             send_str = "subR 2\n"
         elif message.node._parent.id == self.macros.id:
             send_str = "cmdM " + str(message.node._label) + "\n"
+        elif message.node.id == self.files.id:
+            self.files._children = []
+            for file in os.listdir("./"):
+                if file.endswith(".GCO"):
+                    self.files.add_leaf(file)
+            return
+        elif message.node._parent.id == self.files.id:
+            await self.writer_lock.acquire()
+            self.writer.write(("cmdG M110 N0\n").encode('ascii'))
+            self.writer.write(("cmdG M28 " + str(message.node._parent.id) + "\n").encode('ascii'))
+            with open(str(message.node._label), encoding="utf-8") as my_file_handle:
+                    line = 1
+
+                    for chunk in my_file_handle:
+
+                        if not (chunk.find("G") == 0 or chunk.find("M") == 0):
+                            continue
+
+                        # Add line number and strip trailing new line
+                        chunk = "N" + str(line) + " " + chunk.rstrip()
+                        line += 1
+
+                        # strip comments
+                        off = chunk.find(";")
+                        if off > -1:
+                            chunk = chunk[0:off]
+                        sum = 0
+                        for c in chunk:
+                            sum ^= ord(c)
+                        chunk = chunk + '*' + str(sum)
+
+                        self.writer.write(("cmdG " + chunk + "\n").encode('ascii'))
+            self.writer_lock.release()
+        else:
+            return
+                    
 
         if not send_str == "":
             self.query_one("#Debug_Term").write("Send -> " + send_str[:-1])
