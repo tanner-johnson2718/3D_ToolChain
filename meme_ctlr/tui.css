@@ -6,15 +6,13 @@ Screen {
 
 .box {
     height: 100%;
-    border: solid rgb(69, 69, 69);
+    border: round rgba(87, 201, 10, 0.709);
 }
 
 #sidebar {
     dock: left;
     width: 30;
     height: 100%;
-    color: rgb(69, 69, 69);
-    background:  rgb(69, 69, 69);
 }
 
 #tree {
@@ -25,4 +23,5 @@ Screen {
 #Debug_Term {
     dock: right;
     width: 50;
+    border: round rgba(87, 201, 10, 0.709);
 }

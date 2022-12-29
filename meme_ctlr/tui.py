@@ -39,10 +39,11 @@ class MEME(App):
         self.macros.add_leaf("Emergency Stop")
         self.macros.add_leaf("Disable Steppers")
         self.macros.add_leaf("Pull SD Files")
+        self.macros.add_leaf("Firmware Settings")
 
         yield Static("Sidebar", id="sidebar")
         yield tree
-        yield TextLog(id="State_Term", classes="box", max_lines=1024)
+        yield TextLog(id="State_Term", classes="box", max_lines=13)
         yield TextLog(id="Response_Term", classes="box", max_lines=1024)
         yield Input(id="i1", classes="box")
         yield TextLog(id="Debug_Term", max_lines=1024)
@@ -94,10 +95,11 @@ class MEME(App):
                 if prefix == "subR":
                     self.query_one("#Response_Term").write(buffer_temp)
                 elif prefix == "subS":
-                    if len(buffer_temp) > 0:
+                    if len(buffer_temp) > 2:
                         self.query_one("#State_Term", TextLog).write(buffer_temp)
-                    else:
-                        self.query_one("#State_Term", TextLog).clear()
+                    #else:
+                        # self.query_one("#State_Term", TextLog).clear()
+                        #self.query_one("#State_Term", TextLog).write("\n\n")
                 else:
                     break
                 buffer = buffer[(index+1):]

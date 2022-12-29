@@ -4,5 +4,6 @@
     "Disable Steppers": ["M18"],
     "Pull SD Files": ["M20"],
     "Tram": ["G28","G30 X30 Y50","G30 X310 Y50","G30 X30 Y325","G30 X310 Y325"],
-    "Level": ["G28","G29 P1 V4 T0","G29 S0","G29 A","M500","G29 P5"]
+    "Level": ["G28","G29 P1 V4 T0","G29 S0","G29 A","M500","G29 P5"],
+    "Firmware Settings": ["M503", "M115"]
 }
