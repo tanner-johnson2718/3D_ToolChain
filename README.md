@@ -34,14 +34,14 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 | Component | Date Installed | Comment |
 | --- | --- | --- |
-| Mother board | - | Stock Melzi v2.2 [Pinout](Printer_Mods/Electronic_Enclosure/melzi_pinout.jpg) and [ATMega2560 Datasheet](Printer_Mods/Electronic_Enclosure/Datasheets/ATmega2560_Datasheet.pdf) and [Adruino Mega pinout mapping](Printer_Mods/Electronic_Enclosure/Datasheets/Arduino-Mega-Pinout.jpg) (when programming in the Arduino IDE use these pins as a reference) |
-| PSU | - | [Stock Meanwell RSP-500-24](Printer_Mods/Electronic_Enclosure/MeanWell_500_Datasheet.pdf) |
+| Mother board | Jan 2023 | SKR Mini E3 V3. [Pinout](DataSheets/BTT%20E3%20SKR%20MINI%20V3.0_PIN.pdf)  |
+| PSU | - | [Stock Meanwell RSP-500-24](DataSheets/MeanWell_500_Datasheet.pdf) |
 | Extruder | Sept 2022 | Creality All metal Extruder https://www.amazon.com/dp/B07ZMFP2L8?psc=1&ref=ppx_yo2ov_dt_b_product_details |
 | Steppers | - | Stock |
 | Stepper Drivers | - | Stock |
 | Bowden Tube | Sept 2022 | Capicorn XS https://www.captubes.com |
-| Hot end | Nov 2022 | Micro Swiss All metal hot end https://store.micro-swiss.com/collections/all-metal-hotend-kits/products/all-metal-hotend-kit-for-cr-10 |
-| Hot end Thermistor | Jan 2023 | https://www.amazon.com/dp/B0714MR5BC?psc=1&ref=ppx_yo2ov_dt_b_product_details |
+| Base Hot end | Nov 2022 | Micro Swiss All metal hot end https://store.micro-swiss.com/collections/all-metal-hotend-kits/products/all-metal-hotend-kit-for-cr-10 |
+| Hot end Thermistor | Jan 2023 | https://www.amazon.com/dp/B0714MR5BC?psc=1&ref=ppx_yo2ov_dt_b_product_details. Has JST quick Connect. |
 | External Bed Mosfett | Nov 2022 | Mosfet FYSETC https://www.amazon.com/dp/B07C4PGXFK?psc=1&ref=ppx_yo2ov_dt_b_product_details |
 | Part Cooler | - | Stock |
 | ABL | - | Stock BL Touch |
