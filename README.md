@@ -11,7 +11,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 * FreeCAD 0.20 for 3D modeling
 * Cura 5.0 for slicing 
-* Arduino IDE 2.0.3 for building and flasing ATMega 2560 on main control board |
+* Platfrom IO VS code extension for building Marlin 
 
 ## Modifications, Current Hardware, and project directory
 
@@ -41,7 +41,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
 | Stepper Drivers | - | Stock |
 | Bowden Tube | Sept 2022 | Capicorn XS https://www.captubes.com |
 | Hot end | Nov 2022 | Micro Swiss All metal hot end https://store.micro-swiss.com/collections/all-metal-hotend-kits/products/all-metal-hotend-kit-for-cr-10 |
-| Hot end Thermistor | Nov 2022 | https://www.amazon.com/dp/B0714MR5BC?psc=1&ref=ppx_yo2ov_dt_b_product_details |
+| Hot end Thermistor | Jan 2023 | https://www.amazon.com/dp/B0714MR5BC?psc=1&ref=ppx_yo2ov_dt_b_product_details |
 | External Bed Mosfett | Nov 2022 | Mosfet FYSETC https://www.amazon.com/dp/B07C4PGXFK?psc=1&ref=ppx_yo2ov_dt_b_product_details |
 | Part Cooler | - | Stock |
 | ABL | - | Stock BL Touch |
