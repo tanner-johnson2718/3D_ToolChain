@@ -34,7 +34,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 | Component | Date Installed | Comment |
 | --- | --- | --- |
-| Mother board | Jan 2023 | SKR Mini E3 V3. [Pinout](DataSheets/BTT%20E3%20SKR%20MINI%20V3.0_PIN.pdf). [Block Diagram](DataSheets/BTT%20E3%20SKR%20MINI%20V3.0_SCH.pdf) |
+| Mother board | Jan 2023 | SKR Mini E3 V3. [Pinout](DataSheets/BTT%20E3%20SKR%20MINI%20V3.0_PIN.pdf). [Block Diagram](DataSheets/BTT%20E3%20SKR%20MINI%20V3.0_SCH.pdf). [MCU](DataSheets/stm32g0b1cc-2042221.pdf) |
 | PSU | - | [Stock Meanwell RSP-500-24](DataSheets/MeanWell_500_Datasheet.pdf) |
 | Extruder | Sept 2022 | Creality All metal Extruder https://www.amazon.com/dp/B07ZMFP2L8?psc=1&ref=ppx_yo2ov_dt_b_product_details |
 | Steppers | - | Stock |
@@ -42,6 +42,8 @@ The end goal of this project is a a printer capable of printing higher temp plas
 | Bowden Tube | Sept 2022 | Capicorn XS https://www.captubes.com |
 | Base Hot end | Nov 2022 | Micro Swiss All metal hot end https://store.micro-swiss.com/collections/all-metal-hotend-kits/products/all-metal-hotend-kit-for-cr-10 |
 | Hot end Thermistor | Jan 2023 | https://www.amazon.com/dp/B0714MR5BC?psc=1&ref=ppx_yo2ov_dt_b_product_details. Has JST quick Connect. |
+| Heater Cartridge | - | Stock 40W, Adding standard 20 AWG quick connects to make changing hotend faster. |
+| Hot end fan and part cooler | Jan 2023 | https://www.amazon.com/gp/product/B08N8YDQCD/ref=ppx_yo_dt_b_asin_title_o00_s01?ie=UTF8&psc=1. Adding JST male and female at hot end. |
 | External Bed Mosfett | Nov 2022 | Mosfet FYSETC https://www.amazon.com/dp/B07C4PGXFK?psc=1&ref=ppx_yo2ov_dt_b_product_details |
 | Part Cooler | - | Stock |
 | ABL | - | Stock BL Touch |
@@ -51,7 +53,6 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 ## Tasking
 
-* Update this doc for new board, new hotend fan, new partcooler, and adding quick connects to hot end
 * Update Designs doc for hex script
 
 ### Testing / calibration
