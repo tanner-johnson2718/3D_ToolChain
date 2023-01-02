@@ -34,7 +34,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 | Component | Date Installed | Comment |
 | --- | --- | --- |
-| Mother board | Jan 2023 | SKR Mini E3 V3. [Pinout](DataSheets/BTT%20E3%20SKR%20MINI%20V3.0_PIN.pdf)  |
+| Mother board | Jan 2023 | SKR Mini E3 V3. [Pinout](DataSheets/BTT%20E3%20SKR%20MINI%20V3.0_PIN.pdf). [Block Diagram](DataSheets/BTT%20E3%20SKR%20MINI%20V3.0_SCH.pdf) |
 | PSU | - | [Stock Meanwell RSP-500-24](DataSheets/MeanWell_500_Datasheet.pdf) |
 | Extruder | Sept 2022 | Creality All metal Extruder https://www.amazon.com/dp/B07ZMFP2L8?psc=1&ref=ppx_yo2ov_dt_b_product_details |
 | Steppers | - | Stock |
