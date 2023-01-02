@@ -55,6 +55,14 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 * Update Designs doc for hex script
 
+### Marlin
+* Get working with new brd
+    * Make sure X, Y, and Z move in right dir
+    * Make sure end stops work (both SW and HW)
+    * BL Touch working
+* extra thermistors
+* Ammeters?
+
 ### Testing / calibration
 * meme ctlr custom extrustion
     * Straight Line
@@ -75,7 +83,3 @@ The end goal of this project is a a printer capable of printing higher temp plas
 * belt tensioners?
 * dehydrator and storage box
 * 3D printed enclosure
-
-### Marlin
-* extra thermistors
-* Ammeters?
