@@ -12,7 +12,12 @@ Print a 50mmX50mmX1mm square at slow speed in center of build plate. This print 
 
 On the printed square, the print lines should overlap and form a uniform square of material. Watch for rough tough top finish (too close) and gaps in lines (too far).
 
+### Probe offset
+Marlin stores the distance from the probe to the nozzle in the probe offset `M851`. The Z value of the value of this command is configured with the routine above. The X and Y values should not change and should be verified with calipers.
+
 ## Level_Test
+**Note** before leveling ensure both Z-rods are equidistance from the buildplate.
+
 Print 25mmX25mmx1mm squares at center and at four corners near edges of build plate. Verify good bed adhesion and proper z offset at four corners. This test just verifies the ABL is functioning properly. Printing this is usually unnessacsy unless there is good reason to believe the ABL is not working. See below for guidance on leveling using the ABL system
 
 ### UBL Basic

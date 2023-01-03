@@ -65,7 +65,6 @@ The end goal of this project is a a printer capable of printing higher temp plas
     * L shape with specified angle
     * Extrusion multiplier, how does cura do it?
 * Calibration flow rate doc and tests + calibration doc
-* Doc on X, Y probe offset
 
 ### Enclosure
 * DOC!!

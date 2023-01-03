@@ -51,3 +51,7 @@ The applciation protocol for communicating with the back end follows the followi
 
 # TODO
 * SD stuff
+* Add ability to turn off and on debug console
+* When terminal is full, completely clear it as this should speed things up
+* Increase max lines of state console
+* On a subs, enter a string like --- or something. 
