@@ -60,6 +60,8 @@ The end goal of this project is a a printer capable of printing higher temp plas
     * Make sure X, Y, and Z move in right dir
     * Make sure end stops work (both SW and HW)
     * BL Touch working
+    * Make sure thermistors work
+    * Make sure we can heat nozzle and bed
 * extra thermistors
 * Ammeters?
 
