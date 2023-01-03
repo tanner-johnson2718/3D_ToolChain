@@ -168,9 +168,9 @@ The following settings are usually set in the slicer and will change frequently 
 | Fade Height | Bed Leveling will compensate for bed divations. At which height the firmware stops accounting for these is the fade height | 2-10mm | 2mm | If there is no fade bed deviations will propegate geometric errors |
 | Max Velocity | Max linear velocity of all axis | XY: [250,500] Z:[5,15] E:[35,100] | 250,250,10,50 | - |
 | Max Acceleration Settings | Max acceleration of all axis | XY: [1000,5000] Z:[50,100] E:[1000,10000] | 1000,1000,50,1000 | - |
-| Print Acceleration | The acceleration it uses to print | See max Acceleration | 200 | - |
-| Travel Acceleration | The acceleration it uses to travel | See max Acceleration | 200 | - |
-| Retract Acceleration | The acceleration it uses to travel | See max Acceleration | 200 | - |
+| Print Acceleration | The acceleration it uses to print | See max Acceleration | 400 | Set in slicer with Accel control |
+| Travel Acceleration | The acceleration it uses to travel | See max Acceleration | 1000 | Set in slicer with Accel control |
+| Retract Acceleration | The acceleration it uses to travel | See max Acceleration | 1000 | Set in slicer with Accel control |
 | Junction Deviation?? | - | - | - | - |
 | Min Segment Time?? | - | - | - | - |
 | Min Feedrate?? | - | - | - | - |

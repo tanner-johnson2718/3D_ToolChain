@@ -56,7 +56,6 @@ The end goal of this project is a a printer capable of printing higher temp plas
 * Update Designs doc for hex script
 
 ### Marlin
-* reverse E
 * extra thermistors
 * Ammeters?
 
@@ -67,6 +66,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
     * Extrusion multiplier, how does cura do it?
 * Calibration flow rate doc and tests + calibration doc
 * Go through new marlin M503 output and look at those settings
+* Put Z offset code into code block
 
 ### Enclosure
 * DOC!!
