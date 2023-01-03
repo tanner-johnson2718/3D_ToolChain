@@ -16,6 +16,7 @@
     * `#define DEFAULT_MAX_FEEDRATE          { 1000, 1000, 10, 5000 }`
     * `#define INVERT_X_DIR true`
     * `#define INVERT_Y_DIR true`
+    * `#define INVERT_Z_DIR true`
 * To build deploy simply open Marlin_Custom dir in Auto Build Marlin, build, and copy to SD card as FIRMWARE.BIN.
 
 # Marlin Key Functions / Files / 

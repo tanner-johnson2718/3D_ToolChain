@@ -56,12 +56,6 @@ The end goal of this project is a a printer capable of printing higher temp plas
 * Update Designs doc for hex script
 
 ### Marlin
-* Get working with new brd
-    * Make sure X, Y, and Z move in right dir
-    * Make sure end stops work (both SW and HW)
-    * BL Touch working
-    * Make sure thermistors work
-    * Make sure we can heat nozzle and bed
 * extra thermistors
 * Ammeters?
 
@@ -71,6 +65,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
     * L shape with specified angle
     * Extrusion multiplier, how does cura do it?
 * Calibration flow rate doc and tests + calibration doc
+* Doc on X, Y probe offset
 
 ### Enclosure
 * DOC!!
