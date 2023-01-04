@@ -52,8 +52,6 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 ## Tasking
 
-* Update Designs doc for hex script
-
 ### Testing / calibration
 * meme ctlr custom extrustion
     * Straight Line
@@ -101,6 +99,5 @@ The end goal of this project is a a printer capable of printing higher temp plas
 ### Printer mods
 * PETg hotend fan mount mount
 * Something to keep hotend wires up
-* belt tensioners?
 * dehydrator and storage box
 * 3D printed enclosure

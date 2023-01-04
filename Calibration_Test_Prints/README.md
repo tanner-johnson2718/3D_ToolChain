@@ -1,14 +1,23 @@
 # Calibration Test Prints
 ## Z_Off_Test
 Print a 50mmX50mmX1mm square at slow speed in center of build plate. This print is just a simple test to verify printer works and Z offset is close. While printing fine tune Z offset. Best way to get an initial Z offset is the following)
-* Set Z off to 0.0.
-* Home
-* Turn off end stops with M211 S0
-* Move to Z0
-* Decrment Z until its actually at 0 i.e. touching the build plate
-    * Can check 0 with feeler gauge. When Z off is close, set G0 Z0.5. Then check that a 0.5mm feeler gauge fits snuggly between nozzle and build plate
-* Store that Z value as Z off
-* Turn on end stops M211 S1
+
+```
+M851 Z0 ; Set Z off to 0.0.
+G0      ; Home
+M211 S0 ; Turn off end stops with M211 S0
+G0 Z0   ; Move to Probe Height
+
+;Decrment Z until its actually at 0 i.e. touching the build plate or use feeler gauge to detrmine distance if close.
+G0 Z-1
+G0 Z-1.5
+...
+
+M851 Z{Value} ; Store found Z offset
+M211 S1       ; Turn on end stops M211 S1
+M500          ; Store to EEPROM
+M501          ; Load from EEPROM
+```
 
 On the printed square, the print lines should overlap and form a uniform square of material. Watch for rough tough top finish (too close) and gaps in lines (too far).
 
