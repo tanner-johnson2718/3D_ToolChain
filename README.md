@@ -21,7 +21,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
 | --- | --- | --- |
 |  [Slicer Settings, Calibration, and Test Prints](Calibration_Test_Prints) | Oct 2022 - | Holds documentation on settings/configurations (both firmware and slicer settings). Also has test prints and procedures for calibrating the printer. |
 | [MEME Controller](meme_ctlr) | Oct 2022 - | G code sender and print monitor.  |
-| [Electronics Enclosure](Printer_Mods/Electronic_Enclosure) | Oct-Dec 2022 | Removed PSU and main board, printing custom enclosure to move electronics out from underneath printer. Wiring diagrams, electrical specs, and pinout diagrams can all be found there as well. |
+| [Electronics Enclosure](Printer_Mods/Electronic_Enclosure) | Oct 2022 - Jan 2023 | Removed PSU and main board, printing custom enclosure to move electronics out from underneath printer. Wiring diagrams, electrical specs, and pinout diagrams can all be found there as well. |
 | [Custom Marlin Firmware](marlin) | Dec 2022 - | **TODO** Need to think about how to document, modify, and track firmware changes |
 | :heavy_check_mark: [Designs](Designs) | Dec 2022 | FreeCad Scripts and generic designs, images, and models used for 3D printing and likely to be used in more than a singular project |
 | :heavy_check_mark: [Cable Track management system](Printer_Mods/Cable_Track) | Nov 2022 | [Stole from Reddit](https://www.reddit.com/r/ender5plus/comments/so2ulf/ender_5_plus_cable_chain_solution/) |
@@ -55,25 +55,18 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 * Update Designs doc for hex script
 
-### Marlin
-* extra thermistors
-* Ammeters?
-
 ### Testing / calibration
 * meme ctlr custom extrustion
     * Straight Line
     * L shape with specified angle
     * Extrusion multiplier, how does cura do it?
 * Calibration flow rate doc and tests + calibration doc
-* Go through new marlin M503 output and look at those settings
 * Put Z offset code into code block
 
 ### Enclosure
 * DOC!!
 * Cut t slot Al for elctronics enclosure
-* Get running with skr board
-* enclosure doc fan and go over power draw doc (i.e. board, heated bed, etc)
-* ammeters and do I needd another MCU for chamber temp management
+* ammeters, Chamber heater, and extra therms are still not pinned down
 
 ### Printer mods
 * PETg hotend fan mount mount
