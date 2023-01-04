@@ -1,11 +1,14 @@
 # 3D Printing Tool Chain (Custom Ender 5 Plus)
-Repo to hold scripts, source, designs, and config files for my 3D printing tool chain targeting an Ender 5 Plus. Also this repository will hold any modifications made to the printer. As of current, the modifications will be targeted towards the following requirements)
+Repo to hold scripts, source, designs, and config files for my 3D printing tool chain targeting an Ender 5 Plus. Also this repository will hold any modifications made to the printer. As of current, the modifications will be targeted towards the following requirements and end goals)
 
-1) Print to tempatures up to 300C
-2) Maintain a chamber a chamber tempature up to  50C - 70C
-3) Custom Firmware and Interface to printer, allowing custom features, more in depth monitoring of harwdare and software, and rapid implementaion of custom features (**This is a bad requirement needs to be refined**) 
+1) Print to tempatures up to 300C.
+2) Maintain a chamber a chamber tempature up to  50C - 70C.
+3) Chamber Heater and Enclosure of Printer.
+4) Filament Dehydrator.
+5) Custom Firmware, printer interface, and electronics to manage the printer and periphals and to give debug / developer control over all aspects and subsystems of the printer.
+6) Suite of configuration and calibrations scripts to control and tune printer.
 
-The end goal of this project is a a printer capable of printing higher temp plastics. Nylon is the ultimate goal, however PP and PC are possible. Secondary goal is simply education and understanding every aspect of the 3D printing process from slicing to the printer interface to the firmware and finally the mechanical and electrical aspects of 3D printing. A teriary goal of this project is to house the architecture to refine and streamline the process of modeling to slicing and finally printing.
+The end goal of this project is a a printer capable of printing higher temp plastics. Nylon is the ultimate goal, however PP and PC are possible. Secondary goal is simply education and understanding every aspect of the 3D printing process from slicing to the printer interface to the firmware and finally the mechanical and electrical aspects of 3D printing. A teritary goal is simply a printer, build from the ground up with as many custom features that target what I want out of my 3D printer.
 
 ## 3rd Party tools used
 
@@ -17,21 +20,17 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 ### Modifications and Project Directory
 
-| Proejct *| Date | Comment |
+| Proejct | Date | Comment |
 | --- | --- | --- |
 |  [Slicer Settings, Calibration, and Test Prints](Calibration_Test_Prints) | Oct 2022 - | Holds documentation on settings/configurations (both firmware and slicer settings). Also has test prints and procedures for calibrating the printer. |
 | [MEME Controller](meme_ctlr) | Oct 2022 - | G code sender and print monitor.  |
 | [Electronics Enclosure](Printer_Mods/Electronic_Enclosure) | Oct 2022 - Jan 2023 | Removed PSU and main board, printing custom enclosure to move electronics out from underneath printer. Wiring diagrams, electrical specs, and pinout diagrams can all be found there as well. |
 | [Custom Marlin Firmware](marlin) | Dec 2022 - | **TODO** Need to think about how to document, modify, and track firmware changes |
 | :heavy_check_mark: [Designs](Designs) | Dec 2022 | FreeCad Scripts and generic designs, images, and models used for 3D printing and likely to be used in more than a singular project |
-| :heavy_check_mark: [Cable Track management system](Printer_Mods/Cable_Track) | Nov 2022 | [Stole from Reddit](https://www.reddit.com/r/ender5plus/comments/so2ulf/ender_5_plus_cable_chain_solution/) |
-
-* Check indicates project is closed or no futher work is required at the moment.
+| :heavy_check_mark: [Cable Track Wire Management System](Printer_Mods/Cable_Track) | Nov 2022 | [Stole from Reddit](https://www.reddit.com/r/ender5plus/comments/so2ulf/ender_5_plus_cable_chain_solution/) |
 
 
 ### Current Hardware
-
-
 | Component | Date Installed | Comment |
 | --- | --- | --- |
 | Mother board | Jan 2023 | SKR Mini E3 V3. [Pinout](DataSheets/BTT%20E3%20SKR%20MINI%20V3.0_PIN.pdf). [Block Diagram](DataSheets/BTT%20E3%20SKR%20MINI%20V3.0_SCH.pdf). [MCU](DataSheets/stm32g0b1cc-2042221.pdf) |
@@ -70,29 +69,34 @@ The end goal of this project is a a printer capable of printing higher temp plas
     * Redo power supply picture and add fan connecters both to connector list and BOM
     * Make sure to replace mentions of melzi
 * Add pre set holes for SKR and PSUs on bottom plates
-* Cut t slot Al for elctronics enclosure
-* Open Problems and Questions)
+* Cut aluminum and plexiglass
+* Open Problems and Questions for v2.0)
     * ammeters
     * Chamber heater and extra thermistors?
     * SD Card and mini usb access
-    * TFT display?
     * LEDs?
+    * Raspberry PI??
 
 ### MEME CTLR
+#### V1.0
 * SD stuff + remore firmware write
 * Add ability to turn off and on debug console
-* When terminal is full, completely clear it as this should speed things up
 * Increase max lines of state console
 * On a subs, enter a string like --- or something. 
 * Make prefixes exact to start of string
-* New idea, create set of scripts that connect to the backend for various activities
-    * Would need to make backend more resillant to disconnecting of client, printer, etc...
-* Make all subs Auto??
-    * If we do this, then we need to change the way we sub to state i.e. sub to a command not a value
 * Start off on filtered response level
 * Actually update the block diagram
 * Werid index out of range error -> needs endurance testing
 * Get a hold of a printer emulator to test
+* Go back to needing sudo access for serial
+
+#### v2.0
+* New idea, create set of scripts that connect to the backend for various activities
+    * Would need to make backend more resillant to disconnecting of client, printer, etc...
+* Make all subs Auto??
+    * If we do this, then we need to change the way we sub to state i.e. sub to a command not a value
+* When terminal is full, completely clear it as this should speed things up
+    * Also look into other speed drains
 
 ### Printer mods
 * PETg hotend fan mount mount
