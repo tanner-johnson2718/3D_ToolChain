@@ -58,14 +58,10 @@ The end goal of this project is a a printer capable of printing higher temp plas
     * L shape with specified angle
     * Extrusion multiplier, how does cura do it?
 * Calibration flow rate doc and tests + calibration doc
-* Put Z offset code into code block
 
 ### Enclosure
 * DOC!!
-    * Power Draw of board (+board components) and fan
-    * Make sure all the links work
     * Redo power supply picture and add fan connecters both to connector list and BOM
-    * Make sure to replace mentions of melzi
 * Add pre set holes for SKR and PSUs on bottom plates
 * Cut aluminum and plexiglass
 * Open Problems and Questions for v2.0)
@@ -77,13 +73,13 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 ### MEME CTLR
 #### V1.0
+* Actually update the block diagram
+* Start off on filtered response level
 * SD stuff + remore firmware write
 * Add ability to turn off and on debug console
 * Increase max lines of state console
 * On a subs, enter a string like --- or something. 
 * Make prefixes exact to start of string
-* Start off on filtered response level
-* Actually update the block diagram
 * Werid index out of range error -> needs endurance testing
 * Get a hold of a printer emulator to test
 * Go back to needing sudo access for serial
