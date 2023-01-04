@@ -65,8 +65,34 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 ### Enclosure
 * DOC!!
+    * Power Draw of board (+board components) and fan
+    * Make sure all the links work
+    * Redo power supply picture and add fan connecters both to connector list and BOM
+    * Make sure to replace mentions of melzi
+* Add pre set holes for SKR and PSUs on bottom plates
 * Cut t slot Al for elctronics enclosure
-* ammeters, Chamber heater, and extra therms are still not pinned down
+* Open Problems and Questions)
+    * ammeters
+    * Chamber heater and extra thermistors?
+    * SD Card and mini usb access
+    * TFT display?
+    * LEDs?
+
+### MEME CTLR
+* SD stuff + remore firmware write
+* Add ability to turn off and on debug console
+* When terminal is full, completely clear it as this should speed things up
+* Increase max lines of state console
+* On a subs, enter a string like --- or something. 
+* Make prefixes exact to start of string
+* New idea, create set of scripts that connect to the backend for various activities
+    * Would need to make backend more resillant to disconnecting of client, printer, etc...
+* Make all subs Auto??
+    * If we do this, then we need to change the way we sub to state i.e. sub to a command not a value
+* Start off on filtered response level
+* Actually update the block diagram
+* Werid index out of range error -> needs endurance testing
+* Get a hold of a printer emulator to test
 
 ### Printer mods
 * PETg hotend fan mount mount

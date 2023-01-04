@@ -48,17 +48,3 @@ The applciation protocol for communicating with the back end follows the followi
 | Send Macro | Client | b'cmdM Home' | none | Client sends 'cmdM ' followe by a stored macro |
 | Subscribe to Serial Reponses | Client | b'subR 1\n' | b'subR ...' | Client sends 'subR ' in ascii followed by 0,1,2 in ascii. V=0 -> Dont sent serial input. V=1 -> Send serial input but filter out polled responses (like auto temp report). V=2 -> Send all serial input. Server responds with subR prefix followed by responses from printer |
 | Subscribe to State | Client | b'subS nozzle temp current\n' | b'subS key value' | Client sends 'subS ' followed by state key. Resend the same subS request to unsub. Server responds with subS prefix followed by key followed by value. Before sending a "flurry" of subS key value packets, server will send b'subS \n' to notify client to clear old values. |
-
-# TODO
-* SD stuff + remore firmware write
-* Add ability to turn off and on debug console
-* When terminal is full, completely clear it as this should speed things up
-* Increase max lines of state console
-* On a subs, enter a string like --- or something. 
-* Make prefixes exact to start of string
-* New idea, create set of scripts that connect to the backend for various activities
-    * Would need to make backend more resillant to disconnecting of client, printer, etc...
-* Make all subs Auto??
-    * If we do this, then we need to change the way we sub to state i.e. sub to a command not a value
-* Start off on filtered response level
-* Actually update 
