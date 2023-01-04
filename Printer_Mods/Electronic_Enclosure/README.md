@@ -11,7 +11,7 @@
 
 Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC plug.
 
-![Alt text](Datasheets/Power_Supply_Wiring.png)
+![Alt text](Power_Supply_Wiring.png)
 
 | Connection Source | Connection Sink | Connector Source | Connector Sink | V | W | Wire Gauge |
 | --- | --- | --- | --- | --- | --- | --- |
