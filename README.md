@@ -73,20 +73,23 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 ### MEME CTLR
 #### V1.0
-* Actually update the block diagram
-* SD stuff + remore firmware write
+* SD stuff
+    * Need to make it so in backend, a single read from the socket may contain several API calls
 * Add ability to turn off and on debug console
-* Increase max lines of state console
-* On a subs, enter a string like --- or something. 
-* Need to make it so in backend, a single read from the socket may contain several API calls
+* Polish Doc
+    * Actually update the block diagram
+
 
 #### v2.0
 * New idea, create set of scripts that connect to the backend for various activities
     * Would need to make backend more resillant to disconnecting of client, printer, etc...
 * Make all subs Auto??
     * If we do this, then we need to change the way we sub to state i.e. sub to a command not a value
+    * Make SD print progress an auto sub
 * When terminal is full, completely clear it as this should speed things up
     * Also look into other speed drains
+* Remote Firmware writes??
+    * requies binary transfer in marlin
 
 ### Printer mods
 * PETg hotend fan mount mount

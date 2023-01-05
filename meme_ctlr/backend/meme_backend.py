@@ -215,8 +215,10 @@ for key in ds.state.cmd_auto_poll:
     if ds.state.cmd_auto_poll[key]:
         ds.push_cmd(key + "S0")
 
-tm.start()
+if MEM_TRACING:
+    tm.start()
 
+# Command line interface to backend
 while not killed:
     time.sleep(1)
     if MEM_TRACING:
@@ -225,7 +227,8 @@ while not killed:
             print(s)
         print()
 
-tm.stop()
+if MEM_TRACING:
+    tm.stop()
 ds.kill()
 
 send_t.join()
