@@ -77,6 +77,8 @@ The end goal of this project is a a printer capable of printing higher temp plas
     * Need to make it so in backend, a single read from the socket may contain several API calls
 * Polish Doc
     * Actually update the block diagram
+* Bed trammig Bed X:.. not showing up with filter
+* //action heating bed not showing up with filter
 
 
 #### v2.0
@@ -85,8 +87,6 @@ The end goal of this project is a a printer capable of printing higher temp plas
 * Make all subs Auto??
     * If we do this, then we need to change the way we sub to state i.e. sub to a command not a value
     * Make SD print progress an auto sub
-* When terminal is full, completely clear it as this should speed things up
-    * Also look into other speed drains
 * Remote Firmware writes??
     * requies binary transfer in marlin
 * Make Printer resillant to serail connects and disconnects
