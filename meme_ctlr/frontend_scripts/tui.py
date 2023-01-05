@@ -8,6 +8,7 @@ HOST = "127.0.0.1"
 PORT = 65432
 PACKET_SIZE = 64
 killed = 0
+DEBUG_VERBOSITY = 1
 
 class MEME(App):
     CSS_PATH="tui.css"
@@ -41,7 +42,11 @@ class MEME(App):
         self.macros.add_leaf("Disable Steppers")
         self.macros.add_leaf("Pull SD Files")
         self.macros.add_leaf("Firmware Settings")
-        self.files = tree.root.add("Local .GCO (CLICK)", expand=True)
+        self.files = tree.root.add("Local .GCO (CLICK)", expand=False)
+        self.debug_verbosity = tree.root.add("Debug Terminal", expand=True)
+        self.debug_verbosity.add_leaf("Off")
+        self.debug_verbosity.add_leaf("On")
+        self.debug_verbosity.add_leaf("Clear")
 
         yield Static("Sidebar", id="sidebar")
         yield tree
@@ -56,13 +61,17 @@ class MEME(App):
     async def on_input_submitted(self, event : Input.Submitted):
         text = self.query_one("#i1").value
         send_str = "cmdG " + str(text) + "\n"
-        self.query_one("#Debug_Term").write("Send -> " + send_str[:-1])
+
+        global DEBUG_VERBOSITY
+        if DEBUG_VERBOSITY:
+            self.query_one("#Debug_Term").write("Send -> " + send_str[:-1])
 
         await self.writer_lock.acquire()
         self.writer.write(send_str.encode('ascii'))
         self.writer_lock.release()
 
     async def on_tree_node_selected(self, message : Tree.NodeSelected):
+        global DEBUG_VERBOSITY
         send_str = ""
         if message.node._parent.id == self.cont.id:
             send_str = "subS " + str(message.node._label) + "\n"
@@ -107,12 +116,22 @@ class MEME(App):
 
                         self.writer.write(("cmdG " + chunk + "\n").encode('ascii'))
             self.writer_lock.release()
+        elif message.node._parent.id == self.debug_verbosity.id:
+            
+            if str(message.node._label) == "On":
+                DEBUG_VERBOSITY = 1
+            elif str(message.node._label) == "Off":
+                DEBUG_VERBOSITY = 0
+            elif str(message.node._label) == "Clear":
+                self.query_one("#Debug_Term", TextLog).clear()
+
         else:
             return
                     
 
         if not send_str == "":
-            self.query_one("#Debug_Term").write("Send -> " + send_str[:-1])
+            if DEBUG_VERBOSITY:
+                self.query_one("#Debug_Term", TextLog).write("Send -> " + send_str[:-1])
             await self.writer_lock.acquire()
             self.writer.write((send_str).encode('ascii'))
             self.writer_lock.release()
@@ -124,7 +143,9 @@ class MEME(App):
             data = await self.reader.read(PACKET_SIZE)
             buffer += data.decode('ascii')
 
-            self.query_one("#Debug_Term").write("Recv -> " + buffer[:-1])
+            global DEBUG_VERBOSITY
+            if DEBUG_VERBOSITY:
+                self.query_one("#Debug_Term").write("Recv -> " + buffer[:-1])
 
             while ('\n' in buffer) and (len(buffer) > 5):
                 index = buffer.find('\n')

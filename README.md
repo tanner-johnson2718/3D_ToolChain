@@ -75,7 +75,6 @@ The end goal of this project is a a printer capable of printing higher temp plas
 #### V1.0
 * SD stuff
     * Need to make it so in backend, a single read from the socket may contain several API calls
-* Add ability to turn off and on debug console
 * Polish Doc
     * Actually update the block diagram
 
@@ -90,6 +89,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
     * Also look into other speed drains
 * Remote Firmware writes??
     * requies binary transfer in marlin
+* Make Printer resillant to serail connects and disconnects
 
 ### Printer mods
 * PETg hotend fan mount mount
