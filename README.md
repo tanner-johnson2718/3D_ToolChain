@@ -74,15 +74,11 @@ The end goal of this project is a a printer capable of printing higher temp plas
 ### MEME CTLR
 #### V1.0
 * Actually update the block diagram
-* Start off on filtered response level
 * SD stuff + remore firmware write
 * Add ability to turn off and on debug console
 * Increase max lines of state console
 * On a subs, enter a string like --- or something. 
-* Make prefixes exact to start of string
-* Werid index out of range error -> needs endurance testing
-* Get a hold of a printer emulator to test
-* Go back to needing sudo access for serial
+* Need to make it so in backend, a single read from the socket may contain several API calls
 
 #### v2.0
 * New idea, create set of scripts that connect to the backend for various activities

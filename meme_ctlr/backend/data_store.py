@@ -66,7 +66,7 @@ class DataStore():
                             "M27"  : ["SD Progress","SD Total"], 
                             "M204" : ["Print Accel","Retract Accel","Travel Accel"]}
 
-            self.cmd2prefix = {"M155" : "T:", 
+            self.cmd2prefix = {"M155" : " T:", 
                                "M154" : "X:",
                                "M27"  : "SD printing", 
                                "M204" : "M204"}
@@ -118,8 +118,9 @@ class DataStore():
     def push_cmd(self, gcode):
         self.sendQ_cv.acquire()
 
-        self.sendQ.append(DataStore.SendJob(gcode))
-        self.sendQ[-1].timestamp_enQ(self.start_time)
+        job = DataStore.SendJob(gcode)
+        job.timestamp_enQ(self.start_time)
+        self.sendQ.append(job)
         self.sendQ_cv.notify_all()
 
         self.sendQ_cv.release()
@@ -133,6 +134,7 @@ class DataStore():
             # the current job has already been sent then do not break out of loop and do not return
             if self.is_ready():
                 ret = self.sendQ[self.current_sendQ_index].command
+                self.sendQ[self.current_sendQ_index].timestamp_sent(self.start_time)
                 self.sendQ_cv.release()
                 return ret
 
@@ -146,6 +148,10 @@ class DataStore():
         # recved an ACK, update timestamp on current send job, inc the index,
         # and notify anyone waiting on sendQ activity
         if line == "ok\n":
+            if not self.is_open():
+                print("ERROR in data store, recved an ok when not expecting")
+                self.sendQ_cv.release()
+                return
             self.sendQ[self.current_sendQ_index].timestamp_ACKed(self.start_time)
             self.advance_Q()     # NOTE!!! SHOULD ONLY BE CALLED HERE WHEN AN ACK IS RECIEVED
             self.sendQ_cv.notify_all()
@@ -157,7 +163,7 @@ class DataStore():
         for cmd_key in self.state.cmd2prefix.keys():
             prefix = self.state.cmd2prefix[cmd_key]
             index = line.find(prefix)
-            if index > -1:
+            if index == 0:
                 line = line[(index+len(prefix)):]
                 nums = re.findall(self.state.regex, line)
                 if len(nums) >= len(self.state.cmd2key[cmd_key]):
@@ -200,7 +206,7 @@ class DataStore():
     def is_open(self):
         ret = (self.current_sendQ_index < len(self.sendQ)) and\
               (self.sendQ[self.current_sendQ_index].time_sent >= 0) and\
-              (self.sendQ[self.current_sendQ_index].ACKed < 0)
+              (self.sendQ[self.current_sendQ_index].time_ACKed < 0)
 
         return ret
 

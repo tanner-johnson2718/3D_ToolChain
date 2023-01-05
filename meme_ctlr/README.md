@@ -7,11 +7,16 @@ G code sender, printer montoring and control, and interface for executing testin
 * Sending and recv-ing commands is done through the USB serial port (/dev/ttyACM0 for skr mini E3 V3.0)
 * Commands are send in ascii delimited by a new line char
 * The command protocal is [G-code](../marlin/Marlin_Docs/_gcode/)
-* All commands, if properly recv-ed by the printer, are ACK-ed with a response "ok" 
+* All commands, if properly recv-ed by the printer, are ACK-ed with a response "ok"
+* Comments on SD writing..
 
 # Dependancies
 * Python 3.8.10
 * textualize TUI 0.20
+
+# Running
+
+# High Level Overview
 
 # Backend Architecture
 
