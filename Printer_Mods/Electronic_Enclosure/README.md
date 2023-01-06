@@ -10,6 +10,7 @@
     * Shall support access to printer MCU serial port
 * All wiring and connectors shall be analzed for power usage and proper guage wire / connector size shall be used.
 * Provide neat cable managment from electronics enclosure to printer.
+* Preferably give easy access to electronics for prototyping.
 
 # Wiring Diagrams and Connector Table
 
