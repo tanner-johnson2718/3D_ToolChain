@@ -1,11 +1,15 @@
-# Custom Electronics and Electronics Enclosure
+# Electronics Enclosure
 
 # Requirements
-* Support chamber heater and Filament dryer
-    * Adding Mosfets and additional wiring and board pinout support to enable this
-* Relocate electronics from underneath the printer to outside the chamber
-* Measure power draw
-* All wiring should be evaluated for current draw and proper gauge wire shall be used
+* Relocate electronics from underneath the printer to outside the chamber in standalone enclosure
+* Allow enough space (or extensibility) to support electronics for chamber heater, filament dehydrator and other requirements listed on main page.
+    * This would include space for 2 PSUs and up to 3 MOSFETs
+    * Holds base printer MCU and possibly other MCUs to control other components.
+    * Possibly support a screen.
+    * Possibly support access to printer MCU SD card
+    * Shall support access to printer MCU serial port
+* All wiring and connectors shall be analzed for power usage and proper guage wire / connector size shall be used.
+* Provide neat cable managment from electronics enclosure to printer.
 
 # Wiring Diagrams and Connector Table
 

@@ -60,26 +60,19 @@ The end goal of this project is a a printer capable of printing higher temp plas
 * Calibration flow rate doc and tests + calibration doc
 
 ### Enclosure
-* DOC!!
+* DOC!! (Thurs)
     * Redo power supply picture and add fan connecters both to connector list and BOM
-* Add pre set holes for SKR and PSUs on bottom plates
-* Cut aluminum and plexiglass
-* Open Problems and Questions for v2.0)
-    * ammeters
-    * Chamber heater and extra thermistors?
-    * SD Card and mini usb access
-    * LEDs?
-    * Raspberry PI??
+* Cut aluminum and plexiglass (Fri)
 
 ### MEME CTLR
 #### V1.0
 * SD stuff
     * Need to make it so in backend, a single read from the socket may contain several API calls
-* Polish Doc
+* Polish Doc (Thurs)
     * Actually update the block diagram
 * Bed trammig Bed X:.. not showing up with filter
 * //action heating bed not showing up with filter
-
+* When un subbing, a MXXX S0 isnt sent
 
 #### v2.0
 * New idea, create set of scripts that connect to the backend for various activities
@@ -93,6 +86,11 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 ### Printer mods
 * PETg hotend fan mount mount
-* Something to keep hotend wires up
-* dehydrator and storage box
-* 3D printed enclosure
+* Open Problems and Questions for next iter of electronics, enclosure , dehydrator
+    * ammeters
+    * Chamber heater and extra thermistors?
+    * SD Card and mini usb access
+    * LEDs?
+    * Raspberry PI??
+    * dehydrator and storage box
+    * 3D printed enclosure
