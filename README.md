@@ -60,9 +60,8 @@ The end goal of this project is a a printer capable of printing higher temp plas
 * Calibration flow rate doc and tests + calibration doc
 
 ### Enclosure
-* DOC!! (Thurs)
-    * Redo power supply picture and add fan connecters both to connector list and BOM
-* Cut aluminum and plexiglass (Fri)
+* Cut aluminum and plexiglass
+* Make window panels a door instead??
 
 ### MEME CTLR
 #### V1.0
