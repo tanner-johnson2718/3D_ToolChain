@@ -8,7 +8,7 @@
     * Possibly support a screen.
     * Possibly support access to printer MCU SD card
     * Shall support access to printer MCU serial port
-* All wiring and connectors shall be analzed for power usage and proper guage wire / connector size shall be used.
+* All wiring and connectors shall be analyzed for power usage and proper guage wire / connector size shall be used.
 * Provide neat cable managment from electronics enclosure to printer.
 * Preferably give easy access to electronics for prototyping.
 
@@ -37,9 +37,9 @@ Power supply wiring diagram. The 10A GMA fuse is integrated into the iec320 AC p
 | Printer V3+/- | Fans |  Spade connector (8 to 10 stud size) | Dupont Connector | 24V DC | < 7W | 26 AWG |
 | Chamber V1+/- | Drier MOSFET +/- Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | 150W | 16 AWG (rated to 10A DC or 240W) |
 | Chamber V3+/- | Chamber MOSFET +/- Input | Spade connector (8 to 10 stud size) | Bare (screw down) | 24V DC | ??? | ??? |
-| Bed MOSFET Output +/- | Terminal Device | Bare (screw down) | -  | 24V DC | 500W + | 12 AWG (rated to 20A DC or 480W) |
-| Drier MOSFET Output +/- | Terminal Device | Bare (screw down) | -  | 24V DC | 150W | 16 AWG (rated to 10A DC or 240W) |
-| Chamber MOSFET Output +/- | Terminal Device | Bare (screw down) | - | 24V DC | ??? | ??? |
+| Bed MOSFET Output +/- | Terminal Device | Bare (screw down) | None  | 24V DC | 500W + | 12 AWG (rated to 20A DC or 480W) |
+| Drier MOSFET Output +/- | Terminal Device | Bare (screw down) | None  | 24V DC | 150W | 16 AWG (rated to 10A DC or 240W) |
+| Chamber MOSFET Output +/- | Terminal Device | Bare (screw down) | None | 24V DC | ??? | ??? |
 
 
 # Bill of Materials
