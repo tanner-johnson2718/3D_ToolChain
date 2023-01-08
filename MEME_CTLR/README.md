@@ -8,7 +8,16 @@ G code sender, printer montoring and control, and interface for executing testin
 * Commands are send in ascii delimited by a new line char
 * The command protocal is [G-code](../marlin/Marlin_Docs/_gcode/)
 * All commands, if properly recv-ed by the printer, are ACK-ed with a response "ok"
-* Comments on SD writing..
+* Writing GCODE files to SD without Binary Transfer:
+    * Initiate a GCODE file trasnfer with `M28 <filename>`
+    * Commands are sent one by one, waiting for the `ok` ACK before sending the next
+    * Reset the line number counter with `M110 N0`
+    * Send the file line by line with the prefix `N<i>` where `i` is the line number
+    * Postfix the command w/ the checksum of the entire command plus line number, deliminated by a `*` char.
+        * The checksum is sent in decimal ASCII
+    * For example,
+        * `N1 G0 X10*C103`
+        * `N2 G0 X20*C87`
 
 # Dependancies
 * Python 3.8.10
