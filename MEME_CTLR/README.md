@@ -25,13 +25,16 @@ G code sender, printer montoring and control, and interface for executing testin
 
 # Running
 
+* In one terminal navigate to the backend dir and execute `sudo python3 meme_backend.py`
+* In another run navigate to the frontend folder and execute `python3 tui.py`.
+
 # High Level Overview
+
+The "backend" consists of two python scripts. It's responsibility is to send and recv GCODE commands (and possibly future custom commands to be implemented in our custom Marlin) over the USB serial interface. Its other responsibility is to expose a network socket that allows some frontend program to interface with the printer over this socket using the API detailed below. The justification for this separation is the following. We want a robust and resilliant backend to be primarly responsible for keeping a port to communicate the printer open. This backend will run on a dedicated device (laptop, raspberry pi, some other embedded MCU, ...) and expose a networked port to communicate with from some other device like a phone or a desktop. This allows the creation of a suite of frontend scripts and tools that are fast and easy to implement as the backend will store macros, allow the query of printer state, and deal with serial communication nuances. These front end scripts could be a fancy java script web based monitoring tool for monitoring prints. Or could be a set of scripts to automate calibration and testing. The backend ensures all recved commands are queued until the printer, and in conjunction with the macro service it offers, allows these front scripts to be very simple and easy to create. The backend architecture is detailed below and as of writing this, only a simple command line interface for print monitoring is avaible, with more frontend scripts in the works.
 
 # Backend Architecture
 
 ![alt text](MEME_Backend.png)
-
-**NOTE** wait_response removed and input from printer is sent directly to client.
 
 ## Data store
 The data store is a per printer data structure that maintains 2 data elements and 4 main functions. Data elements:
