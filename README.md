@@ -23,9 +23,9 @@ The end goal of this project is a a printer capable of printing higher temp plas
 | Proejct | Date | Comment |
 | --- | --- | --- |
 |  [Slicer Settings, Calibration, and Test Prints](Calibration_Test_Prints) | Oct 2022 - | Holds documentation on settings/configurations (both firmware and slicer settings). Also has test prints and procedures for calibrating the printer. |
-| [MEME Controller](meme_ctlr) | Oct 2022 - | G code sender and print monitor.  |
+| [MEME Controller](MEME_CTLR) | Oct 2022 - | G code sender and print monitor.  |
 | [Electronics Enclosure](Printer_Mods/Electronic_Enclosure) | Oct 2022 - Jan 2023 | Removed PSU and main board, printing custom enclosure to move electronics out from underneath printer and support printer customization and additional features i.e. chamber heater, dehydrator, etc. |
-| [Custom Marlin Firmware](marlin) | Dec 2022 - | **TODO** Need to think about how to document, modify, and track firmware changes |
+| [Custom Marlin Firmware](Marlin) | Dec 2022 - | **TODO** Need to think about how to document, modify, and track firmware changes |
 | :heavy_check_mark: [Designs](Designs) | Dec 2022 | FreeCad Scripts and generic designs, images, and models used for 3D printing and likely to be used in more than a singular project |
 | :heavy_check_mark: [Cable Track Wire Management System](Printer_Mods/Cable_Track) | Nov 2022 | [Stole from Reddit](https://www.reddit.com/r/ender5plus/comments/so2ulf/ender_5_plus_cable_chain_solution/) |
 
@@ -61,7 +61,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
 
 ### Enclosure
 * Cut aluminum and plexiglass
-* Make window panels a door instead??
+* Make window panels a door instead
 
 ### MEME CTLR
 #### V1.0
