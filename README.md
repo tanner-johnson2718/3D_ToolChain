@@ -79,7 +79,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
     * Make SD print progress an auto sub
 * Remote Firmware writes??
     * requies binary transfer in marlin
-* Make Printer resillant to serail connects and disconnects
+* Make Printer resillant to serail connects and disconnects, failed or restarting a print, printer lossing power, printer loosing contact w/ controller, etc.
 
 ### Printer mods
 * PETg hotend fan mount mount
