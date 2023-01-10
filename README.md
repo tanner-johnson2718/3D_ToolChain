@@ -13,6 +13,7 @@ The end goal of this project is a a printer capable of printing higher temp plas
 ## 3rd Party tools used
 
 * FreeCAD 0.20 for 3D modeling
+* OpenSCAD 2019.05 for programmatic 3D modeling
 * Cura 5.0 for slicing 
 * Platfrom IO VS code extension for building Marlin 
 
