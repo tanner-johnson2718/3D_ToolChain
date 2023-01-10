@@ -189,13 +189,13 @@ component_color              = "Silver";
 /* [Hinge Parameters] */
 
 hinge_width                           = 40.0;
-leaf_height                           = 60.0;
+leaf_height                           = 40.0;
 // Leaf and knuckle thickness. Values greater than 3mm recommended.
 leaf_gauge                            = 5.0;
 // Recomended values between 0.3 and 4.0. Better quality below 3.0, tough to loosen.
 component_clearance                   = 0.4;
 // Knuckle count must be an odd number, so that the pin is supported on both ends.
-knuckle_count                         = 7;               // [3:2:31]
+knuckle_count                         = 5;               // [3:2:31]
 // Manual pin diameter setting. Only has effect, if "Enable Auto Pin Size" is set to "No".
 pin_diameter                          = 3.0;
 parametric_pin_diameter               = ( enable_auto_pin_size == 1 ) ? leaf_gauge : pin_diameter;
